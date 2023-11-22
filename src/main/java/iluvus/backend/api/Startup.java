@@ -24,6 +24,10 @@ public class Startup implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
+//        userRepository.deleteAll();
+//        postRepository.deleteAll();
+//        communityRepository.deleteAll();
+
         initDatabaseIfEmpty();
 
     }
