@@ -1,5 +1,7 @@
 package iluvus.backend.api.dto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -92,8 +94,29 @@ public class UserDto {
         return dob;
     }
 
-    public void setDob(Date dob) {
-        this.dob = dob;
+    public void setDob(String mm, String dd, String yyyy) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            this.dob = formatter.parse(mm + "/" + dd + "/" + yyyy);
+        } catch (ParseException e) {
+            this.dob = null;
+            System.out.println("Invalid date format");
+            e.printStackTrace();
+        }
+    }
+
+    public void setDob(String dob) { // mm/dd/yyyy
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            String mm = dob.substring(0, 2);
+            String dd = dob.substring(3, 5);
+            String yyyy = dob.substring(6, 10);
+            this.dob = formatter.parse(mm + "/" + dd + "/" + yyyy);
+        } catch (ParseException e) {
+            this.dob = null;
+            System.out.println("Invalid date format");
+            e.printStackTrace();
+        }
     }
 
     public String getRace() {
