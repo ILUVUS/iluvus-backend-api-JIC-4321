@@ -24,11 +24,11 @@ public class User {
     private String race;
     private Location location;
 
-    private String[] interests;
-    private String[] education;
-    private String[] work;
-    private String[] skills;
-    private String[] hobbies;
+    private List<String> interests;
+    private List<String> education;
+    private List<String> work;
+    private List<String> skills;
+    private List<String> hobbies;
 
     @DBRef
     private List<Post> posts;
@@ -140,47 +140,47 @@ public class User {
     }
 
     // Getter and Setter for interests
-    public String[] getInterests() {
+    public List<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(String[] interests) {
+    public void setInterests(List<String> interests) {
         this.interests = interests;
     }
 
     // Getter and Setter for education
-    public String[] getEducation() {
+    public List<String> getEducation() {
         return education;
     }
 
-    public void setEducation(String[] education) {
+    public void setEducation(List<String> education) {
         this.education = education;
     }
 
     // Getter and Setter for work
-    public String[] getWork() {
+    public List<String> getWork() {
         return work;
     }
 
-    public void setWork(String[] work) {
+    public void setWork(List<String> work) {
         this.work = work;
     }
 
     // Getter and Setter for skills
-    public String[] getSkills() {
+    public List<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(String[] skills) {
+    public void setSkills(List<String> skills) {
         this.skills = skills;
     }
 
     // Getter and Setter for hobbies
-    public String[] getHobbies() {
+    public List<String> getHobbies() {
         return hobbies;
     }
 
-    public void setHobbies(String[] hobbies) {
+    public void setHobbies(List<String> hobbies) {
         this.hobbies = hobbies;
     }
 

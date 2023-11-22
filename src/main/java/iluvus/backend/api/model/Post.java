@@ -1,6 +1,6 @@
 package iluvus.backend.api.model;
 
-import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +17,7 @@ public class Post {
     private String time;
     private List<String> images;
     private List<String> comments;
-    private String[] uplift;
-    private String[] downvote;
+    private BigInteger uplift;
     private boolean visible;
 
     @DBRef
@@ -57,7 +56,7 @@ public class Post {
         return images;
     }
 
-    public void setImages(ArrayList<String> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -69,7 +68,7 @@ public class Post {
         return comments;
     }
 
-    public void setComments(ArrayList<String> comments) {
+    public void setComments(List<String> comments) {
         this.comments = comments;
     }
 
@@ -77,20 +76,12 @@ public class Post {
         this.comments.add(comment);
     }
 
-    public String[] getUplift() {
+    public BigInteger getUplift() {
         return uplift;
     }
 
-    public void setUplift(String[] uplift) {
+    public void setUplift(BigInteger uplift) {
         this.uplift = uplift;
-    }
-
-    public String[] getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(String[] downvote) {
-        this.downvote = downvote;
     }
 
     public boolean isVisible() {

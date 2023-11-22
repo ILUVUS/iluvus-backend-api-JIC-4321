@@ -4,13 +4,13 @@ public class Location {
     private String city;
     private String state;
     private String country;
-    private String zipCode;
+    private Integer zipCode;
     private String address;
 
     public Location() {
     }
 
-    public Location(String city, String state, String country, String zipCode, String address) {
+    public Location(String city, String state, String country, Integer zipCode, String address) {
         this.city = city;
         this.state = state;
         this.country = country;
