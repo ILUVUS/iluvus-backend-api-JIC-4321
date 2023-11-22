@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import iluvus.backend.api.dto.LocationDto;
 import iluvus.backend.api.dto.UserDto;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
