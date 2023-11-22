@@ -4,12 +4,15 @@ import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.User;
 
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class PostDto {
 
     private String content;
-    private String date;
+    private Date date;
     private String time;
     private List<String> images;
     private List<String> comments;
@@ -30,12 +33,31 @@ public class PostDto {
         this.content = content;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+     // yyyy-MM-dd hh:mm:ss
+    public void setDateTime(String mm, String dd, String yyyy, String h, String m, String s) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            this.date = formatter.parse(yyyy + "-" + mm + "-" + dd + " " + h + ":" + m + ":" + s);
+        } catch (ParseException e) {
+            this.date = null;
+            System.out.println("Invalid date format");
+            e.printStackTrace();
+        }
+    }
+
+    public void setDateTime(String dob) { // yyyy-MM-dd hh:mm:ss
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            this.date = formatter.parse(dob);
+        } catch (ParseException e) {
+            this.date = null;
+            System.out.println("Invalid date format");
+            e.printStackTrace();
+        }
     }
 
     public String getTime() {

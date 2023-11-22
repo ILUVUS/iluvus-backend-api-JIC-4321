@@ -97,9 +97,9 @@ public class UserDto {
     }
 
     public void setDob(String mm, String dd, String yyyy) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            this.dob = formatter.parse(mm + "/" + dd + "/" + yyyy);
+            this.dob = formatter.parse(yyyy + "-" + mm + "-" + dd);
         } catch (ParseException e) {
             this.dob = null;
             System.out.println("Invalid date format");
@@ -107,13 +107,10 @@ public class UserDto {
         }
     }
 
-    public void setDob(String dob) { // mm/dd/yyyy
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+    public void setDob(String dob) { // yyyy-MM-dd
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            String mm = dob.substring(0, 2);
-            String dd = dob.substring(3, 5);
-            String yyyy = dob.substring(6, 10);
-            this.dob = formatter.parse(mm + "/" + dd + "/" + yyyy);
+            this.dob = formatter.parse(dob);
         } catch (ParseException e) {
             this.dob = null;
             System.out.println("Invalid date format");

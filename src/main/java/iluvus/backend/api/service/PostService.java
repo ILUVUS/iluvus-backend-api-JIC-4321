@@ -31,8 +31,7 @@ public class PostService {
             PostDto postDto = new PostDto();
         
             postDto.setContent(data.get("content"));
-            postDto.setDate(data.get("date"));
-            postDto.setTime(data.get("time"));
+            postDto.setDateTime(data.get("datetime"));
             postDto.setImages(new ArrayList<String>());
             postDto.setComments(new ArrayList<String>());
             postDto.setUplift(BigInteger.valueOf(0));

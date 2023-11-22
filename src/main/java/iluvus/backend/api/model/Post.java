@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "posts")
@@ -13,8 +14,7 @@ public class Post {
     @Id
     private String id;
     private String content;
-    private String date;
-    private String time;
+    private Date dateTime;
     private List<String> images;
     private List<String> comments;
     private BigInteger uplift;
@@ -30,8 +30,7 @@ public class Post {
 
     public Post(PostDto postDto) {
         this.content = postDto.getContent();
-        this.date = postDto.getDate();
-        this.time = postDto.getTime();
+        this.dateTime = postDto.getDate();
         this.images = postDto.getImages();
         this.comments = postDto.getComments();
         this.uplift = postDto.getUplift();
@@ -53,21 +52,9 @@ public class Post {
         this.content = content;
     }
 
-    public String getDate() {
-        return date;
-    }
+    public Date getDateTime() { return dateTime; }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
+    public void setDateTime(Date dateTime) { this.dateTime = dateTime; }
 
     public List<String> getImages() {
         return images;
