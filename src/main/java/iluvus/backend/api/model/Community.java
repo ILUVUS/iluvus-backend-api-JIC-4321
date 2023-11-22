@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import iluvus.backend.api.dto.CommunityDto;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Document(collection = "communities")
@@ -22,6 +25,15 @@ public class Community {
     private Set<User> members;
 
     public Community() {
+    }
+
+    public Community(CommunityDto communityDto) {
+        this.name = communityDto.getName();
+        this.description = communityDto.getDescription();
+        this.rule = communityDto.getRule();
+        this.isPublic = communityDto.isPublic();
+        this.owner = communityDto.getOwner();
+        this.members = communityDto.getMembers();
     }
 
     // get id
@@ -79,8 +91,8 @@ public class Community {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
-        this.members = members;
+    public void initMembers() {
+        this.members = new HashSet<>();
     }
 }
 

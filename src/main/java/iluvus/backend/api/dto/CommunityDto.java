@@ -2,6 +2,8 @@ package iluvus.backend.api.dto;
 
 import java.util.Set;
 
+import iluvus.backend.api.model.*;
+
 public class CommunityDto {
     private String name;
     private String description;
@@ -9,8 +11,8 @@ public class CommunityDto {
 
     private boolean isPublic;
 
-    private UserDto owner;
-    private Set<UserDto> members;
+    private User owner;
+    private Set<User> members;
 
     public CommunityDto() {
     }
@@ -52,20 +54,20 @@ public class CommunityDto {
     }
 
     // Getter and Setter methods for owner
-    public UserDto getOwner() {
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(UserDto owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
     // Getter and Setter methods for members
-    public Set<UserDto> getMembers() {
+    public Set<User> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<UserDto> members) {
+    public void setMembers(Set<User> members) {
         this.members = members;
     }
 }

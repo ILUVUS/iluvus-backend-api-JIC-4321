@@ -3,6 +3,8 @@ package iluvus.backend.api.dto;
 import java.math.BigInteger;
 import java.util.List;
 
+import iluvus.backend.api.model.*;
+
 public class PostDto {
 
     private String content;
@@ -13,8 +15,8 @@ public class PostDto {
     private BigInteger uplift;
     private boolean visible;
 
-    private UserDto author;
-    private CommunityDto group;
+    private User author;
+    private Community group;
 
     public PostDto() {
     }
@@ -83,19 +85,19 @@ public class PostDto {
         this.visible = visible;
     }
 
-    public UserDto getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserDto author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
-    public CommunityDto getGroup() {
+    public Community getGroup() {
         return group;
     }
 
-    public void setGroup(CommunityDto group) {
+    public void setGroup(Community group) {
         this.group = group;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import iluvus.backend.api.dto.PostDto;
+
 @Document(collection = "posts")
 public class Post {
     @Id
@@ -25,6 +27,18 @@ public class Post {
     private Community group;
 
     public Post() {
+    }
+
+    public Post(PostDto postDto) {
+        this.content = postDto.getContent();
+        this.date = postDto.getDate();
+        this.time = postDto.getTime();
+        this.images = postDto.getImages();
+        this.comments = postDto.getComments();
+        this.uplift = postDto.getUplift();
+        this.visible = postDto.isVisible();
+        this.author = postDto.getAuthor();
+        this.group = postDto.getGroup();
     }
 
     // get id

@@ -3,6 +3,8 @@ package iluvus.backend.api.dto;
 import java.util.Date;
 import java.util.List;
 
+import iluvus.backend.api.model.*;
+
 public class UserDto {
     private String username;
     private String email;
@@ -23,9 +25,9 @@ public class UserDto {
     private List<String> skills;
     private List<String> hobbies;
 
-    private List<PostDto> posts;
-    private List<UserDto> friends;
-    private List<CommunityDto> groups;
+    private List<Post> posts;
+    private List<User> friends;
+    private List<Community> groups;
 
     public UserDto() {
     }
@@ -150,27 +152,27 @@ public class UserDto {
         this.hobbies = hobbies;
     }
 
-    public List<PostDto> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<PostDto> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 
-    public List<UserDto> getFriends() {
+    public List<User> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<UserDto> friends) {
+    public void setFriends(List<User> friends) {
         this.friends = friends;
     }
 
-    public List<CommunityDto> getGroups() {
+    public List<Community> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<CommunityDto> groups) {
+    public void setGroups(List<Community> groups) {
         this.groups = groups;
     }
 }
