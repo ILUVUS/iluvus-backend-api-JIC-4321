@@ -1,18 +1,9 @@
-package iluvus.backend.api.model;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import iluvus.backend.api.dto.LocationDto;
+package iluvus.backend.api.dto;
 
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "users")
-public class User {
-    @Id
-    private String id;
+public class UserDto {
     private String username;
     private String email;
     private String password;
@@ -32,22 +23,13 @@ public class User {
     private List<String> skills;
     private List<String> hobbies;
 
-    @DBRef
-    private List<Post> posts;
-    @DBRef
-    private List<User> friends;
-    @DBRef
-    private List<Community> groups;
+    private List<PostDto> posts;
+    private List<UserDto> friends;
+    private List<CommunityDto> groups;
 
-    public User() {
+    public UserDto() {
     }
 
-    // Getter and Setter for id
-    public String getId() {
-        return id;
-    }
-
-    // Getter and Setter for username
     public String getUsername() {
         return username;
     }
@@ -56,7 +38,6 @@ public class User {
         this.username = username;
     }
 
-    // Getter and Setter for email
     public String getEmail() {
         return email;
     }
@@ -65,7 +46,6 @@ public class User {
         this.email = email;
     }
 
-    // Getter and Setter for password
     public String getPassword() {
         return password;
     }
@@ -74,7 +54,6 @@ public class User {
         this.password = password;
     }
 
-    // Getter and Setter for isVerified
     public boolean isVerified() {
         return isVerified;
     }
@@ -83,7 +62,6 @@ public class User {
         isVerified = verified;
     }
 
-    // Getter and Setter for fname
     public String getFname() {
         return fname;
     }
@@ -92,7 +70,6 @@ public class User {
         this.fname = fname;
     }
 
-    // Getter and Setter for lname
     public String getLname() {
         return lname;
     }
@@ -101,7 +78,6 @@ public class User {
         this.lname = lname;
     }
 
-    // Getter and Setter for gender
     public String getGender() {
         return gender;
     }
@@ -110,7 +86,6 @@ public class User {
         this.gender = gender;
     }
 
-    // Getter and Setter for dob
     public Date getDob() {
         return dob;
     }
@@ -119,7 +94,6 @@ public class User {
         this.dob = dob;
     }
 
-    // Getter and Setter for race
     public String getRace() {
         return race;
     }
@@ -128,7 +102,6 @@ public class User {
         this.race = race;
     }
 
-    // Getter and Setter for location
     public LocationDto getLocation() {
         return location;
     }
@@ -137,7 +110,6 @@ public class User {
         this.location = location;
     }
 
-    // Getter and Setter for interests
     public List<String> getInterests() {
         return interests;
     }
@@ -146,7 +118,6 @@ public class User {
         this.interests = interests;
     }
 
-    // Getter and Setter for education
     public List<String> getEducation() {
         return education;
     }
@@ -155,7 +126,6 @@ public class User {
         this.education = education;
     }
 
-    // Getter and Setter for work
     public List<String> getWork() {
         return work;
     }
@@ -164,7 +134,6 @@ public class User {
         this.work = work;
     }
 
-    // Getter and Setter for skills
     public List<String> getSkills() {
         return skills;
     }
@@ -173,7 +142,6 @@ public class User {
         this.skills = skills;
     }
 
-    // Getter and Setter for hobbies
     public List<String> getHobbies() {
         return hobbies;
     }
@@ -182,30 +150,27 @@ public class User {
         this.hobbies = hobbies;
     }
 
-    // Getter and Setter for posts
-    public List<Post> getPosts() {
+    public List<PostDto> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<PostDto> posts) {
         this.posts = posts;
     }
 
-    // Getter and Setter for friends
-    public List<User> getFriends() {
+    public List<UserDto> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<User> friends) {
+    public void setFriends(List<UserDto> friends) {
         this.friends = friends;
     }
 
-    // Getter and Setter for groups
-    public List<Community> getGroups() {
+    public List<CommunityDto> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Community> groups) {
+    public void setGroups(List<CommunityDto> groups) {
         this.groups = groups;
     }
 }

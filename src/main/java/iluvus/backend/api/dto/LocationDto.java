@@ -1,16 +1,16 @@
-package iluvus.backend.api.model;
+package iluvus.backend.api.dto;
 
-public class Location {
+public class LocationDto {
     private String city;
     private String state;
     private String country;
     private Integer zipCode;
     private String address;
 
-    public Location() {
+    public LocationDto() {
     }
 
-    public Location(String city, String state, String country, Integer zipCode, String address) {
+    public LocationDto(String city, String state, String country, Integer zipCode, String address) {
         this.city = city;
         this.state = state;
         this.country = country;

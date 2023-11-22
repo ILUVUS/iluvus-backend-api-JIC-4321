@@ -1,32 +1,18 @@
-package iluvus.backend.api.model;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+package iluvus.backend.api.dto;
 
 import java.util.Set;
 
-@Document(collection = "communities")
-public class Community {
-    @Id
-    private String id;
+public class CommunityDto {
     private String name;
     private String description;
     private String rule;
 
     private boolean isPublic;
 
-    @DBRef
-    private User owner;
-    @DBRef
-    private Set<User> members;
+    private UserDto owner;
+    private Set<UserDto> members;
 
-    public Community() {
-    }
-
-    // get id
-    public String getId() {
-        return id;
+    public CommunityDto() {
     }
 
     // Getter and Setter methods for name
@@ -66,20 +52,20 @@ public class Community {
     }
 
     // Getter and Setter methods for owner
-    public User getOwner() {
+    public UserDto getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(UserDto owner) {
         this.owner = owner;
     }
 
     // Getter and Setter methods for members
-    public Set<User> getMembers() {
+    public Set<UserDto> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
+    public void setMembers(Set<UserDto> members) {
         this.members = members;
     }
 }

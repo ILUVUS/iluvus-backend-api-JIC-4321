@@ -1,16 +1,10 @@
-package iluvus.backend.api.model;
+package iluvus.backend.api.dto;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class PostDto {
 
-@Document(collection = "posts")
-public class Post {
-    @Id
-    private String id;
     private String content;
     private String date;
     private String time;
@@ -19,17 +13,10 @@ public class Post {
     private BigInteger uplift;
     private boolean visible;
 
-    @DBRef
-    private User author;
-    @DBRef
-    private Community group;
+    private UserDto author;
+    private CommunityDto group;
 
-    public Post() {
-    }
-
-    // get id
-    public String getId() {
-        return id;
+    public PostDto() {
     }
 
     public String getContent() {
@@ -96,19 +83,19 @@ public class Post {
         this.visible = visible;
     }
 
-    public User getAuthor() {
+    public UserDto getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserDto author) {
         this.author = author;
     }
 
-    public Community getGroup() {
+    public CommunityDto getGroup() {
         return group;
     }
 
-    public void setGroup(Community group) {
+    public void setGroup(CommunityDto group) {
         this.group = group;
     }
 }

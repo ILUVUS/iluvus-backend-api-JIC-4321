@@ -1,5 +1,5 @@
 package iluvus.backend.api.service;
 
-public class SampleService {
+public class CommunityService {
     
 }
