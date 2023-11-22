@@ -10,12 +10,30 @@ public class LocationDto {
     public LocationDto() {
     }
 
-    public LocationDto(String city, String state, String country, Integer zipCode, String address) {
+    public LocationDto(String address, String city, String state, String country, Integer zipCode) {
         this.city = city;
         this.state = state;
         this.country = country;
         this.zipCode = zipCode;
         this.address = address;
+    }
+
+    public LocationDto(String location) {
+        String[] locationArray = location.split(",");
+        this.address = locationArray[0];
+        this.city = locationArray[1];
+        this.state = locationArray[2];
+        this.country = locationArray[3];
+        this.zipCode = Integer.parseInt(locationArray[4]);
+    }
+
+    public void setLocation(String location) {
+        String[] locationArray = location.split(",");
+        this.address = locationArray[0];
+        this.city = locationArray[1];
+        this.state = locationArray[2];
+        this.country = locationArray[3];
+        this.zipCode = Integer.parseInt(locationArray[4]);
     }
 
     public String getCity() {

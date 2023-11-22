@@ -1,11 +1,10 @@
 package iluvus.backend.api.model;
 
+import iluvus.backend.api.dto.LocationDto;
+import iluvus.backend.api.dto.UserDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import iluvus.backend.api.dto.LocationDto;
-import iluvus.backend.api.dto.UserDto;
 
 import java.util.Date;
 import java.util.List;

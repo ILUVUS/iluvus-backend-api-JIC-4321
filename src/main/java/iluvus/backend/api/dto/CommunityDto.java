@@ -1,8 +1,8 @@
 package iluvus.backend.api.dto;
 
-import java.util.Set;
+import iluvus.backend.api.model.User;
 
-import iluvus.backend.api.model.*;
+import java.util.Set;
 
 public class CommunityDto {
     private String name;

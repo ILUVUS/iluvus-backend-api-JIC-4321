@@ -1,9 +1,10 @@
 package iluvus.backend.api.dto;
 
+import iluvus.backend.api.model.Community;
+import iluvus.backend.api.model.User;
+
 import java.math.BigInteger;
 import java.util.List;
-
-import iluvus.backend.api.model.*;
 
 public class PostDto {
 
