@@ -4,13 +4,13 @@ public class LocationDto {
     private String city;
     private String state;
     private String country;
-    private Integer zipCode;
+    private String zipCode;
     private String address;
 
     public LocationDto() {
     }
 
-    public LocationDto(String address, String city, String state, String country, Integer zipCode) {
+    public LocationDto(String address, String city, String state, String country, String zipCode) {
         this.city = city;
         this.state = state;
         this.country = country;
@@ -20,20 +20,20 @@ public class LocationDto {
 
     public LocationDto(String location) {
         String[] locationArray = location.split(",");
-        this.address = locationArray[0];
-        this.city = locationArray[1];
-        this.state = locationArray[2];
-        this.country = locationArray[3];
-        this.zipCode = Integer.parseInt(locationArray[4]);
+        this.address = locationArray[0].trim();
+        this.city = locationArray[1].trim();
+        this.state = locationArray[2].trim();
+        this.country = locationArray[3].trim();
+        this.zipCode = locationArray[4].trim();
     }
 
     public void setLocation(String location) {
         String[] locationArray = location.split(",");
-        this.address = locationArray[0];
-        this.city = locationArray[1];
-        this.state = locationArray[2];
-        this.country = locationArray[3];
-        this.zipCode = Integer.parseInt(locationArray[4]);
+        this.address = locationArray[0].trim();
+        this.city = locationArray[1].trim();
+        this.state = locationArray[2].trim();
+        this.country = locationArray[3].trim();
+        this.zipCode = locationArray[4].trim();
     }
 
     public String getCity() {
@@ -60,11 +60,11 @@ public class LocationDto {
         this.country = country;
     }
 
-    public Integer getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(Integer zipCode) {
+    public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
