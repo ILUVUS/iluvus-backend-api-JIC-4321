@@ -4,10 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SampleController {
-    
+public class MainController {
+
     @GetMapping("/")
-    public String hello() {
-        return "Hello, World!";
+    public String index() {
+        return "Welcome to ILUVUS. API is running well!";
     }
+    
 }
