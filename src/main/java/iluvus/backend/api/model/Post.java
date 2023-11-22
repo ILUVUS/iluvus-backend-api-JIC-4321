@@ -1,7 +1,6 @@
 package iluvus.backend.api.model;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
