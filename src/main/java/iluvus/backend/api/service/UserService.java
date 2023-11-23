@@ -9,48 +9,91 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
     public boolean createUser(Map<String, String> data) {
-         try {
-             UserDto userDto = new UserDto();
-             userDto.setUsername(data.get("username"));
-             userDto.setEmail(data.get("email"));
-             userDto.setPassword(data.get("password"));
-             userDto.setVerified(false);
-             userDto.setFname(data.get("fname"));
-             userDto.setLname(data.get("lname"));
-             userDto.setGender(data.get("gender"));
-             userDto.setDob(data.get("dob"));
-             userDto.setRace(data.get("race"));
+        try {
+            UserDto userDto = new UserDto();
+            userDto.setUsername(data.get("username"));
+            userDto.setEmail(data.get("email"));
+            userDto.setPassword(data.get("password"));
+            userDto.setFname(data.get("fname"));
+            userDto.setLname(data.get("lname"));
+            userDto.setGender(data.get("gender"));
+            userDto.setDob(data.get("dob"));
+            userDto.setRace(data.get("race"));
+            userDto.setProEmail(data.get("proemail"));
+            //we have the professional emailID
+            //1) we can call a function for email validity
+            userDto.setVerified(validateEmail(userDto.getProEmail()));
 
-             LocationDto locationDto = new LocationDto(data.get("location"));
-             userDto.setLocation(locationDto);
-            
-             // need to fix this
-             // we need a way to put List in Frontend into a String seperated by commas
-             // then we can split the String into a List in Backend
-             // FOR NOW, we will just create an empty List
-             userDto.setInterests(new ArrayList<>());
-             userDto.setEducation(new ArrayList<>());
-             userDto.setWork(new ArrayList<>());
-             userDto.setSkills(new ArrayList<>());
-             userDto.setHobbies(new ArrayList<>());
-             userDto.setPosts(new ArrayList<>());
-             userDto.setFriends(new ArrayList<>());
-             userDto.setGroups(new ArrayList<>());
-             User user = new User(userDto);
-             userRepository.insert(user);
-             return true;
-         } catch (Exception e) {
-             return false;
-         }
+            LocationDto locationDto = new LocationDto(data.get("location"));
+            userDto.setLocation(locationDto);
+
+            // need to fix this
+            // we need a way to put List in Frontend into a String seperated by commas
+            // then we can split the String into a List in Backend
+            // FOR NOW, we will just create an empty List
+            userDto.setInterests(new ArrayList<>());
+            userDto.setEducation(new ArrayList<>());
+            userDto.setWork(new ArrayList<>());
+            userDto.setSkills(new ArrayList<>());
+            userDto.setHobbies(new ArrayList<>());
+            userDto.setPosts(new ArrayList<>());
+            userDto.setFriends(new ArrayList<>());
+            userDto.setGroups(new ArrayList<>());
+            User user = new User(userDto);
+            userRepository.insert(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
 
     }
 
+    private boolean validateEmail(String proemail) {
+        if (proemail == null) {
+            return false;
+        }
+
+        String[] parts = proemail.split("@"); // Split at the "@" character
+
+        if (parts.length == 2) {
+            String username = parts[0];
+            String domain = parts[1];
+            String[] domainParts = domain.split("\\."); // Split the domain at "."
+
+            if (domainParts.length == 2) {
+                String domainName = domainParts[0];
+                String domainExtension = domainParts[1];
+
+                String[] genericDomains = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
+
+                // Check if the domain name is generic
+                boolean isGeneric = false;
+                for (String generic : genericDomains) {
+                    if (domainName.equalsIgnoreCase(generic)) {
+                        isGeneric = true;
+                        break;
+                    }
+                }
+                if (isGeneric) {return false;}
+
+                String[] result = {username, domainName, domainExtension};
+                String verificationToken = UUID.randomUUID().toString(); //random token to verify
+                //here I want to verify if the email ID exists. Can I do this by sending a verification code?
+                //or is there a method I can use to find out?
+                //we can build an email and send a verification link, but how do we know if the link was clicked
+                //and where do we direct them
+                //api call etc.
+                return true;
+            }
+        }
+        return false;
+    }
 }

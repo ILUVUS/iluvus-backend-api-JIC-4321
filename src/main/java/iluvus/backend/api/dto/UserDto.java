@@ -13,9 +13,8 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
-
     private boolean isVerified;
-
+    private String proEmail;
     private String fname;
     private String lname;
     private String gender;
@@ -28,7 +27,6 @@ public class UserDto {
     private List<String> work;
     private List<String> skills;
     private List<String> hobbies;
-
     private List<Post> posts;
     private List<User> friends;
     private List<Community> groups;
@@ -197,4 +195,8 @@ public class UserDto {
     public void setGroups(List<Community> groups) {
         this.groups = groups;
     }
+
+    public String getProEmail() {return proEmail;}
+
+    public void setProEmail(String proEmail){this.proEmail = proEmail;}
 }
