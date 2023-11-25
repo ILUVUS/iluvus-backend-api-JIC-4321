@@ -20,7 +20,7 @@ public class UserDto {
     private String gender;
     private Date dob;
     private String race;
-    private LocationDto location;
+    // private LocationDto location;
 
     private List<String> interests;
     private List<String> education;
@@ -124,13 +124,13 @@ public class UserDto {
         this.race = race;
     }
 
-    public LocationDto getLocation() {
-        return location;
-    }
+    // public LocationDto getLocation() {
+    //     return location;
+    // }
 
-    public void setLocation(LocationDto location) {
-        this.location = location;
-    }
+    // public void setLocation(LocationDto location) {
+    //     this.location = location;
+    // }
 
     public List<String> getInterests() {
         return interests;

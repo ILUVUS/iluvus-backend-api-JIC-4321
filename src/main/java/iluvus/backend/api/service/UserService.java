@@ -1,6 +1,6 @@
 package iluvus.backend.api.service;
 
-import iluvus.backend.api.dto.LocationDto;
+// import iluvus.backend.api.dto.LocationDto;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
@@ -27,13 +27,13 @@ public class UserService {
             userDto.setGender(data.get("gender"));
             userDto.setDob(data.get("dob"));
             userDto.setRace(data.get("race"));
-            userDto.setProEmail(data.get("proemail"));
+            userDto.setProEmail(data.get("proEmail"));
             //we have the professional emailID
             //1) we can call a function for email validity
             userDto.setVerified(validateEmail(userDto.getProEmail()));
 
-            LocationDto locationDto = new LocationDto(data.get("location"));
-            userDto.setLocation(locationDto);
+            // LocationDto locationDto = new LocationDto(data.get("location"));
+            // userDto.setLocation(locationDto);
 
             // need to fix this
             // we need a way to put List in Frontend into a String seperated by commas

@@ -53,7 +53,7 @@ public class User {
         this.gender = userDto.getGender();
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
-        this.location = userDto.getLocation();
+//        this.location = userDto.getLocation();
 
         this.interests = userDto.getInterests();
         this.education = userDto.getEducation();
