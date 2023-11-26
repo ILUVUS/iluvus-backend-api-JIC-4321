@@ -55,8 +55,27 @@ public class UserService {
         }
 
     }
+  
+    public boolean loginUser(Map<String, String> data) {
+        try {
+            User user = userRepository.findUserbyUsername(data.get("username"));
 
-    private boolean validateEmail(String proEmail) {
+            // simple checking for now
+            if (user.getPassword().equals(data.get("password"))) {
+                return true;
+            } 
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    private boolean validateEmail(String proemail) {
+        if (proemail == null) {
+            return false;
+        }
+
+        String[] parts = proemail.split("@"); // Split at the "@" character
 
         final String[] GENERIC_DOMAINS = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
         final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+)$";

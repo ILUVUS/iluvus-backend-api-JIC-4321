@@ -30,5 +30,15 @@ public class UserController {
         }
 
     }
+
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> checkLogin(@RequestBody Map<String, String> data) {
+        boolean userExists = userService.loginUser(data);
+        if (userExists) {
+            return ResponseEntity.ok().body("User logined successfully");
+        } else {
+            return ResponseEntity.badRequest().body("User logined failed");
+        }
+    }
     
 }

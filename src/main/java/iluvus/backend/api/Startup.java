@@ -1,13 +1,10 @@
 package iluvus.backend.api;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import iluvus.backend.api.repository.*;
-import iluvus.backend.api.dto.*;
 import iluvus.backend.api.model.*;
 
 
