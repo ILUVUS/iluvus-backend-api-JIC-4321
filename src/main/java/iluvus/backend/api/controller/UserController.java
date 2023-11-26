@@ -35,7 +35,8 @@ public class UserController {
     public ResponseEntity<String> checkLogin(@RequestBody Map<String, String> data) {
         boolean userExists = userService.loginUser(data);
         if (userExists) {
-            return ResponseEntity.ok().body("User logined successfully");
+            String userId = userService.getUserId(data.get("username"));
+            return ResponseEntity.ok().body(userId);
         } else {
             return ResponseEntity.badRequest().body("User logined failed");
         }

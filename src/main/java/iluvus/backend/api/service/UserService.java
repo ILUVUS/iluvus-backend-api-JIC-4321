@@ -62,11 +62,21 @@ public class UserService {
 
             // simple checking for now
             if (user.getPassword().equals(data.get("password"))) {
+                // return true;
                 return true;
             } 
             return false;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public String getUserId(String username) {
+        try {
+            User user = userRepository.findUserbyUsername(username);
+            return user.getId();
+        } catch (Exception e) {
+            return null;
         }
     }
     
