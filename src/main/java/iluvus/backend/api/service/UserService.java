@@ -6,7 +6,7 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
@@ -56,41 +56,39 @@ public class UserService {
 
     }
 
-    private boolean validateEmail(String proemail) {
-        if (proemail == null) {
+    private boolean validateEmail(String proEmail) {
+
+        final String[] GENERIC_DOMAINS = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
+        final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+)$";
+        final String DOMAIN_REGEX = "^[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+
+        if (proEmail == null || !proEmail.matches(EMAIL_REGEX)) {
             return false;
         }
 
-        String[] parts = proemail.split("@"); // Split at the "@" character
+        String[] parts = proEmail.split("@");
+        if (parts.length != 2) {
+            return false;
+        }
+        String domain = parts[1];
+        if (!domain.matches(DOMAIN_REGEX)) {
+            return false;
+        }
+        if (isGenericDomain(domain, GENERIC_DOMAINS)) {
+            return false;
+        }
+        if (domain.endsWith(".edu")) {
+            return true;
+        }
+        Pattern.matches("[A-Za-z]+\\.[A-Za-z]+", parts[0]);
+        //need more criteria to identify fake emailIDs
+        return true;
+    }
 
-        if (parts.length == 2) {
-            String username = parts[0];
-            String domain = parts[1];
-            String[] domainParts = domain.split("\\."); // Split the domain at "."
-
-            if (domainParts.length == 2) {
-                String domainName = domainParts[0];
-                String domainExtension = domainParts[1];
-
-                String[] genericDomains = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
-
-                // Check if the domain name is generic
-                boolean isGeneric = false;
-                for (String generic : genericDomains) {
-                    if (domainName.equalsIgnoreCase(generic)) {
-                        isGeneric = true;
-                        break;
-                    }
-                }
-                if (isGeneric) {return false;}
-
-                String[] result = {username, domainName, domainExtension};
-                String verificationToken = UUID.randomUUID().toString(); //random token to verify
-                //here I want to verify if the email ID exists. Can I do this by sending a verification code?
-                //or is there a method I can use to find out?
-                //we can build an email and send a verification link, but how do we know if the link was clicked
-                //and where do we direct them
-                //api call etc.
+    private boolean isGenericDomain(String domain, String[] GENERIC_DOMAINS) {
+        String domainName = domain.split("\\.")[0];
+        for (String generic : GENERIC_DOMAINS) {
+            if (domainName.equalsIgnoreCase(generic)) {
                 return true;
             }
         }
