@@ -28,7 +28,7 @@ public class CommunityService {
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(Boolean.valueOf(data.get("visibility")));
 
-            User owner = userRepository.findById(data.get("ownerId")).get();
+            User owner = userRepository.findUserbyUsername(data.get("ownerId"));
             communityDto.setOwner(owner);
 
             communityDto.setMembers(new HashSet<>());
