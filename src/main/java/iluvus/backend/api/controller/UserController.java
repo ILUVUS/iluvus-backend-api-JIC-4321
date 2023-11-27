@@ -47,7 +47,6 @@ public class UserController {
         boolean isVerified = userService.verify(data);
 
         if (isVerified) {
-
             return ResponseEntity.ok().body("Verified");
         } else {
             return ResponseEntity.badRequest().body("Not Verified");
