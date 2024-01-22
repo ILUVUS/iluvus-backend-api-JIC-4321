@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -88,6 +89,15 @@ public class UserService {
         try {
             User user = userRepository.findUserbyUsername(username);
             return user.getId();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public User getUserByID(String userID) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(userID);
+            return optionalUser.orElse(null);
         } catch (Exception e) {
             return null;
         }

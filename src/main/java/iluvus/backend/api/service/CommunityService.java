@@ -18,6 +18,8 @@ public class CommunityService {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public boolean createCommunity(Map<String, String> data) {
         try {
@@ -50,5 +52,17 @@ public class CommunityService {
             communityList.add(community.getName());
         }
         return communityList;
+    }
+
+    public Community getCommunityByID(String id) {
+        return communityRepository.findById(id).orElse(null);
+    }
+
+    public void joinCommunity(String userID, String communityID) {
+        User user = userService.getUserByID(userID);
+        Community community = getCommunityByID(communityID);
+        if (user != null && community != null) {
+            user.getGroups().add(community);
+        }
     }
 }
