@@ -55,18 +55,41 @@ public class UserService {
         }
 
     }
-  
+
+    public boolean verify(Map<String, String> data) {
+        try {
+            User user = userRepository.findUserbyUsername(data.get("username"));
+
+            if (user.isVerified()) {
+                return true;
+            } 
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean loginUser(Map<String, String> data) {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
             // simple checking for now
             if (user.getPassword().equals(data.get("password"))) {
+                // return true;
                 return true;
             } 
             return false;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public String getUserId(String username) {
+        try {
+            User user = userRepository.findUserbyUsername(username);
+            return user.getId();
+        } catch (Exception e) {
+            return null;
         }
     }
     

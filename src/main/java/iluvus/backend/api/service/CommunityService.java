@@ -8,6 +8,7 @@ import iluvus.backend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -24,10 +25,10 @@ public class CommunityService {
 
             communityDto.setName(data.get("name"));
             communityDto.setDescription(data.get("description"));
-            communityDto.setRule(data.get("rule"));
-            communityDto.setPublic(Boolean.valueOf(data.get("isPublic")));
+            communityDto.setRule(data.get("rules"));
+            communityDto.setPublic(Boolean.valueOf(data.get("visibility")));
 
-            User owner = userRepository.findById(data.get("ownerId")).get();
+            User owner = userRepository.findUserbyUsername(data.get("ownerId"));
             communityDto.setOwner(owner);
 
             communityDto.setMembers(new HashSet<>());
@@ -41,5 +42,13 @@ public class CommunityService {
             return false;
         }
 
+    }
+
+    public ArrayList<String> getAllCommunity() {
+        ArrayList<String> communityList = new ArrayList<>();
+        for (Community community : communityRepository.findAll()) {
+            communityList.add(community.getName());
+        }
+        return communityList;
     }
 }

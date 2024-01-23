@@ -35,9 +35,21 @@ public class UserController {
     public ResponseEntity<String> checkLogin(@RequestBody Map<String, String> data) {
         boolean userExists = userService.loginUser(data);
         if (userExists) {
-            return ResponseEntity.ok().body("User logined successfully");
+            // String userId = userService.getUserId(data.get("username"));
+            return ResponseEntity.ok().body(data.get("username"));
         } else {
             return ResponseEntity.badRequest().body("User logined failed");
+        }
+    }
+
+    @PostMapping(value = "/verify", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> checkVerification(@RequestBody Map<String, String> data) {
+        boolean isVerified = userService.verify(data);
+
+        if (isVerified) {
+            return ResponseEntity.ok().body("Verified");
+        } else {
+            return ResponseEntity.badRequest().body("Not Verified");
         }
     }
     
