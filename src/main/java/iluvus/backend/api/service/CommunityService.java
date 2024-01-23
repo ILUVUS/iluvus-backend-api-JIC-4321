@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -51,4 +52,13 @@ public class CommunityService {
         }
         return communityList;
     }
+
+    public Map<String, String> getCommunityInfo() {
+        Map<String, String> communityMap = new HashMap<>();
+        for (Community community : communityRepository.findAll()) {
+            communityMap.put(community.getId(), community.getName());
+        }
+        return communityMap;
+    }
+
 }
