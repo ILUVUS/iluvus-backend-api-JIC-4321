@@ -45,12 +45,15 @@ public class CommunityController {
     public ResponseEntity<Map<String, String>> searchCommunity(@RequestParam String filter) {
         Map<String, String> communityList = communityService.getCommunityInfo();
 
-        // Filter the communityList based on the specified filter
+        // Convert the filter to lowercase for case-insensitive comparison
+        String lowercaseFilter = filter.toLowerCase();
+
+        // Filter the communityList based on the specified filter (case-insensitive)
         Map<String, String> filteredCommunityList = communityList.entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().contains(filter))
+                .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        System.out.println(filteredCommunityList);
+
         return ResponseEntity.ok().body(filteredCommunityList);
     }
 }
