@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -36,5 +37,15 @@ public class CommunityController {
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ArrayList<String>> getAllCommunity() {
         return ResponseEntity.ok().body(communityService.getAllCommunity());
+    }
+
+    @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> joinCommunity(@RequestParam String userID, @RequestParam String communityID) {
+        try {
+            communityService.joinCommunity(userID, communityID);
+            return ResponseEntity.ok().body("User join the community successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("User failed to join the community");
+        }
     }
 }
