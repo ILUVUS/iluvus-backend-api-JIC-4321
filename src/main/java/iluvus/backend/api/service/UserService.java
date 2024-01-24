@@ -4,10 +4,14 @@ package iluvus.backend.api.service;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.util.UserDataCheck;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,8 +20,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean createUser(Map<String, String> data) {
+    public Map<String, String> createUser(Map<String, String> data) {
+
         try {
+
+            UserDataCheck userDataCheck = new UserDataCheck();
+
+            Map<String, String> newUserCheckResult = userDataCheck.newUserCheck(data, userRepository);
+            
+            if (newUserCheckResult.get("error") != null || newUserCheckResult.get("error") != "") {
+                return newUserCheckResult;
+            }
+            
+
             UserDto userDto = new UserDto();
             userDto.setUsername(data.get("username"));
             userDto.setEmail(data.get("email"));
@@ -49,9 +64,11 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            return true;
+            return newUserCheckResult;
         } catch (Exception e) {
-            return false;
+            return new HashMap<>() {{
+                put("error", "");
+            }};
         }
 
     }

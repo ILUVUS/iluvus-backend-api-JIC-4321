@@ -1,6 +1,8 @@
 package iluvus.backend.api.controller;
 
 import iluvus.backend.api.service.UserService;
+import iluvus.backend.api.util.UserDataCheck;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +21,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createUser(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
+
+        Map<String, String> newUser = userService.createUser(data);
         
-        boolean newUser = userService.createUser(data);
-        
-        if (newUser) {
+        // if all the error field is empty, then the user is created successfully
+        if (newUser.get("error") == null || newUser.get("error") == "") {
             return ResponseEntity.ok().body("User created successfully");
         } else {
-            return ResponseEntity.badRequest().body("User creation failed");
+            return ResponseEntity.badRequest().body("Please check the following fields: \n\n" + newUser.get("error"));
         }
 
     }
