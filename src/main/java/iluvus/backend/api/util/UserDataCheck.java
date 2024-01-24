@@ -3,18 +3,12 @@ package iluvus.backend.api.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.validator.*;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import iluvus.backend.api.dto.UserDto;
-import iluvus.backend.api.model.User;
 import org.springframework.stereotype.Service;
+import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 
 @Service
@@ -23,7 +17,8 @@ public class UserDataCheck {
     @Autowired
     private UserRepository userRepository;
 
-    public Map<String, String> newUserCheck(Map<String, String> data, UserRepository userRepository) {
+    public Map<String, String> newUserCheck(Map<String, String> data,
+            UserRepository userRepository) {
 
         this.userRepository = userRepository;
 

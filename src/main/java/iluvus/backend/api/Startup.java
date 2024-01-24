@@ -3,9 +3,12 @@ package iluvus.backend.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import iluvus.backend.api.repository.*;
-import iluvus.backend.api.model.*;
+import iluvus.backend.api.model.Community;
+import iluvus.backend.api.model.Post;
+import iluvus.backend.api.model.User;
+import iluvus.backend.api.repository.CommunityRepository;
+import iluvus.backend.api.repository.PostRepository;
+import iluvus.backend.api.repository.UserRepository;
 
 
 @Component
@@ -21,9 +24,9 @@ public class Startup implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-//        userRepository.deleteAll();
-//        postRepository.deleteAll();
-//        communityRepository.deleteAll();
+        // userRepository.deleteAll();
+        // postRepository.deleteAll();
+        // communityRepository.deleteAll();
 
         initDatabaseIfEmpty();
 
