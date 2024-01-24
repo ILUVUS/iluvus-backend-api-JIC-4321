@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkLogin(@RequestBody Map<String, String> data) {
-        System.out.println("Login");
+        
         boolean userExists = userService.loginUser(data);
         if (userExists) {
             // String userId = userService.getUserId(data.get("username"));
@@ -45,7 +45,7 @@ public class UserController {
 
     @PostMapping(value = "/verify", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkVerification(@RequestBody Map<String, String> data) {
-        System.out.println("get verify");
+        
         boolean isVerified = userService.verify(data);
 
         if (isVerified) {
