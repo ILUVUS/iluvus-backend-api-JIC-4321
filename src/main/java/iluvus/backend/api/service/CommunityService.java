@@ -63,6 +63,7 @@ public class CommunityService {
         Community community = getCommunityByID(communityID);
         if (user != null && community != null) {
             user.getGroups().add(community);
+            community.getMembers().add(user);
         }
     }
 }
