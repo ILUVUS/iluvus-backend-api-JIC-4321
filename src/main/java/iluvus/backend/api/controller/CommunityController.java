@@ -1,7 +1,6 @@
 package iluvus.backend.api.controller;
 
 import iluvus.backend.api.service.CommunityService;
-import io.micrometer.core.ipc.http.HttpSender.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,11 +42,18 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<String>> searchCommunity(@RequestParam String filter) {
-        ArrayList<String> communityList = communityService.getAllCommunity();
-        ArrayList<String> filteredCommunityList = communityList.stream()
-            .filter(community -> community.contains(filter))
-            .collect(Collectors.toCollection(ArrayList::new));
+    public ResponseEntity<Map<String, String>> searchCommunity(@RequestParam String filter) {
+        Map<String, String> communityList = communityService.getCommunityInfo();
+
+        // Convert the filter to lowercase for case-insensitive comparison
+        String lowercaseFilter = filter.toLowerCase();
+
+        // Filter the communityList based on the specified filter (case-insensitive)
+        Map<String, String> filteredCommunityList = communityList.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         return ResponseEntity.ok().body(filteredCommunityList);
     }
 }
