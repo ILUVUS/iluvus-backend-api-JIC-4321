@@ -85,18 +85,17 @@ public class UserService {
         }
     }
 
-    public boolean loginUser(Map<String, String> data) {
+    public User loginUser(Map<String, String> data) {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
             // simple checking for now
             if (user.getPassword().equals(data.get("password"))) {
-                // return true;
-                return true;
+                return user;
             }
-            return false;
+            return null;
         } catch (Exception e) {
-            return false;
+            return null;
         }
     }
 

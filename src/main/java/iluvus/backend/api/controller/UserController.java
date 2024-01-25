@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import iluvus.backend.api.model.User;
 import iluvus.backend.api.service.UserService;
 
 @RestController
@@ -21,7 +22,7 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
 
         Map<String, String> newUser = userService.createUser(data);
-        
+
         String newUserRes = newUser.get("error");
 
         // if all the error field is empty, then the user is created successfully
@@ -36,10 +37,10 @@ public class UserController {
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkLogin(@RequestBody Map<String, String> data) {
-        boolean userExists = userService.loginUser(data);
-        if (userExists) {
+        User userExists = userService.loginUser(data);
+        if (userExists != null) {
             // String userId = userService.getUserId(data.get("username"));
-            return ResponseEntity.ok().body(data.get("username"));
+            return ResponseEntity.ok().body(userExists.getId());
         } else {
             return ResponseEntity.badRequest().body("User logined failed");
         }
