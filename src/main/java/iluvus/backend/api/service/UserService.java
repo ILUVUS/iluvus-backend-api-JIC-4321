@@ -61,10 +61,7 @@ public class UserService {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
-            if (user.isVerified()) {
-                return true;
-            } 
-            return false;
+            return user.isVerified();
         } catch (Exception e) {
             return false;
         }
@@ -75,11 +72,8 @@ public class UserService {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
             // simple checking for now
-            if (user.getPassword().equals(data.get("password"))) {
-                // return true;
-                return true;
-            } 
-            return false;
+            // return true;
+            return user.getPassword().equals(data.get("password"));
         } catch (Exception e) {
             return false;
         }

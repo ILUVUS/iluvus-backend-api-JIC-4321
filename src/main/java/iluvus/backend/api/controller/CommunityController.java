@@ -40,9 +40,9 @@ public class CommunityController {
     }
 
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> joinCommunity(@RequestParam String userID, @RequestParam String communityID) {
+    public ResponseEntity<String> joinCommunity(@RequestParam String userId, @RequestParam String communityId) {
         try {
-            communityService.joinCommunity(userID, communityID);
+            communityService.joinCommunity(userId, communityId);
             return ResponseEntity.ok().body("User join the community successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("User failed to join the community");
