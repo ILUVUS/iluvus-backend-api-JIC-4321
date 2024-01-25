@@ -59,11 +59,22 @@ public class CommunityService {
     }
 
     public void joinCommunity(String userId, String communityId) {
-        User user = userService.getUserByID(userId);
-        Community community = getCommunityByID(communityId);
-        if (user != null && community != null) {
+        try {
+            User user = userService.getUserByID(userId);
+            Community community = getCommunityByID(communityId);
+            if (user == null) {
+                throw new IllegalArgumentException("User not found");
+            }
+            if (community == null) {
+                throw new IllegalArgumentException("Community not found");
+            }
+            if (community.getMembers().contains(user)) {
+                throw new IllegalArgumentException("User is already a member");
+            }
             user.getGroups().add(communityId);
-            community.getMembers().add(user);
+            community.getMembers().add(user); // do we also want Community to have list of user ids
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
