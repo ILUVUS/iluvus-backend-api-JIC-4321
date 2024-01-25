@@ -1,23 +1,35 @@
 package iluvus.backend.api.service;
 
-// import iluvus.backend.api.dto.LocationDto;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
+import iluvus.backend.api.util.UserDataCheck;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean createUser(Map<String, String> data) {
+    public Map<String, String> createUser(Map<String, String> data) {
+
         try {
+
+            UserDataCheck userDataCheck = new UserDataCheck();
+
+            Map<String, String> newUserCheckResult =
+                    userDataCheck.newUserCheck(data, userRepository);
+
+            if (newUserCheckResult.get("error") != null || newUserCheckResult.get("error") != "") {
+                return newUserCheckResult;
+            }
+
+
             UserDto userDto = new UserDto();
             userDto.setUsername(data.get("username"));
             userDto.setEmail(data.get("email"));
@@ -28,8 +40,8 @@ public class UserService {
             userDto.setDob(data.get("dob"));
             userDto.setRace(data.get("race"));
             userDto.setProEmail(data.get("proEmail"));
-            //we have the professional emailID
-            //1) we can call a function for email validity
+            // we have the professional emailID
+            // 1) we can call a function for email validity
             userDto.setVerified(validateEmail(userDto.getProEmail()));
 
             // LocationDto locationDto = new LocationDto(data.get("location"));
@@ -49,9 +61,13 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            return true;
+            return newUserCheckResult;
         } catch (Exception e) {
-            return false;
+            return new HashMap<>() {
+                {
+                    put("error", "");
+                }
+            };
         }
 
     }
@@ -62,7 +78,7 @@ public class UserService {
 
             if (user.isVerified()) {
                 return true;
-            } 
+            }
             return false;
         } catch (Exception e) {
             return false;
@@ -77,7 +93,7 @@ public class UserService {
             if (user.getPassword().equals(data.get("password"))) {
                 // return true;
                 return true;
-            } 
+            }
             return false;
         } catch (Exception e) {
             return false;
@@ -92,7 +108,7 @@ public class UserService {
             return null;
         }
     }
-    
+
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
             return false;
@@ -109,7 +125,7 @@ public class UserService {
                 String domainName = domainParts[0];
                 String domainExtension = domainParts[1];
 
-                String[] genericDomains = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
+                String[] genericDomains = {"gmail", "outlook", "yahoo", "hotmail", "aol"};
 
                 // Check if the domain name is generic
                 boolean isGeneric = false;
@@ -119,15 +135,19 @@ public class UserService {
                         break;
                     }
                 }
-                if (isGeneric) {return false;}
+                if (isGeneric) {
+                    return false;
+                }
 
                 String[] result = {username, domainName, domainExtension};
-                String verificationToken = UUID.randomUUID().toString(); //random token to verify
-                //here I want to verify if the email ID exists. Can I do this by sending a verification code?
-                //or is there a method I can use to find out?
-                //we can build an email and send a verification link, but how do we know if the link was clicked
-                //and where do we direct them
-                //api call etc.
+                String verificationToken = UUID.randomUUID().toString(); // random token to verify
+                // here I want to verify if the email ID exists. Can I do this by sending a
+                // verification code?
+                // or is there a method I can use to find out?
+                // we can build an email and send a verification link, but how do we know if the
+                // link was clicked
+                // and where do we direct them
+                // api call etc.
                 return true;
             }
         }

@@ -1,6 +1,6 @@
 package iluvus.backend.api.controller;
 
-import iluvus.backend.api.service.UserService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import iluvus.backend.api.service.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -19,14 +18,16 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createUser(@RequestBody Map<String, String> data) {
-        
-        boolean newUser = userService.createUser(data);
-        
-        if (newUser) {
+    public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
+
+        Map<String, String> newUser = userService.createUser(data);
+
+        // if all the error field is empty, then the user is created successfully
+        if (newUser.get("error") == null || newUser.get("error") == "") {
             return ResponseEntity.ok().body("User created successfully");
         } else {
-            return ResponseEntity.badRequest().body("User creation failed");
+            return ResponseEntity.badRequest()
+                    .body("Please check the following fields: \n\n" + newUser.get("error"));
         }
 
     }
@@ -54,5 +55,5 @@ public class UserController {
             return ResponseEntity.badRequest().body("Not Verified");
         }
     }
-    
+
 }
