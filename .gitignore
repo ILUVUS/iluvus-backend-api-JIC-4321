@@ -10,6 +10,11 @@
 .springBeans
 .sts4-cache
 
+# properties
+
+project.properties
+*.properties
+project.properties
 
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,windows
 
