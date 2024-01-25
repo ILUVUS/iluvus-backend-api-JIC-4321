@@ -88,9 +88,9 @@ public class UserService {
         }
     }
 
-    public User getUserByID(String userID) {
+    public User getUserByID(String userId) {
         try {
-            Optional<User> optionalUser = userRepository.findById(userID);
+            Optional<User> optionalUser = userRepository.findById(userId);
             return optionalUser.orElse(null);
         } catch (Exception e) {
             return null;
