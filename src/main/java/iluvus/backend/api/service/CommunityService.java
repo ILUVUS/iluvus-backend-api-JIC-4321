@@ -58,11 +58,11 @@ public class CommunityService {
         return communityRepository.findById(id).orElse(null);
     }
 
-    public void joinCommunity(String userID, String communityID) {
-        User user = userService.getUserByID(userID);
-        Community community = getCommunityByID(communityID);
+    public void joinCommunity(String userId, String communityId) {
+        User user = userService.getUserByID(userId);
+        Community community = getCommunityByID(communityId);
         if (user != null && community != null) {
-            user.getGroups().add(community);
+            user.getGroups().add(communityId);
             community.getMembers().add(user);
         }
     }

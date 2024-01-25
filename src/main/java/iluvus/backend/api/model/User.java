@@ -37,7 +37,7 @@ public class User {
     @DBRef
     private List<User> friends;
     @DBRef
-    private List<Community> groups;
+    private List<String> groups;
 
     public User() {
     }
@@ -210,11 +210,11 @@ public class User {
         this.friends = friends;
     }
 
-    public List<Community> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Community> groups) {
+    public void setGroups(List<String> groups) {
         this.groups = groups;
     }
 }
