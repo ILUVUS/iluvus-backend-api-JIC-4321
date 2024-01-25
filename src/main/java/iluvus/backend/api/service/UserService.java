@@ -25,10 +25,9 @@ public class UserService {
             Map<String, String> newUserCheckResult =
                     userDataCheck.newUserCheck(data, userRepository);
 
-            if (newUserCheckResult.get("error") != null || newUserCheckResult.get("error") != "") {
+            if (newUserCheckResult.get("error").strip() != "") {
                 return newUserCheckResult;
             }
-
 
             UserDto userDto = new UserDto();
             userDto.setUsername(data.get("username"));
@@ -43,6 +42,7 @@ public class UserService {
             // we have the professional emailID
             // 1) we can call a function for email validity
             userDto.setVerified(validateEmail(userDto.getProEmail()));
+
 
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);

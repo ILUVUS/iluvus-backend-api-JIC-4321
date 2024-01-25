@@ -21,13 +21,15 @@ public class UserController {
     public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
 
         Map<String, String> newUser = userService.createUser(data);
+        
+        String newUserRes = newUser.get("error");
 
         // if all the error field is empty, then the user is created successfully
-        if (newUser.get("error") == null || newUser.get("error") == "") {
+        if (newUserRes == null || newUserRes.strip() == "") {
             return ResponseEntity.ok().body("User created successfully");
         } else {
             return ResponseEntity.badRequest()
-                    .body("Please check the following fields: \n\n" + newUser.get("error"));
+                    .body("Please check the following fields: \n\n" + newUserRes);
         }
 
     }
