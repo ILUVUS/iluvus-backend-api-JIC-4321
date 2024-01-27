@@ -58,7 +58,7 @@ public class CommunityService {
         return communityRepository.findById(id).orElse(null);
     }
 
-    public void joinCommunity(String userId, String communityId) {
+    public boolean joinCommunity(String userId, String communityId) {
         try {
             User user = userService.getUserByID(userId);
             Community community = getCommunityByID(communityId);
@@ -68,13 +68,19 @@ public class CommunityService {
             if (community == null) {
                 throw new IllegalArgumentException("Community not found");
             }
-            if (community.getMembers().contains(user)) {
+            if (user.getGroups().contains(communityId)) {
                 throw new IllegalArgumentException("User is already a member");
             }
+
             user.getGroups().add(communityId);
             community.getMembers().add(user); // do we also want Community to have list of user ids
+
+            userRepository.save(user);
+            communityRepository.save(community);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

@@ -40,14 +40,13 @@ public class CommunityController {
     }
 
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> joinCommunity(@RequestBody Map<String, String> userData,
-                                                @RequestBody Map<String, String> communityData) {
-        try {
-            String userId = userData.get("userId");
-            String communityId = communityData.get("communityId");
-            communityService.joinCommunity(userId, communityId);
-            return ResponseEntity.ok().body("User join the community successfully");
-        } catch (Exception e) {
+    public ResponseEntity<String> joinCommunity(@RequestBody Map<String, String> data) {
+        String userId = data.get("userId");
+        String communityId = data.get("communityId");
+        boolean userJoined = communityService.joinCommunity(userId, communityId);
+        if (userJoined) {
+            return ResponseEntity.ok().body("User joined the community successfully");
+        } else {
             return ResponseEntity.badRequest().body("User failed to join the community");
         }
     }
