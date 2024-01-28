@@ -73,10 +73,11 @@ public class CommunityService {
             }
 
             user.getGroups().add(communityId);
-            community.getMembers().add(user); // do we also want Community to have list of user ids
-
-            userRepository.save(user);
-            communityRepository.save(community);
+            userRepository.updateUserGroups(userId, communityId);
+            community.getMembers().add(userId); // changed community to store user Ids
+            communityRepository.updateCommunityMembers(userId, communityId);
+            // userRepository.save(user);
+            // communityRepository.save(community);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -12,7 +12,7 @@ public class CommunityDto {
     private boolean isPublic;
 
     private User owner;
-    private Set<User> members;
+    private Set<String> members;
 
     public CommunityDto() {
     }
@@ -63,11 +63,11 @@ public class CommunityDto {
     }
 
     // Getter and Setter methods for members
-    public Set<User> getMembers() {
+    public Set<String> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
+    public void setMembers(Set<String> members) {
         this.members = members;
     }
 }

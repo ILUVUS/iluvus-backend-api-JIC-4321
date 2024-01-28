@@ -21,7 +21,7 @@ public class Community {
     @DBRef
     private User owner;
     @DBRef
-    private Set<User> members;
+    private Set<String> members;
 
     public Community() {
     }
@@ -86,7 +86,7 @@ public class Community {
     }
 
     // Getter and Setter methods for members
-    public Set<User> getMembers() {
+    public Set<String> getMembers() {
         return members;
     }
 
