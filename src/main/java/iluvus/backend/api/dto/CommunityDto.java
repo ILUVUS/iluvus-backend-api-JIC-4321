@@ -2,7 +2,7 @@ package iluvus.backend.api.dto;
 
 import iluvus.backend.api.model.User;
 
-import java.util.Set;
+import java.util.*;
 
 public class CommunityDto {
     private String name;
@@ -12,7 +12,7 @@ public class CommunityDto {
     private boolean isPublic;
 
     private User owner;
-    private Set<User> members;
+    private List<String> members;
 
     public CommunityDto() {
     }
@@ -63,11 +63,11 @@ public class CommunityDto {
     }
 
     // Getter and Setter methods for members
-    public Set<User> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 }

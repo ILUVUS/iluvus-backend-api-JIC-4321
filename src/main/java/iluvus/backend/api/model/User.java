@@ -5,7 +5,7 @@ import iluvus.backend.api.dto.UserDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 import java.util.List;
 
@@ -34,13 +34,14 @@ public class User {
 
     @DBRef
     private List<Post> posts;
-    @DBRef
+    
+    @Field("friends")
     private List<User> friends;
-    @DBRef
-    private List<Community> groups;
 
-    public User() {
-    }
+    @Field("groups")
+    private List<String> groups;
+
+    public User() {}
 
     public User(UserDto userDto) {
         this.username = userDto.getUsername();
@@ -53,7 +54,7 @@ public class User {
         this.gender = userDto.getGender();
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
-//        this.location = userDto.getLocation();
+        // this.location = userDto.getLocation();
 
         this.interests = userDto.getInterests();
         this.education = userDto.getEducation();
@@ -210,11 +211,15 @@ public class User {
         this.friends = friends;
     }
 
-    public List<Community> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Community> groups) {
+    public void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    public boolean addGroup(String groupId) {
+        return this.groups.add(groupId);
     }
 }

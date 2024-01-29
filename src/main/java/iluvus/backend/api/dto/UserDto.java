@@ -29,7 +29,7 @@ public class UserDto {
     private List<String> hobbies;
     private List<Post> posts;
     private List<User> friends;
-    private List<Community> groups;
+    private List<String> groups;
 
     public UserDto() {
     }
@@ -188,11 +188,11 @@ public class UserDto {
         this.friends = friends;
     }
 
-    public List<Community> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Community> groups) {
+    public void setGroups(List<String> groups) {
         this.groups = groups;
     }
 

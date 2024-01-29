@@ -6,6 +6,8 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class CommunityService {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public boolean createCommunity(Map<String, String> data) {
         try {
@@ -32,7 +36,7 @@ public class CommunityService {
             User owner = userRepository.findUserbyUsername(data.get("ownerId"));
             communityDto.setOwner(owner);
 
-            communityDto.setMembers(new HashSet<>());
+            communityDto.setMembers(new ArrayList<>());
 
             Community community = new Community(communityDto);
 
@@ -42,7 +46,6 @@ public class CommunityService {
             e.printStackTrace();
             return false;
         }
-
     }
 
     public ArrayList<String> getAllCommunity() {
@@ -61,4 +64,32 @@ public class CommunityService {
         return communityMap;
     }
 
+
+    public boolean joinCommunity(String userId, String communityId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            Community community = communityRepository.findById(communityId).orElse(null);
+
+            if (user == null) {
+                throw new IllegalArgumentException("User not found");
+            }
+            if (community == null) {
+                throw new IllegalArgumentException("Community not found");
+            }
+            if (user.getGroups().contains(communityId)) {
+                throw new IllegalArgumentException("User is already a member");
+            }
+
+            user.addGroup(communityId);
+            community.addMember(userId);
+
+            userRepository.save(user);
+            communityRepository.save(community);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -10,6 +10,7 @@ import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -76,10 +77,7 @@ public class UserService {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
-            if (user.isVerified()) {
-                return true;
-            }
-            return false;
+            return user.isVerified();
         } catch (Exception e) {
             return false;
         }
@@ -103,6 +101,16 @@ public class UserService {
         try {
             User user = userRepository.findUserbyUsername(username);
             return user.getId();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    public User getUserByID(String userId) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(userId);
+            return optionalUser.orElse(null);
         } catch (Exception e) {
             return null;
         }
