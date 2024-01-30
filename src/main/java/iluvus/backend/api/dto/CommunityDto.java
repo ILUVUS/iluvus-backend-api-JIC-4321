@@ -71,4 +71,3 @@ public class CommunityDto {
         this.members = members;
     }
 }
-

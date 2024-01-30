@@ -34,14 +34,15 @@ public class User {
 
     @DBRef
     private List<Post> posts;
-    
+
     @Field("friends")
     private List<User> friends;
 
     @Field("groups")
     private List<String> groups;
 
-    public User() {}
+    public User() {
+    }
 
     public User(UserDto userDto) {
         this.username = userDto.getUsername();

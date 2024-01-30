@@ -125,11 +125,11 @@ public class UserDto {
     }
 
     // public LocationDto getLocation() {
-    //     return location;
+    // return location;
     // }
 
     // public void setLocation(LocationDto location) {
-    //     this.location = location;
+    // this.location = location;
     // }
 
     public List<String> getInterests() {
@@ -196,7 +196,11 @@ public class UserDto {
         this.groups = groups;
     }
 
-    public String getProEmail() {return proEmail;}
+    public String getProEmail() {
+        return proEmail;
+    }
 
-    public void setProEmail(String proEmail){this.proEmail = proEmail;}
+    public void setProEmail(String proEmail) {
+        this.proEmail = proEmail;
+    }
 }

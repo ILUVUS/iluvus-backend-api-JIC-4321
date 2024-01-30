@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.*;
 
-
 @Document(collection = "communities")
 public class Community {
     @Id
@@ -20,7 +19,7 @@ public class Community {
 
     @DBRef
     private User owner;
-    
+
     @Field("members")
     private List<String> members;
 
@@ -99,4 +98,3 @@ public class Community {
         return this.members.add(userId);
     }
 }
-

@@ -76,4 +76,3 @@ public class LocationDto {
         this.address = address;
     }
 }
-

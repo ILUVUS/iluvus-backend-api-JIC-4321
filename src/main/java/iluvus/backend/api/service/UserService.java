@@ -1,16 +1,16 @@
 package iluvus.backend.api.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
@@ -23,8 +23,7 @@ public class UserService {
 
             UserDataCheck userDataCheck = new UserDataCheck();
 
-            Map<String, String> newUserCheckResult =
-                    userDataCheck.newUserCheck(data, userRepository);
+            Map<String, String> newUserCheckResult = userDataCheck.newUserCheck(data, userRepository);
 
             if (newUserCheckResult.get("error").strip() != "") {
                 return newUserCheckResult;
@@ -43,7 +42,6 @@ public class UserService {
             // we have the professional emailID
             // 1) we can call a function for email validity
             userDto.setVerified(validateEmail(userDto.getProEmail()));
-
 
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
@@ -70,12 +68,11 @@ public class UserService {
                 }
             };
         }
-
     }
 
     public boolean verify(Map<String, String> data) {
         try {
-            User user = userRepository.findUserbyUsername(data.get("username"));
+            User user = userRepository.findById(data.get("userId")).orElse(null);
 
             return user.isVerified();
         } catch (Exception e) {
@@ -106,7 +103,6 @@ public class UserService {
         }
     }
 
-
     public User getUserByID(String userId) {
         try {
             Optional<User> optionalUser = userRepository.findById(userId);
@@ -132,7 +128,7 @@ public class UserService {
                 String domainName = domainParts[0];
                 String domainExtension = domainParts[1];
 
-                String[] genericDomains = {"gmail", "outlook", "yahoo", "hotmail", "aol"};
+                String[] genericDomains = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
 
                 // Check if the domain name is generic
                 boolean isGeneric = false;
@@ -146,7 +142,7 @@ public class UserService {
                     return false;
                 }
 
-                String[] result = {username, domainName, domainExtension};
+                String[] result = { username, domainName, domainExtension };
                 String verificationToken = UUID.randomUUID().toString(); // random token to verify
                 // here I want to verify if the email ID exists. Can I do this by sending a
                 // verification code?

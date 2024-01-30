@@ -6,13 +6,13 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -48,12 +48,12 @@ public class CommunityService {
         }
     }
 
-    public ArrayList<String> getAllCommunity() {
-        ArrayList<String> communityList = new ArrayList<>();
+    public Map<String, String> getAllCommunity() {
+        Map<String, String> communityMap = new HashMap<>();
         for (Community community : communityRepository.findAll()) {
-            communityList.add(community.getName());
+            communityMap.put(community.getId(), community.getName());
         }
-        return communityList;
+        return communityMap;
     }
 
     public Map<String, String> getCommunityInfo() {
@@ -63,7 +63,6 @@ public class CommunityService {
         }
         return communityMap;
     }
-
 
     public boolean joinCommunity(String userId, String communityId) {
         try {
@@ -90,6 +89,28 @@ public class CommunityService {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Map<String, String> getCommunityInformation(String communityId) {
+        try {
+            Community community = communityRepository.findById(communityId).orElse(null);
+            if (community == null) {
+                throw new IllegalArgumentException("Community not found");
+            }
+
+            List<String> memberList = community.getMembers();
+
+            Map<String, String> communityInfo = new HashMap<>();
+            communityInfo.put("name", community.getName());
+            communityInfo.put("description", community.getDescription());
+            communityInfo.put("rules", community.getRule());
+            communityInfo.put("members", String.join(", ", memberList));
+
+            return communityInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

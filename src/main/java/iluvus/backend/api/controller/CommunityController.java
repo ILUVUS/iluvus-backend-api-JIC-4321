@@ -37,7 +37,7 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<String>> getAllCommunity() {
+    public ResponseEntity<Map<String, String>> getAllCommunity() {
         return ResponseEntity.ok().body(communityService.getAllCommunity());
     }
 
@@ -68,4 +68,11 @@ public class CommunityController {
 
         return ResponseEntity.ok().body(filteredCommunityList);
     }
+
+    @GetMapping(value = "/getInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> setCommunityInformation(@RequestParam String id) {
+        Map<String, String> communityInfo = communityService.getCommunityInformation(id);
+        return ResponseEntity.ok().body(communityInfo);
+    }
+    
 }
