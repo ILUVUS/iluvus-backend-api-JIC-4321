@@ -22,10 +22,10 @@ jobs:
 
             - name: Build and push Backend docker image
               run: |
-                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest \
+                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvustemp/backend:latest \
                   --build-arg MONGODB_URI=$MONGODB_URI \
                   --build-arg MONGODB_DB=$MONGODB_DB ./
-                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest
+                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvustemp/backend:latest
               env:
                   MONGODB_URI: ${{ secrets.MONGODB_URI }}
                   MONGODB_DB: ${{ secrets.MONGODB_DB }}
