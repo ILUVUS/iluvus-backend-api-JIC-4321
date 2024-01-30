@@ -1,7 +1,9 @@
 
-<![endif]-->
-
 # ILUVUS - BACKEND API
+
+<p align="center">
+<img src="./img/icon.png" width="300" height="auto" />
+</p>
 
 ### Description
 
@@ -82,19 +84,14 @@ mvn spring-boot:run
 ### Features
 
 - Search community by the community’s name
-
 - View, and join community
-
 - Register inputs indicator
-
 - Date picker for Date of Birth input on Register screen
 
 ### Bug Fixes
 
 - Register new user with empty username and password
-
 - Create new community button did not show up
-
 - Verify does not work with userId
 
 ### Known Issues
@@ -106,15 +103,11 @@ This project is licensed under the MIT License.
 
 ## Contributors:
 
-[Arjun Ramani](#)
-
-[Binaya Timsina](#)
-
-[Doan Tran](#)
-
-[Thuan Vo](#)
-
-[Tyler Lin](#)
+- [Arjun Ramani](#)
+- [Binaya Timsina](#)
+- [Doan Tran](#)
+- [Thuan Vo](#)
+- [Tyler Lin](#)
 
 ## Acknowledgments
 
