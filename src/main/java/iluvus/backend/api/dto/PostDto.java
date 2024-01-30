@@ -37,7 +37,7 @@ public class PostDto {
         return date;
     }
 
-     // yyyy-MM-dd hh:mm:ss
+    // yyyy-MM-dd hh:mm:ss
     public void setDateTime(String mm, String dd, String yyyy, String h, String m, String s) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
@@ -124,4 +124,3 @@ public class PostDto {
         this.group = group;
     }
 }
-

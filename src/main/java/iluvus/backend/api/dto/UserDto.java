@@ -29,7 +29,7 @@ public class UserDto {
     private List<String> hobbies;
     private List<Post> posts;
     private List<User> friends;
-    private List<Community> groups;
+    private List<String> groups;
 
     public UserDto() {
     }
@@ -125,11 +125,11 @@ public class UserDto {
     }
 
     // public LocationDto getLocation() {
-    //     return location;
+    // return location;
     // }
 
     // public void setLocation(LocationDto location) {
-    //     this.location = location;
+    // this.location = location;
     // }
 
     public List<String> getInterests() {
@@ -188,15 +188,19 @@ public class UserDto {
         this.friends = friends;
     }
 
-    public List<Community> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Community> groups) {
+    public void setGroups(List<String> groups) {
         this.groups = groups;
     }
 
-    public String getProEmail() {return proEmail;}
+    public String getProEmail() {
+        return proEmail;
+    }
 
-    public void setProEmail(String proEmail){this.proEmail = proEmail;}
+    public void setProEmail(String proEmail) {
+        this.proEmail = proEmail;
+    }
 }

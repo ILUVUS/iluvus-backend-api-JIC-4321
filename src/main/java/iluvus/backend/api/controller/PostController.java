@@ -14,15 +14,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/post")
 public class PostController {
-    
+
     @Autowired
     private PostService postService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createPost(@RequestBody Map<String, String> data) {
-        
+
         boolean newPost = postService.createPost(data);
-        
+
         if (newPost) {
             return ResponseEntity.ok().body("Post created successfully");
         } else {
