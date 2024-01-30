@@ -22,10 +22,10 @@ jobs:
 
             - name: Build and push Backend docker image
               run: |
-                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend:latest \
+                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest \
                   --build-arg MONGODB_URI=$MONGODB_URI \
                   --build-arg MONGODB_DB=$MONGODB_DB ./
-                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend:latest
+                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest
               env:
                   MONGODB_URI: ${{ secrets.MONGODB_URI }}
                   MONGODB_DB: ${{ secrets.MONGODB_DB }}
@@ -45,4 +45,4 @@ jobs:
                   project_id: ${{ secrets.PROJECT_ID }}
                   service: "backend"
                   region: "us-east1"
-                  image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/cleantimer-frontend/testing:latest"
+                  image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest"
