@@ -10,8 +10,6 @@
 .springBeans
 .sts4-cache
 
-# properties
-
 project.properties
 *.properties
 project.properties
