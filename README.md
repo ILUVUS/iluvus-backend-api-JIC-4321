@@ -13,9 +13,9 @@ We're developing our own platform instead of using existing ones because they do
 
 ### Technology Stack:
 
-- ** Spring Boot **: A Java-based framework for building robust and scalable backend applications.
+- **Spring Boot**: A Java-based framework for building robust and scalable backend applications.
 
-- ** Google Cloud Platform (GCP)**: Google Cloud Run for deploying and running containerized applications.
+- **Google Cloud Platform (GCP)**: Google Cloud Run for deploying and running containerized applications.
 
 - **Google Cloud Storage**: A scalable and secure object storage solution provided by Google Cloud Platform.
 
@@ -75,18 +75,6 @@ mvn spring-boot:run
 
 5. Your browser should return: `Welcome to ILUVUS. API is running well!`
 
-## Contributors:
-
-[Arjun Ramani](#)
-
-[Binaya Timsina](#)
-
-[Doan Tran](#)
-
-[Thuan Vo](#)
-
-[Tyler Lin](#)
-
 # Release Notes
 
 ## Version 0.1.0
@@ -107,13 +95,26 @@ mvn spring-boot:run
 
 - Create new community button did not show up
 
+- Verify does not work with userId
+
 ### Known Issues
 
-- (optional)
 
 ## License
 
 This project is licensed under the MIT License.
+
+## Contributors:
+
+[Arjun Ramani](#)
+
+[Binaya Timsina](#)
+
+[Doan Tran](#)
+
+[Thuan Vo](#)
+
+[Tyler Lin](#)
 
 ## Acknowledgments
 
