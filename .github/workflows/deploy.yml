@@ -1,56 +1,49 @@
 name: Deploying to Cloud Run
 
 on:
-  push:
-    branches:
-    - 'containerize'
+    push:
+        branches:
+            - "containerize"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-    - name: Authenticate with Google Cloud
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: '${{ secrets.GG_CREDENTIAL }}'
+            - name: Authenticate with Google Cloud
+              uses: "google-github-actions/auth@v1"
+              with:
+                  credentials_json: "${{ secrets.GG_CREDENTIAL }}"
 
-    - name: Configure docker
-      run: gcloud auth configure-docker us-east1-docker.pkg.dev
+            - name: Configure docker
+              run: gcloud auth configure-docker us-east1-docker.pkg.dev
 
-    - name: Build and push Backend docker image
-      run: |
-        docker build -t us-east1-docker.pkg.dev${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest \
-        --build-arg MONGODB_URI=$MONGODB_URI
-        --build-arg MONGODB_DB=$MONGODB_DB
-        --no-cache ./
-        docker push us-east1-docker.pkg.dev${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest
-      env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        MONGODB_DB: ${{ secrets.MONGODB_DB }}
-      working-directory: ./backend
+            - name: Build and push Backend docker image
+              run: |
+                  docker build -t us-east1-docker.pkg.dev${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest \
+                  --build-arg MONGODB_URI=$MONGODB_URI
+                  --build-arg MONGODB_DB=$MONGODB_DB
+                  --no-cache ./
+                  docker push us-east1-docker.pkg.dev${{ secrets.PROJECT_ID }}/iluvustemp/backend/api:latest
+              env:
+                  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+                  MONGODB_DB: ${{ secrets.MONGODB_DB }}
 
-    - name: Build and push Frontend docker image
-      run: |
-        docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/cleantimer-frontend/testing:latest .
-        docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/cleantimer-frontend/testing:latest
-      working-directory: ./frontend
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Authenticate with Google Cloud
+              uses: "google-github-actions/auth@v1"
+              with:
+                  credentials_json: "${{ secrets.GG_CREDENTIAL }}"
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Authenticate with Google Cloud
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: '${{ secrets.GG_CREDENTIAL }}'
-
-    - name: Deploy Backend to Cloud Run
-      uses: 'google-github-actions/deploy-cloudrun@v1'
-      with:
-        project_id: ${{ secrets.PROJECT_ID }}
-        service: 'backend'
-        region: 'us-east1'
-        image: 'us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/cleantimer-frontend/testing:latest'
+            - name: Deploy Backend to Cloud Run
+              uses: "google-github-actions/deploy-cloudrun@v1"
+              with:
+                  project_id: ${{ secrets.PROJECT_ID }}
+                  service: "backend"
+                  region: "us-east1"
+                  image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/cleantimer-frontend/testing:latest"
