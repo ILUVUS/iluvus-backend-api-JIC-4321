@@ -11,6 +11,17 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import iluvus.backend.api.dto.UserDto;
+import iluvus.backend.api.model.User;
+import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.util.UserDataCheck;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Service
 public class UserService {
@@ -42,6 +53,10 @@ public class UserService {
             // we have the professional emailID
             // 1) we can call a function for email validity
             userDto.setVerified(validateEmail(userDto.getProEmail()));
+            Random random = new Random();
+            userDto.setVerifyCode(100000 + random.nextInt(900000));
+
+
 
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
@@ -60,6 +75,7 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
+            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode())
             return newUserCheckResult;
         } catch (Exception e) {
             return new HashMap<>() {
@@ -155,5 +171,45 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    public void sendVerificationEmail(String userEmail, int verificationCode) {
+        final String username = "your_gmail_username@gmail.com"; //change for later
+        final String password = "your_gmail_password"; //change for later
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("your_gmail_username@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userEmail));
+            message.setSubject("Your Verification Code");
+
+            String emailContent = loadEmailTemplate(verificationCode);
+            message.setContent(emailContent, "text/html");
+
+            Transport.send(message);
+
+            System.out.println("Email sent successfully");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String loadEmailTemplate(int verificationCode) throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get("EmailTemplate.html")));
+        return content.replace("{{code}}", Integer.toString(verificationCode));
     }
 }

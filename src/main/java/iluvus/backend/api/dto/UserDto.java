@@ -20,6 +20,7 @@ public class UserDto {
     private String gender;
     private Date dob;
     private String race;
+    private int verifyCode;
     // private LocationDto location;
 
     private List<String> interests;
@@ -124,13 +125,13 @@ public class UserDto {
         this.race = race;
     }
 
-    // public LocationDto getLocation() {
-    // return location;
-    // }
+    public int getVerifyCode() {
+         return verifyCode;
+    }
 
-    // public void setLocation(LocationDto location) {
-    // this.location = location;
-    // }
+    public void setVerifyCode(int verifyCode) {
+         this.verifyCode = verifyCode;
+    }
 
     public List<String> getInterests() {
         return interests;
