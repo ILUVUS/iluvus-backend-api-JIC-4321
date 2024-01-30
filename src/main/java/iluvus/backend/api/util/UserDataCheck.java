@@ -51,7 +51,7 @@ public class UserDataCheck {
     }
 
     public boolean checkName(String name) {
-        if (name.strip().length() < 3) {
+        if (name.strip().length() < 2) {
             return false;
         } else {
             return true;

@@ -7,12 +7,11 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 // create post service class
 @Service
@@ -29,7 +28,7 @@ public class PostService {
     public boolean createPost(Map<String, String> data) {
         try {
             PostDto postDto = new PostDto();
-        
+
             postDto.setContent(data.get("content"));
             postDto.setDateTime(data.get("datetime"));
             postDto.setImages(new ArrayList<String>());
@@ -47,12 +46,9 @@ public class PostService {
 
             postRepository.insert(post);
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        
     }
-    
 }

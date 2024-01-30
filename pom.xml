@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>iluvus</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Backend API for ILUVUS</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -25,6 +25,12 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.8.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency> 
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

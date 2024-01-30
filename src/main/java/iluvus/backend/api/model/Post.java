@@ -52,9 +52,13 @@ public class Post {
         this.content = content;
     }
 
-    public Date getDateTime() { return dateTime; }
+    public Date getDateTime() {
+        return dateTime;
+    }
 
-    public void setDateTime(Date dateTime) { this.dateTime = dateTime; }
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public List<String> getImages() {
         return images;
@@ -112,4 +116,3 @@ public class Post {
         this.group = group;
     }
 }
-

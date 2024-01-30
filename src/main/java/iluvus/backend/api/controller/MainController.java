@@ -10,5 +10,5 @@ public class MainController {
     public String index() {
         return "Welcome to ILUVUS. API is running well!";
     }
-    
+
 }
