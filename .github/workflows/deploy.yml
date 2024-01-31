@@ -43,6 +43,6 @@ jobs:
               uses: "google-github-actions/deploy-cloudrun@v1"
               with:
                   project_id: ${{ secrets.PROJECT_ID }}
-                  service: "api"
+                  service: "testing"
                   region: "us-east1"
                   image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest"
