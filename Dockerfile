@@ -12,7 +12,7 @@ ARG MONGODB_DB
 RUN touch /app/src/main/resources/application.properties
 
 RUN echo "spring.data.mongodb.uri=${MONGODB_URI}" >> /app/src/main/resources/application.properties \
-&& echo "spring.data.mongodb.database=${MONGODB_DB}}" >> /app/src/main/resources/application.properties
+&& echo "spring.data.mongodb.database=${MONGODB_DB}" >> /app/src/main/resources/application.properties
 
 # Build the application using Maven
 RUN mvn clean package -DskipTests
