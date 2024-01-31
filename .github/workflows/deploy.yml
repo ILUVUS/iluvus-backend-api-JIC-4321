@@ -3,7 +3,7 @@ name: Deploying to Cloud Run 1.1
 on:
     push:
         branches:
-            - "containerize"
+            - "main"
 
 jobs:
     build:
