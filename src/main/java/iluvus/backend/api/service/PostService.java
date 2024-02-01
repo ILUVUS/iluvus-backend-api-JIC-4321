@@ -27,40 +27,7 @@ public class PostService {
     private CommunityRepository communityRepository;
 
     public boolean createPost(Map<String, String> data) {
-        try {
-            PostDto postDto = new PostDto();
-
-            String text = data.get("text");
-            String authorId = data.get("authorId");
-            String communityId = data.get("communityId");
-            String dateTime = data.get("dateTime");
-
-            User user = userRepository.findById(authorId).orElse(null);
-            if (user == null) {
-                return false;
-            }
-            Community community = communityRepository.findById(communityId).orElse(null);
-            if (community == null) {
-                return false;
-            }
-            if (text.strip().length() == 0) {
-                return false;
-            }
-            
-            postDto.setText(text);
-            postDto.setDateTime(dateTime);
-            postDto.setUplift(BigInteger.valueOf(0));
-            postDto.setAuthor_id(authorId);
-            postDto.setCommunity_id(communityId);
-
-            Post post = new Post(postDto);
-
-            postRepository.insert(post);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        
     }
 
     public boolean writeComment(Map<String, String> data) {
