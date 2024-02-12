@@ -8,10 +8,15 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +37,10 @@ public class PostService {
             String dateTime = data.get("datetime");
             String author_id = data.get("author_id");
             String community_id = data.get("community_id");
-            if (text == null) {
+            if (text == null || text.trim().isEmpty() || text.length() > 1000) {
                 return false;
             }
-            if (dateTime == null) {
+            if (dateTime == null || !isValidDateTime(dateTime)) {
                 return false;
             }
             if (author_id == null) {
@@ -71,6 +76,24 @@ public class PostService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean isValidDateTime(String dateTime) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime.parse(dateTime, formatter);
+            return true;
+        } catch (DateTimeParseException e){
+            return false;
+        }
+    }
+
+    public List<Post> getPostsByAuthor(String author_id) {
+        return postRepository.findPostByAuthor_id(author_id);
+    }
+
+    public List<Post> getPostsByCommunity(String community_id) {
+        return postRepository.findPostByCommunity_id(community_id);
     }
 
     public boolean writeComment(Map<String, String> data) {

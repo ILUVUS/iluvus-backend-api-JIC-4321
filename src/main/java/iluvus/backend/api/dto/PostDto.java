@@ -3,6 +3,8 @@ package iluvus.backend.api.dto;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
 
 public class PostDto {
 
@@ -11,6 +13,7 @@ public class PostDto {
     private BigInteger uplift;
     private String author_id;
     private String community_id;
+    private List<HashMap<String, String>> comments;
 
     public PostDto() {
     }
@@ -53,6 +56,14 @@ public class PostDto {
 
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
+    }
+
+    public List<HashMap<String, String>> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<HashMap<String, String>> comments) {
+        this.comments = comments;
     }
 
 }
