@@ -26,12 +26,12 @@ public class PostDto {
         this.text = text;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
     public String getDateTime() {
         return this.dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     public BigInteger getUplift() {

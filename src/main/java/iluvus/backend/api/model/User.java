@@ -33,7 +33,7 @@ public class User {
     private List<String> hobbies;
 
     @DBRef
-    private List<Post> posts;
+    private List<String> posts;
 
     @Field("friends")
     private List<User> friends;
@@ -196,13 +196,15 @@ public class User {
         this.hobbies = hobbies;
     }
 
-    public List<Post> getPosts() {
+    public List<String> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(List<String> posts) {
         this.posts = posts;
     }
+
+    public boolean addPost(String postId) {return this.posts.add(postId); }
 
     public List<User> getFriends() {
         return friends;

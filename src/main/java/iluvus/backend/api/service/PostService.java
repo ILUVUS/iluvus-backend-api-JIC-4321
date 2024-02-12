@@ -8,12 +8,15 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javafx.geometry.Pos;
@@ -71,6 +74,9 @@ public class PostService {
 
             postRepository.insert(post);
 
+            author.addPost(post.getId());
+            userRepository.save(author);
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,12 +84,13 @@ public class PostService {
         }
     }
 
-    public static boolean isValidDateTime(String dateTime) {
+    public boolean isValidDateTime(String dateTime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime.parse(dateTime, formatter);
+            formatter.parse(dateTime);
             return true;
-        } catch (DateTimeParseException e){
+        } catch (ParseException e) {
             return false;
         }
     }
