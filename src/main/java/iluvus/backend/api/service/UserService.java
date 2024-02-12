@@ -11,17 +11,13 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import iluvus.backend.api.dto.UserDto;
-import iluvus.backend.api.model.User;
-import iluvus.backend.api.repository.UserRepository;
-import iluvus.backend.api.util.UserDataCheck;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.IOException;
 
 @Service
 public class UserService {
@@ -75,7 +71,7 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode())
+            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
             return new HashMap<>() {
@@ -203,7 +199,7 @@ public class UserService {
 
             System.out.println("Email sent successfully");
 
-        } catch (MessagingException e) {
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
     }
