@@ -37,13 +37,13 @@ public class PostService {
     public boolean createPost(Map<String, String> data) {
         try {
             String text = data.get("text");
-            String dateTime = data.get("datetime");
-            String author_id = data.get("author_id");
-            String community_id = data.get("community_id");
+            String dateTime = data.get("dateTime");
+            String author_id = data.get("authorId");
+            String community_id = data.get("communityId");
             if (text == null || text.trim().isEmpty() || text.length() > 1000) {
                 return false;
             }
-            if (dateTime == null || !isValidDateTime(dateTime)) {
+            if (dateTime == null) {
                 return false;
             }
             if (author_id == null) {
@@ -74,9 +74,6 @@ public class PostService {
 
             postRepository.insert(post);
 
-            author.addPost(post.getId());
-            userRepository.save(author);
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,16 +81,7 @@ public class PostService {
         }
     }
 
-    public boolean isValidDateTime(String dateTime) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        try {
-            formatter.parse(dateTime);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
+    
 
     public List<Post> getPostsByAuthor(String author_id) {
         return postRepository.findPostByAuthor_id(author_id);
