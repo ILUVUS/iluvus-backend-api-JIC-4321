@@ -32,9 +32,6 @@ public class User {
     private List<String> skills;
     private List<String> hobbies;
 
-    @DBRef
-    private List<String> posts;
-
     @Field("friends")
     private List<User> friends;
 
@@ -63,7 +60,6 @@ public class User {
         this.skills = userDto.getSkills();
         this.hobbies = userDto.getHobbies();
 
-        this.posts = userDto.getPosts();
         this.friends = userDto.getFriends();
         this.groups = userDto.getGroups();
     }
@@ -195,16 +191,6 @@ public class User {
     public void setHobbies(List<String> hobbies) {
         this.hobbies = hobbies;
     }
-
-    public List<String> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<String> posts) {
-        this.posts = posts;
-    }
-
-    public boolean addPost(String postId) {return this.posts.add(postId); }
 
     public List<User> getFriends() {
         return friends;
