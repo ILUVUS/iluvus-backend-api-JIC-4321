@@ -2,12 +2,10 @@ package iluvus.backend.api.model;
 
 import iluvus.backend.api.dto.PostDto;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.aggregation.VariableOperators.Map;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Document(collection = "posts")
@@ -25,6 +23,62 @@ public class Post {
 
     @Field("comments")
     private List<HashMap<String, String>> comments;
+    
+    public String getId() {
+        return this.id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public BigInteger getUplift() {
+        return uplift;
+    }
+
+    public String getAuthor_id() {
+        return author_id;
+    }
+
+    public String getCommunity_id() {
+        return community_id;
+    }
+
+    public List<HashMap<String, String>> getComments() {
+        return comments;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setUplift(BigInteger uplift) {
+        this.uplift = uplift;
+    }
+
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
+    }
+
+    public void setCommunity_id(String community_id) {
+        this.community_id = community_id;
+    }
+
+    public void setComments(List<HashMap<String, String>> comments) {
+        this.comments = comments;
+    }
 
     public Post() {
     }
@@ -38,9 +92,6 @@ public class Post {
         this.comments = new ArrayList<>();
     }
 
-    public String getId() {
-        return this.id;
-    }
 
     /**
      * Comment hashmap inside a comment list

@@ -119,4 +119,21 @@ public class PostService {
             return false;
         }
     }
+
+    public boolean likePost(Map<String, String> data) {
+        try {
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            if (post == null) {
+                return false;
+            }
+
+            BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
+            post.setUplift(addedBigInteger);
+            postRepository.save(post);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
