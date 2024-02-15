@@ -28,7 +28,7 @@ public class UserDto {
     private List<String> work;
     private List<String> skills;
     private List<String> hobbies;
-    private List<Post> posts;
+    
     private List<User> friends;
     private List<String> groups;
 
@@ -173,13 +173,6 @@ public class UserDto {
         this.hobbies = hobbies;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
 
     public List<User> getFriends() {
         return friends;

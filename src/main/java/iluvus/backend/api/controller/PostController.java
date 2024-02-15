@@ -18,6 +18,16 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    /**
+     * 
+     * @param data JSON object with the following keys:
+     *             text: String
+     *             dateTime: String
+     *             authorId: String
+     *             communityId: String
+     * 
+     * @return
+     */
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createPost(@RequestBody Map<String, String> data) {
 
@@ -29,5 +39,27 @@ public class PostController {
             return ResponseEntity.badRequest().body("Post creation failed");
         }
 
+    }
+
+    /**
+     * write a comment
+     * 
+     * @param data JSON object with the following keys:
+     *             postId: String
+     *             authorId: String
+     *             text: String
+     *             dateTime: String
+     * 
+     * @return
+     */
+    @PostMapping(value = "/comment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> commentPost(@RequestBody Map<String, String> data) {
+        boolean newComment = postService.writeComment(data);
+
+        if (newComment) {
+            return ResponseEntity.ok().body("Comment created successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Comment creation failed");
+        }
     }
 }

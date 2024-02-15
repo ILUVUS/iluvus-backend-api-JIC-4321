@@ -1,126 +1,72 @@
 package iluvus.backend.api.dto;
 
-import iluvus.backend.api.model.Community;
-import iluvus.backend.api.model.User;
-
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class PostDto {
 
-    private String content;
-    private Date date;
-    private String time;
-    private List<String> images;
-    private List<String> comments;
+    private String text;
+    private String dateTime;
     private BigInteger uplift;
-    private boolean visible;
-
-    private User author;
-    private Community group;
+    private String author_id;
+    private String community_id;
+    private List<HashMap<String, String>> comments;
 
     public PostDto() {
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return this.text;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDateTime() {
+        return this.dateTime;
     }
 
-    // yyyy-MM-dd hh:mm:ss
-    public void setDateTime(String mm, String dd, String yyyy, String h, String m, String s) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            this.date = formatter.parse(yyyy + "-" + mm + "-" + dd + " " + h + ":" + m + ":" + s);
-        } catch (ParseException e) {
-            this.date = null;
-            System.out.println("Invalid date format");
-            e.printStackTrace();
-        }
-    }
-
-    public void setDateTime(String dob) { // yyyy-MM-dd hh:mm:ss
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            this.date = formatter.parse(dob);
-        } catch (ParseException e) {
-            this.date = null;
-            System.out.println("Invalid date format");
-            e.printStackTrace();
-        }
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
-
-    public void addImage(String image) {
-        this.images.add(image);
-    }
-
-    public List<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<String> comments) {
-        this.comments = comments;
-    }
-
-    public void addComment(String comment) {
-        this.comments.add(comment);
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     public BigInteger getUplift() {
-        return uplift;
+        return this.uplift;
     }
 
     public void setUplift(BigInteger uplift) {
         this.uplift = uplift;
     }
 
-    public boolean isVisible() {
-        return visible;
+    public String getAuthor_id() {
+        return this.author_id;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getCommunity_id() {
+        return this.community_id;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setCommunity_id(String community_id) {
+        this.community_id = community_id;
     }
 
-    public Community getGroup() {
-        return group;
+    public List<HashMap<String, String>> getComments() {
+        return this.comments;
     }
 
-    public void setGroup(Community group) {
-        this.group = group;
+    public void setComments(List<HashMap<String, String>> comments) {
+        this.comments = comments;
     }
+
 }

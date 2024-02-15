@@ -70,7 +70,6 @@ public class UserService {
             userDto.setWork(new ArrayList<>());
             userDto.setSkills(new ArrayList<>());
             userDto.setHobbies(new ArrayList<>());
-            userDto.setPosts(new ArrayList<>());
             userDto.setFriends(new ArrayList<>());
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
