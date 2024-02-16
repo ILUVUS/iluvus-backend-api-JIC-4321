@@ -93,6 +93,38 @@ public class Post {
     }
 
 
+    public String getText() {
+        return this.text;
+    }
+
+    public String getDateTime() {
+        return this.dateTime;
+    }
+
+    public BigInteger getUplift() {
+        return this.uplift;
+    }
+
+    public String getAuthor_id() {
+        return this.author_id;
+    }
+
+    public String getCommunity_id() {
+        return this.community_id;
+    }
+
+    public List<HashMap<String, String>> getComments() {
+        return this.comments;
+    }
+
+    public void setAuthor_id(String fname, String lname) {
+        this.author_id = lname + ", " + fname;
+    }
+    public void setAuthor_id(String fullname) {
+        this.author_id = fullname;
+    }
+    
+
     /**
      * Comment hashmap inside a comment list
      * [

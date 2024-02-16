@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.HashMap;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,12 +84,29 @@ public class PostService {
 
     
 
-    public List<Post> getPostsByAuthor(String author_id) {
-        return postRepository.findPostByAuthor_id(author_id);
+    public List<Post> getPostsByAuthorId (String id) {
+        return postRepository.findPostByAuthor_id(id);
     }
 
-    public List<Post> getPostsByCommunity(String community_id) {
-        return postRepository.findPostByCommunity_id(community_id);
+    public List<Post> getPostsByCommunityId (String id) {
+        if(id == null || id.strip().length() == 0) {
+            return null;
+        }
+        List<Post> posts = postRepository.findPostByCommunity_id(id);
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for(Post post : posts) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User user = userRepository.findById(authorId).orElse(null);
+                String fname = user.getFname();
+                String lname = user.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+        return posts;
     }
 
     public boolean writeComment(Map<String, String> data) {
