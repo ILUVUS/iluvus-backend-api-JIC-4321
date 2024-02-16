@@ -1,14 +1,18 @@
 package iluvus.backend.api.controller;
 
+import iluvus.backend.api.model.Post;
 import iluvus.backend.api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,4 +66,22 @@ public class PostController {
             return ResponseEntity.badRequest().body("Comment creation failed");
         }
     }
+
+    /**
+     * /post/getPostsByCommunityID?id=
+     * @return
+     */
+
+    @GetMapping(value = "/getPostsByCommunityID", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> getAllCommunity(@RequestParam String id) {
+        System.out.println("id: " + id);
+        List<Post> posts = postService.getPostsByCommunityId(id);
+        if (posts != null && !posts.isEmpty()) {
+            return ResponseEntity.ok().body(posts);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
 }
