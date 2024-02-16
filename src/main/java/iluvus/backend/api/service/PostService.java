@@ -160,6 +160,13 @@ public class PostService {
                 return null;
             }
             List<HashMap<String, String>> comments = post.getComments();
+            for (HashMap<String, String> comment : comments) {
+                String authorId = comment.get("author_id");
+                User user = userRepository.findById(authorId).orElse(null);
+                if (user != null) {
+                    comment.put("author_id", user.getLname() + ", " + user.getFname());
+                }
+            }
             return comments;
         } catch (Exception e) {
             e.printStackTrace();
