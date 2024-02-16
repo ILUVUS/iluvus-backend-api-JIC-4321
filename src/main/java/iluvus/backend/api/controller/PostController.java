@@ -72,8 +72,9 @@ public class PostController {
      * @return
      */
 
-    @GetMapping(value = "/getPostsByCommunityID")
+    @GetMapping(value = "/getPostsByCommunityID", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getAllCommunity(@RequestParam String id) {
+        System.out.println("id: " + id);
         List<Post> posts = postService.getPostsByCommunityId(id);
         if (posts != null && !posts.isEmpty()) {
             return ResponseEntity.ok().body(posts);
