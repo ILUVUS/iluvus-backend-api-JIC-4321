@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +77,17 @@ public class PostController {
             return ResponseEntity.badRequest().body(0);
         }
 
+    }
+
+    @PostMapping(value = "/getAllComments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> getAllComments(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> allComments = postService.getAllComments(data);
+
+        if (allComments != null) {
+            return ResponseEntity.ok().body(allComments);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     /**

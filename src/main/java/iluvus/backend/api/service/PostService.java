@@ -152,6 +152,21 @@ public class PostService {
         }
     }
 
+    public List<HashMap<String, String>> getAllComments(Map<String, String> data) {
+        try {
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            List<HashMap<String, String>> comments = post.getComments();
+            return comments;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public boolean likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
