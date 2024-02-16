@@ -139,6 +139,19 @@ public class PostService {
         }
     }
 
+    public int getLikeNumber(String postId) {
+        try {
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return -1;
+            }
+            return post.getUplift().intValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     public boolean likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);

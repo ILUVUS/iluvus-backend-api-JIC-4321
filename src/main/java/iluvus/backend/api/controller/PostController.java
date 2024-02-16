@@ -68,24 +68,23 @@ public class PostController {
     }
 
     @PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> likePost(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Integer> likePost(@RequestBody Map<String, String> data) {
         boolean isLiked = postService.likePost(data);
         if (isLiked) {
-            return ResponseEntity.ok().body("Successfully Liked a post");
+            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
         } else {
-            return ResponseEntity.badRequest().body("Like Function Unsuccessful");
+            return ResponseEntity.badRequest().body(0);
         }
 
     }
-  
+
     /**
      * /post/getPostsByCommunityID?id=
+     * 
      * @return
      */
-
     @GetMapping(value = "/getPostsByCommunityID", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getAllCommunity(@RequestParam String id) {
-        System.out.println("id: " + id);
         List<Post> posts = postService.getPostsByCommunityId(id);
         if (posts != null && !posts.isEmpty()) {
             return ResponseEntity.ok().body(posts);
@@ -93,6 +92,5 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 
 }

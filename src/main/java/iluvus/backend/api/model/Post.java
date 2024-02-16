@@ -28,30 +28,6 @@ public class Post {
         return this.id;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public BigInteger getUplift() {
-        return uplift;
-    }
-
-    public String getAuthor_id() {
-        return author_id;
-    }
-
-    public String getCommunity_id() {
-        return community_id;
-    }
-
-    public List<HashMap<String, String>> getComments() {
-        return comments;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -68,9 +44,6 @@ public class Post {
         this.uplift = uplift;
     }
 
-    public void setAuthor_id(String author_id) {
-        this.author_id = author_id;
-    }
 
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
