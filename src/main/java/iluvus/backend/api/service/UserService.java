@@ -15,9 +15,6 @@ import java.util.Random;
 import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
 
 @Service
 public class UserService {
@@ -52,6 +49,8 @@ public class UserService {
             Random random = new Random();
             userDto.setVerifyCode(100000 + random.nextInt(900000));
 
+
+
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
 
@@ -68,7 +67,7 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
+            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
             return new HashMap<>() {
@@ -166,43 +165,34 @@ public class UserService {
         return false;
     }
 
-    public void sendVerificationEmail(String userEmail, int verificationCode) {
-        final String username = "your_gmail_username@gmail.com"; // change for later
-        final String password = "your_gmail_password"; // change for later
+    public boolean sendVerificationEmail(String userEmail, int verificationCode) {
+        final String sender = "iluvusapp@gmail.com";
+        final String password = "pkfccmkmbdgozzpl";
 
-        Properties prop = new Properties();
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true");
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true"); // Use this line for TLS
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587"); // Use 465 for SSL
 
-        Session session = Session.getInstance(prop, new Authenticator() {
-            @Override
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(sender, password);
             }
         });
 
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("your_gmail_username@gmail.com"));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userEmail));
-            message.setSubject("Your Verification Code");
-
-            String emailContent = loadEmailTemplate(verificationCode);
-            message.setContent(emailContent, "text/html");
-
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(sender));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+            message.setSubject("Email Verification");
+            message.setText("Your verification code is: " + verificationCode);
             Transport.send(message);
-
-            System.out.println("Email sent successfully");
-
-        } catch (MessagingException | IOException e) {
-            e.printStackTrace();
+            System.out.println("Verification email sent successfully...");
+            return true;
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+            return false;
         }
-    }
-
-    private String loadEmailTemplate(int verificationCode) throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get("EmailTemplate.html")));
-        return content.replace("{{code}}", Integer.toString(verificationCode));
     }
 }
