@@ -58,13 +58,13 @@ public class PostController {
      * @return
      */
     @PostMapping(value = "/comment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> commentPost(@RequestBody Map<String, String> data) {
-        boolean newComment = postService.writeComment(data);
+    public ResponseEntity<List<HashMap<String, String>>> commentPost(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> newComment = postService.writeComment(data);
 
-        if (newComment) {
-            return ResponseEntity.ok().body("Comment created successfully");
+        if (newComment != null) {
+            return ResponseEntity.ok().body(newComment);
         } else {
-            return ResponseEntity.badRequest().body("Comment creation failed");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

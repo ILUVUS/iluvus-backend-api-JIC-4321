@@ -62,7 +62,7 @@ public class Post {
         this.uplift = postDto.getUplift();
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
-        this.comments = new ArrayList<>();
+        this.comments = new ArrayList<HashMap<String, String>>();
     }
 
 
