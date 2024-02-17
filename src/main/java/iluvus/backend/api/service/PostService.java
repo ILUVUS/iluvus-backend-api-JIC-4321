@@ -8,19 +8,10 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.HashMap;
-
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,19 +73,17 @@ public class PostService {
         }
     }
 
-    
-
-    public List<Post> getPostsByAuthorId (String id) {
+    public List<Post> getPostsByAuthorId(String id) {
         return postRepository.findPostByAuthor_id(id);
     }
 
-    public List<Post> getPostsByCommunityId (String id) {
-        if(id == null || id.strip().length() == 0) {
+    public List<Post> getPostsByCommunityId(String id) {
+        if (id == null || id.strip().length() == 0) {
             return null;
         }
         List<Post> posts = postRepository.findPostByCommunity_id(id);
         HashMap<String, String> authorIdName = new HashMap<>();
-        for(Post post : posts) {
+        for (Post post : posts) {
             String authorId = post.getAuthor_id();
             if (authorIdName.containsKey(authorId)) {
                 post.setAuthor_id(authorIdName.get(authorId));
@@ -109,7 +98,7 @@ public class PostService {
         return posts;
     }
 
-    public boolean writeComment(Map<String, String> data) {
+    public List<HashMap<String, String>> writeComment(Map<String, String> data) {
         try {
             String id = UUID.randomUUID().toString();
             String postId = data.get("postId");
@@ -119,23 +108,83 @@ public class PostService {
 
             Post post = postRepository.findById(postId).orElse(null);
 
+            if (comment == null || comment.strip().length() == 0) {
+                return null;
+            }
+
             if (post != null) {
                 User user = userRepository.findById(authorId).orElse(null);
                 if (user == null) {
-                    return false;
+                    return null;
                 }
                 if (comment.strip().length() == 0) {
-                    return false;
+                    return null;
                 }
                 post.writeComment(id, comment, authorId, dateTime);
                 postRepository.save(post);
-                return true;
-            } else {
-                return false;
+
+                return this.getCommentsWithAuthorName(postId);
             }
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
+        }
+    }
+
+    public List<HashMap<String, String>> getCommentsWithAuthorName(String postId) {
+        try {
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            List<HashMap<String, String>> comments = post.getComments();
+            for (HashMap<String, String> comment : comments) {
+                String authorId = comment.get("author_id");
+                User user = userRepository.findById(authorId).orElse(null);
+                if (user != null) {
+                    comment.put("author_id", user.getLname() + ", " + user.getFname());
+                }
+            }
+            return comments;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int getLikeNumber(String postId) {
+        try {
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return -1;
+            }
+            return post.getUplift().intValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public List<HashMap<String, String>> getAllComments(Map<String, String> data) {
+        try {
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            List<HashMap<String, String>> comments = post.getComments();
+            for (HashMap<String, String> comment : comments) {
+                String authorId = comment.get("author_id");
+                User user = userRepository.findById(authorId).orElse(null);
+                if (user != null) {
+                    comment.put("author_id", user.getLname() + ", " + user.getFname());
+                }
+            }
+            return comments;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

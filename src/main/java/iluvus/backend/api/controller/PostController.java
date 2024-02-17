@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,35 +58,45 @@ public class PostController {
      * @return
      */
     @PostMapping(value = "/comment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> commentPost(@RequestBody Map<String, String> data) {
-        boolean newComment = postService.writeComment(data);
+    public ResponseEntity<List<HashMap<String, String>>> commentPost(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> newComment = postService.writeComment(data);
 
-        if (newComment) {
-            return ResponseEntity.ok().body("Comment created successfully");
+        if (newComment != null) {
+            return ResponseEntity.ok().body(newComment);
         } else {
-            return ResponseEntity.badRequest().body("Comment creation failed");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> likePost(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Integer> likePost(@RequestBody Map<String, String> data) {
         boolean isLiked = postService.likePost(data);
         if (isLiked) {
-            return ResponseEntity.ok().body("Successfully Liked a post");
+            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
         } else {
-            return ResponseEntity.badRequest().body("Like Function Unsuccessful");
+            return ResponseEntity.badRequest().body(0);
         }
 
     }
-  
+
+    @PostMapping(value = "/getAllComments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> getAllComments(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> allComments = postService.getAllComments(data);
+
+        if (allComments != null) {
+            return ResponseEntity.ok().body(allComments);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     /**
      * /post/getPostsByCommunityID?id=
+     * 
      * @return
      */
-
     @GetMapping(value = "/getPostsByCommunityID", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getAllCommunity(@RequestParam String id) {
-        System.out.println("id: " + id);
         List<Post> posts = postService.getPostsByCommunityId(id);
         if (posts != null && !posts.isEmpty()) {
             return ResponseEntity.ok().body(posts);
@@ -93,6 +104,5 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 
 }

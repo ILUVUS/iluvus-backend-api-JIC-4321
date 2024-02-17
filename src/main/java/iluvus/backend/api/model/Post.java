@@ -23,33 +23,9 @@ public class Post {
 
     @Field("comments")
     private List<HashMap<String, String>> comments;
-    
+
     public String getId() {
         return this.id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public BigInteger getUplift() {
-        return uplift;
-    }
-
-    public String getAuthor_id() {
-        return author_id;
-    }
-
-    public String getCommunity_id() {
-        return community_id;
-    }
-
-    public List<HashMap<String, String>> getComments() {
-        return comments;
     }
 
     public void setId(String id) {
@@ -66,10 +42,6 @@ public class Post {
 
     public void setUplift(BigInteger uplift) {
         this.uplift = uplift;
-    }
-
-    public void setAuthor_id(String author_id) {
-        this.author_id = author_id;
     }
 
     public void setCommunity_id(String community_id) {
@@ -89,9 +61,8 @@ public class Post {
         this.uplift = postDto.getUplift();
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
-        this.comments = new ArrayList<>();
+        this.comments = new ArrayList<HashMap<String, String>>();
     }
-
 
     public String getText() {
         return this.text;
@@ -120,10 +91,10 @@ public class Post {
     public void setAuthor_id(String fname, String lname) {
         this.author_id = lname + ", " + fname;
     }
+
     public void setAuthor_id(String fullname) {
         this.author_id = fullname;
     }
-    
 
     /**
      * Comment hashmap inside a comment list

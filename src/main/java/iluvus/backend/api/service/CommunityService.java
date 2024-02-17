@@ -21,8 +21,8 @@ public class CommunityService {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserService userService;
+    // @Autowired
+    // private UserService userService;
 
     public boolean createCommunity(Map<String, String> data) {
         try {
