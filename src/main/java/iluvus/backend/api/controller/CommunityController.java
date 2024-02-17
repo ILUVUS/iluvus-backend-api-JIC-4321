@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/community")
 public class CommunityController {
-    
+
     @Autowired
     private CommunityService communityService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createCommunity(@RequestBody Map<String, String> data) {
-        
-        boolean newCommunity = communityService.createCommunity(data); 
-        
+
+        boolean newCommunity = communityService.createCommunity(data);
+
         if (newCommunity) {
             return ResponseEntity.ok().body("Community created successfully");
         } else {
@@ -73,5 +73,5 @@ public class CommunityController {
         Map<String, String> communityInfo = communityService.getCommunityInformation(id);
         return ResponseEntity.ok().body(communityInfo);
     }
-    
+
 }

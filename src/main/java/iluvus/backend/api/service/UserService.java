@@ -52,8 +52,6 @@ public class UserService {
             Random random = new Random();
             userDto.setVerifyCode(100000 + random.nextInt(900000));
 
-
-
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
 
@@ -70,7 +68,7 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode());
+            sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
             return new HashMap<>() {
@@ -169,8 +167,8 @@ public class UserService {
     }
 
     public void sendVerificationEmail(String userEmail, int verificationCode) {
-        final String username = "your_gmail_username@gmail.com"; //change for later
-        final String password = "your_gmail_password"; //change for later
+        final String username = "your_gmail_username@gmail.com"; // change for later
+        final String password = "your_gmail_password"; // change for later
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");

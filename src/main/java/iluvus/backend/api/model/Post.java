@@ -23,7 +23,7 @@ public class Post {
 
     @Field("comments")
     private List<HashMap<String, String>> comments;
-    
+
     public String getId() {
         return this.id;
     }
@@ -44,7 +44,6 @@ public class Post {
         this.uplift = uplift;
     }
 
-
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
     }
@@ -64,7 +63,6 @@ public class Post {
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
     }
-
 
     public String getText() {
         return this.text;
@@ -93,10 +91,10 @@ public class Post {
     public void setAuthor_id(String fname, String lname) {
         this.author_id = lname + ", " + fname;
     }
+
     public void setAuthor_id(String fullname) {
         this.author_id = fullname;
     }
-    
 
     /**
      * Comment hashmap inside a comment list
