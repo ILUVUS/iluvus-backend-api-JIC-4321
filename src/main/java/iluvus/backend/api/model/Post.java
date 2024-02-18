@@ -20,6 +20,7 @@ public class Post {
     private BigInteger uplift;
     private String author_id;
     private String community_id;
+    private BigInteger report_count;
 
     @Field("comments")
     private List<HashMap<String, String>> comments;
@@ -52,6 +53,10 @@ public class Post {
         this.comments = comments;
     }
 
+    public void setReport_count(BigInteger report_count) {
+        this.report_count = report_count;
+    }
+
     public Post() {
     }
 
@@ -62,7 +67,7 @@ public class Post {
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
-this.report_count = postDto.getReport_count();
+        this.report_count = postDto.getReport_count();
     }
 
     public String getText() {
@@ -96,6 +101,8 @@ this.report_count = postDto.getReport_count();
     public void setAuthor_id(String fullname) {
         this.author_id = fullname;
     }
+
+    public BigInteger getReport_count() { return this.report_count; }
 
     /**
      * Comment hashmap inside a comment list

@@ -61,7 +61,8 @@ public class PostService {
             postDto.setUplift(BigInteger.ZERO);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
-postDto.setReport_count(BigInteger.ZERO);
+            postDto.setReport_count(BigInteger.ZERO);
+            postDto.setReport_count(BigInteger.ZERO);
 
             Post post = new Post(postDto);
 
