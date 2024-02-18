@@ -55,17 +55,4 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/sendEmail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> sendEmail(@RequestBody Map<String, String> data) {
-        String email = data.get("email");
-        int verificationCode = Integer.parseInt(data.get("verificationCode"));
-        boolean isSent = userService.sendVerificationEmail(email, verificationCode);
-
-        if (isSent) {
-            return ResponseEntity.ok().body("Successfully sent Verification Email");
-        } else {
-            return ResponseEntity.badRequest().body("Unsuccessful to send Email.");
-        }
-    }
-
 }
