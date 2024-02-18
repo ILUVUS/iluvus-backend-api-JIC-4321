@@ -61,7 +61,6 @@ public class PostService {
             postDto.setUplift(BigInteger.ZERO);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
-            postDto.setReport_count(BigInteger.ZERO);
 
             Post post = new Post(postDto);
 
@@ -199,27 +198,6 @@ public class PostService {
             BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
             post.setUplift(addedBigInteger);
             postRepository.save(post);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean reportPost(Map<String, String> data) {
-        try {
-            Post post = postRepository.findById(data.get("postId")).orElse(null);
-            if (post == null) {
-                return false;
-            }
-
-            BigInteger addedBigInteger = post.getReport_count().add(BigInteger.ONE);
-            post.setReport_count(addedBigInteger);
-            if (addedBigInteger.compareTo(BigInteger.valueOf(5)) >= 0) {
-                postRepository.delete(post);
-            } else {
-                postRepository.save(post);
-            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
