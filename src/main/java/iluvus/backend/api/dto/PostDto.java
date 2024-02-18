@@ -16,7 +16,6 @@ public class PostDto {
     private BigInteger uplift;
     private String author_id;
     private String community_id;
-    private BigInteger report_count;
     private List<HashMap<String, String>> comments;
 
     public PostDto() {
@@ -61,10 +60,6 @@ public class PostDto {
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
     }
-
-    public void setReport_count(BigInteger report_count) { this.report_count = report_count; }
-
-    public BigInteger getReport_count() { return this.report_count; }
 
     public List<HashMap<String, String>> getComments() {
         return this.comments;
