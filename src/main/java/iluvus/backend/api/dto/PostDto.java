@@ -16,6 +16,7 @@ public class PostDto {
     private BigInteger uplift;
     private String author_id;
     private String community_id;
+private BigInteger report_count;
     private List<HashMap<String, String>> comments;
 
     public PostDto() {
