@@ -104,15 +104,4 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
-    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> reportPost(@RequestBody Map<String, String> data) {
-        boolean isReported = postService.reportPost(data);
-        if (isReported) {
-            return ResponseEntity.ok().body("Post reported successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Post reporting failed");
-        }
-    }
-
 }
