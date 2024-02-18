@@ -26,33 +26,33 @@ public class PostService {
     @Autowired
     private CommunityRepository communityRepository;
 
-    public boolean createPost(Map<String, String> data) {
+    public List<Post> createPost(Map<String, String> data) {
         try {
             String text = data.get("text");
             String dateTime = data.get("dateTime");
             String author_id = data.get("authorId");
             String community_id = data.get("communityId");
             if (text == null || text.trim().isEmpty() || text.length() > 1000) {
-                return false;
+                return null;
             }
             if (dateTime == null) {
-                return false;
+                return null;
             }
             if (author_id == null) {
-                return false;
+                return null;
             }
             if (community_id == null) {
-                return false;
+                return null;
             }
 
             User author = userRepository.findById(author_id).orElse(null);
             if (author == null) {
-                return false;
+                return null;
             }
 
             Community community = communityRepository.findById(community_id).orElse(null);
             if (community == null) {
-                return false;
+                return null;
             }
 
             PostDto postDto = new PostDto();
@@ -66,10 +66,10 @@ public class PostService {
 
             postRepository.insert(post);
 
-            return true;
+            return getPostsByCommunityId(community_id);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
