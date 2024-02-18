@@ -62,7 +62,6 @@ public class Post {
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
-        this.report_count = postDto.getReport_count();
     }
 
     public String getText() {
