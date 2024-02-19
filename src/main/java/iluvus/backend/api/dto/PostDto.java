@@ -15,15 +15,23 @@ public class PostDto {
     private String dateTime;
     private String author_id;
     private String community_id;
-    private BigInteger report_count;
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
+    private List<String> reportedBy;
+
+    public List<String> getReportedBy() {
+        return reportedBy;
+    }
 
     public void setLikedBy(List<String> likedBy) {this.likedBy = likedBy; }
 
     public List<String> getLikedBy() { return likedBy;}
 
     public PostDto() {
+    }
+
+    public void setReportedBy(List<String> reportedBy) {
+        this.reportedBy = reportedBy;
     }
 
     public String getText() {
@@ -61,10 +69,6 @@ public class PostDto {
     public List<HashMap<String, String>> getComments() {
         return this.comments;
     }
-
-    public void setReport_count(BigInteger report_count) { this.report_count = report_count; }
-
-    public BigInteger getReport_count() { return this.report_count; }
 
     public void setComments(List<HashMap<String, String>> comments) {
         this.comments = comments;
