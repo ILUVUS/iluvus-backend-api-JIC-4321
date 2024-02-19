@@ -17,12 +17,30 @@ public class Post {
     @Field("datetime")
     private String dateTime;
 
-    private BigInteger uplift;
     private String author_id;
     private String community_id;
+    private BigInteger report_count;
 
     @Field("comments")
     private List<HashMap<String, String>> comments;
+    private List<String> likedBy;
+    private List<String>reportedBy;
+
+    public List<String> getReportedBy() {
+        return reportedBy;
+    }
+
+    public void setReportedBy(List<String> reportedBy) {
+        this.reportedBy = reportedBy;
+    }
+
+    public List<String> getLikedBy() {
+        return likedBy;
+    }
+
+    public void setLikedBy(List<String> likedBy) {
+        this.likedBy = likedBy;
+    }
 
     public String getId() {
         return this.id;
@@ -40,10 +58,6 @@ public class Post {
         this.dateTime = dateTime;
     }
 
-    public void setUplift(BigInteger uplift) {
-        this.uplift = uplift;
-    }
-
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
     }
@@ -52,16 +66,21 @@ public class Post {
         this.comments = comments;
     }
 
+    public void setReport_count(BigInteger report_count) {
+        this.report_count = report_count;
+    }
+
     public Post() {
     }
 
     public Post(PostDto postDto) {
         this.text = postDto.getText();
         this.dateTime = postDto.getDateTime();
-        this.uplift = postDto.getUplift();
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
+        this.likedBy = new ArrayList<String>();
+        this.reportedBy = new ArrayList<String>();
     }
 
     public String getText() {
@@ -70,10 +89,6 @@ public class Post {
 
     public String getDateTime() {
         return this.dateTime;
-    }
-
-    public BigInteger getUplift() {
-        return this.uplift;
     }
 
     public String getAuthor_id() {
@@ -96,6 +111,8 @@ public class Post {
         this.author_id = fullname;
     }
 
+    public BigInteger getReport_count() { return this.report_count; }
+
     /**
      * Comment hashmap inside a comment list
      * [
@@ -108,7 +125,7 @@ public class Post {
      * {..}
      * ...
      * ]
-     * 
+     *
      * @param text
      * @param author_id
      * @param dateTime

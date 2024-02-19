@@ -58,7 +58,6 @@ public class PostService {
             PostDto postDto = new PostDto();
             postDto.setText(text);
             postDto.setDateTime(dateTime);
-            postDto.setUplift(BigInteger.ZERO);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
 
@@ -159,7 +158,7 @@ public class PostService {
             if (post == null) {
                 return -1;
             }
-            return post.getUplift().intValue();
+            return post.getLikedBy().size() -1;
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -191,13 +190,63 @@ public class PostService {
     public boolean likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String user = data.get("userId");
             if (post == null) {
                 return false;
             }
 
-            BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
-            post.setUplift(addedBigInteger);
+            List<String> likedBy = post.getLikedBy();
+            if (likedBy != null && likedBy.contains(user)) {
+                likedBy.remove(user);
+                post.setLikedBy(likedBy);
+                System.out.println("Unliked");
+            } else {
+                likedBy.add(user);
+                post.setLikedBy(likedBy);
+                System.out.println("liked");
+            }
             postRepository.save(post);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean reportPost(Map<String, String> data) {
+        try {
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String user = data.get("userId");
+            if (post == null) {
+                return false;
+            }
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            if (community == null) {
+                return false;
+            }
+
+            User reporter = userRepository.findById(data.get("userId")).orElse(null);
+            if (reporter == null) {
+                return false;
+            }
+
+            if (reporter.equals(community.getOwner())) {
+                System.out.println("Already reported by the user!");
+                postRepository.delete(post);
+                return true;
+            }
+            List<String> reportedBy = post.getReportedBy();
+            if (reportedBy.contains(user)) {
+                postRepository.save(post);
+            } else {
+                reportedBy.add(user);
+                if (reportedBy.size() >= 5) {
+                    postRepository.delete(post);
+                } else {
+                    post.setReportedBy(reportedBy);
+                    postRepository.save(post);
+                }
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
