@@ -60,8 +60,6 @@ public class PostService {
             postDto.setDateTime(dateTime);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
-            postDto.setReport_count(BigInteger.ZERO);
-            postDto.setReport_count(BigInteger.ZERO);
 
             Post post = new Post(postDto);
 
@@ -218,6 +216,7 @@ public class PostService {
     public boolean reportPost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String user = data.get("userId");
             if (post == null) {
                 return false;
             }
@@ -232,16 +231,21 @@ public class PostService {
             }
 
             if (reporter.equals(community.getOwner())) {
+                System.out.println("Already reported by the user!");
                 postRepository.delete(post);
                 return true;
             }
-
-            BigInteger addedBigInteger = post.getReport_count().add(BigInteger.ONE);
-            post.setReport_count(addedBigInteger);
-            if (addedBigInteger.compareTo(BigInteger.valueOf(5)) >= 0) {
-                postRepository.delete(post);
-            } else {
+            List<String> reportedBy = post.getReportedBy();
+            if (reportedBy.contains(user)) {
                 postRepository.save(post);
+            } else {
+                reportedBy.add(user);
+                if (reportedBy.size() >= 5) {
+                    postRepository.delete(post);
+                } else {
+                    post.setReportedBy(reportedBy);
+                    postRepository.save(post);
+                }
             }
             return true;
         } catch (Exception e) {

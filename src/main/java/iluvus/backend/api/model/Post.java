@@ -24,6 +24,15 @@ public class Post {
     @Field("comments")
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
+    private List<String>reportedBy;
+
+    public List<String> getReportedBy() {
+        return reportedBy;
+    }
+
+    public void setReportedBy(List<String> reportedBy) {
+        this.reportedBy = reportedBy;
+    }
 
     public List<String> getLikedBy() {
         return likedBy;
@@ -70,8 +79,8 @@ public class Post {
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
-        this.report_count = postDto.getReport_count();
         this.likedBy = new ArrayList<String>();
+        this.reportedBy = new ArrayList<String>();
     }
 
     public String getText() {
