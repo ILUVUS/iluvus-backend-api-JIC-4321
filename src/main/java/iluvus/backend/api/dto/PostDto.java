@@ -13,7 +13,6 @@ public class PostDto {
 
     private String text;
     private String dateTime;
-    private BigInteger uplift;
     private String author_id;
     private String community_id;
     private List<HashMap<String, String>> comments;
@@ -40,14 +39,6 @@ public class PostDto {
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
-    }
-
-    public BigInteger getUplift() {
-        return this.uplift;
-    }
-
-    public void setUplift(BigInteger uplift) {
-        this.uplift = uplift;
     }
 
     public String getAuthor_id() {

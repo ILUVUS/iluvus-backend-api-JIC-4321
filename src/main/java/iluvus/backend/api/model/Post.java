@@ -17,7 +17,6 @@ public class Post {
     @Field("datetime")
     private String dateTime;
 
-    private BigInteger uplift;
     private String author_id;
     private String community_id;
 
@@ -49,10 +48,6 @@ public class Post {
         this.dateTime = dateTime;
     }
 
-    public void setUplift(BigInteger uplift) {
-        this.uplift = uplift;
-    }
-
     public void setCommunity_id(String community_id) {
         this.community_id = community_id;
     }
@@ -67,7 +62,6 @@ public class Post {
     public Post(PostDto postDto) {
         this.text = postDto.getText();
         this.dateTime = postDto.getDateTime();
-        this.uplift = postDto.getUplift();
         this.author_id = postDto.getAuthor_id();
         this.community_id = postDto.getCommunity_id();
         this.comments = new ArrayList<HashMap<String, String>>();
@@ -80,10 +74,6 @@ public class Post {
 
     public String getDateTime() {
         return this.dateTime;
-    }
-
-    public BigInteger getUplift() {
-        return this.uplift;
     }
 
     public String getAuthor_id() {

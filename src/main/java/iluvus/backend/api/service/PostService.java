@@ -58,7 +58,6 @@ public class PostService {
             PostDto postDto = new PostDto();
             postDto.setText(text);
             postDto.setDateTime(dateTime);
-            postDto.setUplift(BigInteger.ZERO);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
 
@@ -159,7 +158,7 @@ public class PostService {
             if (post == null) {
                 return -1;
             }
-            return post.getUplift().intValue();
+            return post.getLikedBy().size() -1;
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -199,15 +198,11 @@ public class PostService {
             List<String> likedBy = post.getLikedBy();
             if (likedBy != null && likedBy.contains(user)) {
                 likedBy.remove(user);
-                BigInteger subtracted = post.getUplift().subtract(BigInteger.ONE);
                 post.setLikedBy(likedBy);
-                post.setUplift(subtracted);
                 System.out.println("Unliked");
             } else {
                 likedBy.add(user);
                 post.setLikedBy(likedBy);
-                BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
-                post.setUplift(addedBigInteger);
                 System.out.println("liked");
             }
             postRepository.save(post);
