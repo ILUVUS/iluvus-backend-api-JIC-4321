@@ -191,12 +191,25 @@ public class PostService {
     public boolean likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String user = data.get("userId");
             if (post == null) {
                 return false;
             }
 
-            BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
-            post.setUplift(addedBigInteger);
+            List<String> likedBy = post.getLikedBy();
+            if (likedBy != null && likedBy.contains(user)) {
+                likedBy.remove(user);
+                BigInteger subtracted = post.getUplift().subtract(BigInteger.ONE);
+                post.setLikedBy(likedBy);
+                post.setUplift(subtracted);
+                System.out.println("Unliked");
+            } else {
+                likedBy.add(user);
+                post.setLikedBy(likedBy);
+                BigInteger addedBigInteger = post.getUplift().add(BigInteger.ONE);
+                post.setUplift(addedBigInteger);
+                System.out.println("liked");
+            }
             postRepository.save(post);
             return true;
         } catch (Exception e) {

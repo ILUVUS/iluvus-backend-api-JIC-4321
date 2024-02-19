@@ -17,6 +17,11 @@ public class PostDto {
     private String author_id;
     private String community_id;
     private List<HashMap<String, String>> comments;
+    private List<String> likedBy;
+
+    public void setLikedBy(List<String> likedBy) {this.likedBy = likedBy; }
+
+    public List<String> getLikedBy() { return likedBy;}
 
     public PostDto() {
     }
@@ -68,5 +73,4 @@ public class PostDto {
     public void setComments(List<HashMap<String, String>> comments) {
         this.comments = comments;
     }
-
 }
