@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.util.Properties;
@@ -20,6 +21,11 @@ import javax.mail.internet.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    // get the password from application.properties
+
+    @Value("${iluvus.email.passwordtoken}")
+    private String iluvusEmailPassword;
 
     public Map<String, String> createUser(Map<String, String> data) {
 
@@ -49,8 +55,6 @@ public class UserService {
             Random random = new Random();
             userDto.setVerifyCode(100000 + random.nextInt(900000));
 
-
-
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
 
@@ -67,7 +71,7 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            sendVerificationEmail(userDto.getProEmail(),userDto.getVerifyCode());
+            sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
             return new HashMap<>() {
@@ -167,7 +171,8 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusapp@gmail.com";
-        final String password = "pkfccmkmbdgozzpl";
+        
+        final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
