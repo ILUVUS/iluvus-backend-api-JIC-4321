@@ -34,14 +34,14 @@ public class PostController {
      * @return
      */
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createPost(@RequestBody Map<String, String> data) {
+    public ResponseEntity<List<Post>> createPost(@RequestBody Map<String, String> data) {
 
-        boolean newPost = postService.createPost(data);
+        List<Post> newPost = postService.createPost(data);
 
-        if (newPost) {
-            return ResponseEntity.ok().body("Post created successfully");
+        if (newPost != null) {
+            return ResponseEntity.ok().body(newPost);
         } else {
-            return ResponseEntity.badRequest().body("Post creation failed");
+            return ResponseEntity.badRequest().body(null);
         }
 
     }
