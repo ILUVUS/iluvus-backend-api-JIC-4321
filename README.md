@@ -60,6 +60,7 @@ git clone https://github.com/ILUVUS/iluvus-backend-api-JIA-3317.git
 ```java
 spring.data.mongodb.uri=mongodb+srv://<USERNAME:<PASSWORD>@iluvusdb.mocs11o.mongodb.net/iluvus
 spring.data.mongodb.database=iluvus
+iluvus.email.passwordtoken=<GMAIL_GENERATED_PASSWORD>
 ```
 
 Modify `<USERNAME>` and `<PASSWORD>` with provided information.
