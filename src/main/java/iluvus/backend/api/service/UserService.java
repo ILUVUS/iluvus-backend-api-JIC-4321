@@ -4,16 +4,13 @@ import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Random;
-import java.util.Properties;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 
@@ -200,5 +197,9 @@ public class UserService {
             mex.printStackTrace();
             return false;
         }
+    }
+
+    public List<HashMap<String, String>> getNotification(Map<String, String> data) {
+        return new ArrayList<HashMap<String, String>>();
     }
 }
