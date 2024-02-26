@@ -7,6 +7,7 @@ import iluvus.backend.api.model.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserDto {
@@ -21,7 +22,7 @@ public class UserDto {
     private Date dob;
     private String race;
     private int verifyCode;
-    // private LocationDto location;
+    private List<HashMap<String, String>> notification;
 
     private List<String> interests;
     private List<String> education;
@@ -116,6 +117,10 @@ public class UserDto {
             e.printStackTrace();
         }
     }
+
+    public void setNotification(List<HashMap<String, String>> notification) { this.notification = notification; }
+
+    public List<HashMap<String, String>> getNotification() { return notification; }
 
     public String getRace() {
         return race;

@@ -62,6 +62,7 @@ public class UserService {
             // we need a way to put List in Frontend into a String seperated by commas
             // then we can split the String into a List in Backend
             // FOR NOW, we will just create an empty List
+            userDto.setNotification(new ArrayList<HashMap<String, String>>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
             userDto.setWork(new ArrayList<>());
