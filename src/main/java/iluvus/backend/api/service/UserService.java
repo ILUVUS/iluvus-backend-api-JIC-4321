@@ -1,6 +1,7 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.UserDto;
+import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
@@ -200,6 +201,14 @@ public class UserService {
     }
 
     public List<HashMap<String, String>> getNotification(Map<String, String> data) {
-        return new ArrayList<HashMap<String, String>>();
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            List<HashMap<String, String>> notification = user.getNotification();
+            return notification;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
