@@ -18,6 +18,7 @@ public class PostDto {
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
     private List<String> reportedBy;
+    private List<String> medias;
 
     public List<String> getReportedBy() {
         return reportedBy;
@@ -72,5 +73,13 @@ public class PostDto {
 
     public void setComments(List<HashMap<String, String>> comments) {
         this.comments = comments;
+    }
+
+    public List<String> getMedias() {
+        return this.medias;
+    }
+
+    public void setMedias(List<String> medias) {
+        this.medias = medias;
     }
 }
