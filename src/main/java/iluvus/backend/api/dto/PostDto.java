@@ -18,6 +18,7 @@ public class PostDto {
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
     private List<String> reportedBy;
+    private List<String> tagged;
 
     public List<String> getReportedBy() {
         return reportedBy;
@@ -72,5 +73,13 @@ public class PostDto {
 
     public void setComments(List<HashMap<String, String>> comments) {
         this.comments = comments;
+    }
+
+    public void setTagged(List<String> tagged) {
+        this.tagged = tagged;
+    }
+
+    public List<String> getTagged() {
+        return tagged;
     }
 }

@@ -115,4 +115,16 @@ public class PostController {
         }
     }
 
+//need to figure out what we need here
+    @PostMapping(value = "/tag", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> tagPost(@RequestBody Map<String, String> data) {
+        boolean isTagged = postService.likePost(data);
+        if (isTagged) {
+            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
+        } else {
+            return ResponseEntity.badRequest().body(0);
+        }
+
+    }
+
 }
