@@ -4,6 +4,7 @@ import iluvus.backend.api.dto.CommunityDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
+import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +22,8 @@ public class CommunityService {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PostRepository  postRepository;
     // @Autowired
     // private UserService userService;
 
@@ -34,7 +37,7 @@ public class CommunityService {
             communityDto.setPublic(data.get("visibility").equals("Public"));
 
             User owner = userRepository.findUserbyUsername(data.get("ownerId"));
-            communityDto.setOwner(owner);
+            communityDto.setOwner(owner.getId());
 
             communityDto.setMembers(new ArrayList<>());
 
@@ -62,6 +65,10 @@ public class CommunityService {
             communityMap.put(community.getId(), community.getName());
         }
         return communityMap;
+    }
+
+    public int getPostNumber(String communityId) {
+        return postRepository.findPostByCommunity_id(communityId).size();
     }
 
     public boolean joinCommunity(String userId, String communityId) {
@@ -106,6 +113,10 @@ public class CommunityService {
             communityInfo.put("description", community.getDescription());
             communityInfo.put("rules", community.getRule());
             communityInfo.put("members", String.join(", ", memberList));
+
+            communityInfo.put("visibility", String.valueOf(community.isPublic()));
+            communityInfo.put("posts", String.valueOf(getPostNumber(communityId)));
+            communityInfo.put("owner", community.getOwner());
 
             return communityInfo;
         } catch (Exception e) {

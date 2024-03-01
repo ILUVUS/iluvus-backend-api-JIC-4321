@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.service.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/user")
@@ -67,5 +70,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("Unsuccessful to send Email.");
         }
     }
+
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> getUser(@RequestParam String userId) {
+        return ResponseEntity.ok().body(userService.getUser(userId));
+    }
+    
 
 }

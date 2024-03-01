@@ -210,29 +210,34 @@ public class PostService {
         }
     }
 
-    public boolean likePost(Map<String, String> data) {
+    public int likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
             String user = data.get("userId");
             if (post == null) {
-                return false;
+                return 0;
             }
-
             List<String> likedBy = post.getLikedBy();
-            if (likedBy != null && likedBy.contains(user)) {
+
+            if (likedBy.size() == 0) {
+                likedBy.add(user);
+                post.setLikedBy(likedBy);
+            } else if (likedBy.contains(user)) {
                 likedBy.remove(user);
                 post.setLikedBy(likedBy);
-                System.out.println("Unliked");
             } else {
                 likedBy.add(user);
                 post.setLikedBy(likedBy);
-                System.out.println("liked");
             }
+
             postRepository.save(post);
-            return true;
+
+            return post.getLikedBy().size();
+
+            
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 

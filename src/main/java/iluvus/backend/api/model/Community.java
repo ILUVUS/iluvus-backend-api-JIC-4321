@@ -17,8 +17,7 @@ public class Community {
 
     private boolean isPublic;
 
-    @DBRef
-    private User owner;
+    private String owner;
 
     @Field("members")
     private List<String> members;
@@ -77,11 +76,11 @@ public class Community {
     }
 
     // Getter and Setter methods for owner
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
