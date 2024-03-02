@@ -41,7 +41,7 @@ public class CommunityService {
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(data.get("visibility").equals("Public"));
 
-            User owner = userRepository.findUserbyUsername(data.get("ownerId"));
+            User owner = userRepository.findById(data.get("ownerId")).orElse(null);
             communityDto.setOwner(owner.getId());
 
             communityDto.setMembers(new ArrayList<>());
@@ -89,7 +89,7 @@ public class CommunityService {
             if (community == null) {
                 throw new IllegalArgumentException("Community not found");
             }
-            
+
             // check if user is already a member
             for (CommunityUser communityUser : communityUsers) {
                 if (communityUser.getMemberId().equals(userId)) {
