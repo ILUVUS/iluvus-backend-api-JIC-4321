@@ -7,12 +7,10 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -234,7 +232,6 @@ public class PostService {
 
             return post.getLikedBy().size();
 
-            
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

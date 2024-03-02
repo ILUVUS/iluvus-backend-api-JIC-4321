@@ -136,8 +136,7 @@ public class UserService {
             userMap.put("fname", user.getFname());
             userMap.put("lname", user.getLname());
             return userMap;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -189,7 +188,7 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusapp@gmail.com";
-        
+
         final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();

@@ -1,13 +1,7 @@
 package iluvus.backend.api.dto;
 
-import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 public class PostDto {
 
@@ -24,9 +18,13 @@ public class PostDto {
         return reportedBy;
     }
 
-    public void setLikedBy(List<String> likedBy) {this.likedBy = likedBy; }
+    public void setLikedBy(List<String> likedBy) {
+        this.likedBy = likedBy;
+    }
 
-    public List<String> getLikedBy() { return likedBy;}
+    public List<String> getLikedBy() {
+        return likedBy;
+    }
 
     public PostDto() {
     }

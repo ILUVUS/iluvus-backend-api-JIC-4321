@@ -1,7 +1,5 @@
 package iluvus.backend.api.dto;
 
-import iluvus.backend.api.model.User;
-
 import java.util.*;
 
 public class CommunityDto {
