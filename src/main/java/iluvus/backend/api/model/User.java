@@ -5,7 +5,10 @@ import iluvus.backend.api.dto.UserDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Document(collection = "users")
@@ -23,6 +26,7 @@ public class User {
     private String gender;
     private Date dob;
     private String race;
+    private List<HashMap<String, String>> notification;
     private LocationDto location;
 
     private List<String> interests;
@@ -51,6 +55,7 @@ public class User {
         this.gender = userDto.getGender();
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
+        this.notification = userDto.getNotification();
         // this.location = userDto.getLocation();
 
         this.interests = userDto.getInterests();
@@ -210,4 +215,8 @@ public class User {
     public boolean addGroup(String groupId) {
         return this.groups.add(groupId);
     }
+
+    public List<HashMap<String, String>> getNotification() { return notification; }
+
+    public void setNotification(List<HashMap<String, String>> notification) { this.notification = notification;}
 }
