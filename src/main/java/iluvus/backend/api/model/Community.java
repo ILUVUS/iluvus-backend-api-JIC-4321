@@ -16,9 +16,7 @@ public class Community {
     private String rule;
 
     private boolean isPublic;
-
-    @DBRef
-    private User owner;
+    private String owner;
 
     @Field("members")
     private List<String> members;
