@@ -1,5 +1,7 @@
 package iluvus.backend.api.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -65,6 +67,16 @@ public class UserController {
             return ResponseEntity.ok().body("Successfully sent Verification Email");
         } else {
             return ResponseEntity.badRequest().body("Unsuccessful to send Email.");
+        }
+    }
+
+    @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> notifications = userService.getNotification(data);
+        if (notifications != null) {
+            return ResponseEntity.ok().body(notifications);
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
