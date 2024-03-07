@@ -40,8 +40,11 @@ public class UserDataCheck {
         if (!checkPassword(data.get("password"))) {
             errorList.add("Password");
         }
-        if (!checkEmail(data.get("email"))) {
-            errorList.add("Email");
+
+        if (data.get("proEmail").length() == 0) {
+            if (!checkEmail(data.get("email"))) {
+                errorList.add("Email");
+            }
         }
 
         String errorString = String.join("\n ", errorList);

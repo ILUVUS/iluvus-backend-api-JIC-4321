@@ -158,7 +158,7 @@ public class PostService {
             if (post == null) {
                 return -1;
             }
-            return post.getLikedBy().size() -1;
+            return post.getLikedBy().size();
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
