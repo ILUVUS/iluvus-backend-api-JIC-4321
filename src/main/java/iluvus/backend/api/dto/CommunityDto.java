@@ -11,7 +11,7 @@ public class CommunityDto {
 
     private boolean isPublic;
 
-    private User owner;
+    private String ownerId;
     private List<String> members;
 
     public CommunityDto() {
@@ -54,12 +54,12 @@ public class CommunityDto {
     }
 
     // Getter and Setter methods for owner
-    public User getOwner() {
-        return owner;
+    public String getOwner() {
+        return ownerId;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwner(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     // Getter and Setter methods for members
