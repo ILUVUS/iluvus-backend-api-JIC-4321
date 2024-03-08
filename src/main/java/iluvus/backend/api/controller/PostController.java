@@ -70,9 +70,9 @@ public class PostController {
 
     @PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> likePost(@RequestBody Map<String, String> data) {
-        boolean isLiked = postService.likePost(data);
-        if (isLiked) {
-            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
+        int upLifeNumber = postService.likePost(data);
+        if (upLifeNumber != -1) {
+            return ResponseEntity.ok().body(upLifeNumber);
         } else {
             return ResponseEntity.badRequest().body(0);
         }
@@ -105,7 +105,7 @@ public class PostController {
         }
     }
 
-@PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reportPost(@RequestBody Map<String, String> data) {
         boolean isReported = postService.reportPost(data);
         if (isReported) {
@@ -113,6 +113,18 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().body("Post reporting failed");
         }
+    }
+
+//need to figure out what we need here
+    @PostMapping(value = "/tag", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> tagPost(@RequestBody Map<String, String> data) {
+        boolean isTagged = postService.likePost(data);
+        if (isTagged) {
+            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
+        } else {
+            return ResponseEntity.badRequest().body(0);
+        }
+
     }
 
 }

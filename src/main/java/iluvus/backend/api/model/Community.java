@@ -2,7 +2,6 @@ package iluvus.backend.api.model;
 
 import iluvus.backend.api.dto.CommunityDto;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.*;
@@ -17,8 +16,7 @@ public class Community {
 
     private boolean isPublic;
 
-    @DBRef
-    private User owner;
+    private String owner;
 
     @Field("members")
     private List<String> members;
@@ -77,11 +75,11 @@ public class Community {
     }
 
     // Getter and Setter methods for owner
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 

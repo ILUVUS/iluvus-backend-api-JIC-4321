@@ -69,6 +69,12 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> getUser(@RequestParam String userId) {
+        return ResponseEntity.ok().body(userService.getUser(userId));
+    }
+
+
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
         List<HashMap<String, String>> notifications = userService.getNotification(data);

@@ -125,6 +125,23 @@ public class UserService {
         }
     }
 
+    public Map<String, String> getUser(String userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return null;
+            }
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("username", user.getUsername());
+            userMap.put("email", user.getEmail());
+            userMap.put("fname", user.getFname());
+            userMap.put("lname", user.getLname());
+            return userMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
             return false;
@@ -172,7 +189,7 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusapp@gmail.com";
-        
+
         final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();

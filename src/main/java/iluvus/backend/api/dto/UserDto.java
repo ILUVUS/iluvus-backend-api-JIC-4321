@@ -1,7 +1,5 @@
 package iluvus.backend.api.dto;
 
-import iluvus.backend.api.model.Community;
-import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 
 import java.text.ParseException;
@@ -35,6 +33,8 @@ public class UserDto {
 
     public UserDto() {
     }
+
+    
 
     public String getUsername() {
         return username;
