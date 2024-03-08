@@ -74,7 +74,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(userId));
     }
 
-
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
         List<HashMap<String, String>> notifications = userService.getNotification(data);
@@ -86,8 +85,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> searchUser(@RequestParam String filter) {
-        List<String> userList = userService.getMatchedUser(filter);
+    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter) {
+        List<HashMap<String, Object>> userList = userService.getMatchedUser(filter);
         if (userList != null) {
             return ResponseEntity.ok().body(userList);
         } else {

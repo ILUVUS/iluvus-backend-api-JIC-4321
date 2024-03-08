@@ -24,7 +24,7 @@ public class Post {
     @Field("comments")
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
-    private List<String>reportedBy;
+    private List<String> reportedBy;
     private List<String> tagged;
 
     @Field("medias")
@@ -121,7 +121,9 @@ public class Post {
         this.author_id = fullname;
     }
 
-    public BigInteger getReport_count() { return this.report_count; }
+    public BigInteger getReport_count() {
+        return this.report_count;
+    }
 
     /**
      * Comment hashmap inside a comment list

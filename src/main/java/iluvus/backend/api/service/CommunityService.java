@@ -25,7 +25,7 @@ public class CommunityService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PostRepository  postRepository;
+    private PostRepository postRepository;
 
     @Autowired
     private CommunityUserRepository communityUserRepository;

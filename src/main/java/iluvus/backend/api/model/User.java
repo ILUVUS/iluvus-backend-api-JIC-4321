@@ -6,7 +6,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -216,7 +215,12 @@ public class User {
         return this.groups.add(groupId);
     }
 
-    public List<HashMap<String, String>> getNotification() { return notification; }
+    public List<HashMap<String, String>> getNotification() {
+        return notification;
+    }
 
-    public void setNotification(List<HashMap<String, String>> notification) { this.notification = notification;}
+    public void setNotification(List<HashMap<String, String>> notification) {
+        this.notification = notification;
+    }
+
 }

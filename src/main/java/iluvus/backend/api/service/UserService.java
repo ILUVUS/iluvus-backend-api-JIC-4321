@@ -1,14 +1,11 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.UserDto;
-import iluvus.backend.api.model.Community;
-import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -231,20 +228,21 @@ public class UserService {
 
     }
 
-    public List<String> getMatchedUser(String filter) {
+    public List<HashMap<String, Object>> getMatchedUser(String filter) {
         try {
-            List<String> userList = new ArrayList<>();
-            for (User user : userRepository.findAll()) {
-                userList.add(user.getUsername());
+            // get all users matched
+            List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
+            List<HashMap<String, Object>> userMapList = new ArrayList<>();
+            for (User user : userList) {
+                UserDto userDto = new UserDto(user);
+                HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+                userMapList.add(userMap);
             }
-            String lowerCaseFilter = filter.toLowerCase();
-            List<String> filteredList = userList.stream()
-                    .filter(username -> username.toLowerCase().startsWith(lowerCaseFilter))
-                    .collect(Collectors.toList());
-            return filteredList;
+            return userMapList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 }
