@@ -1,13 +1,12 @@
 package iluvus.backend.api.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.service.UserService;
 
@@ -65,6 +64,22 @@ public class UserController {
             return ResponseEntity.ok().body("Successfully sent Verification Email");
         } else {
             return ResponseEntity.badRequest().body("Unsuccessful to send Email.");
+        }
+    }
+
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> getUser(@RequestParam String userId) {
+        return ResponseEntity.ok().body(userService.getUser(userId));
+    }
+
+
+    @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> notifications = userService.getNotification(data);
+        if (notifications != null) {
+            return ResponseEntity.ok().body(notifications);
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

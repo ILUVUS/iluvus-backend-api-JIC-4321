@@ -7,13 +7,16 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 // create post service class
 @Service
@@ -32,6 +35,24 @@ public class PostService {
             String dateTime = data.get("dateTime");
             String author_id = data.get("authorId");
             String community_id = data.get("communityId");
+
+            String raw_media = data.get("medias");
+
+            List<String> medias = new ArrayList<>();
+
+            if (raw_media != null && raw_media.strip().length() != 0) {
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Map<String, List<String>> media = objectMapper.readValue(raw_media,
+                            new TypeReference<Map<String, List<String>>>() {
+                            });
+                    medias = media.get("urls");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
             if (text == null || text.trim().isEmpty() || text.length() > 1000) {
                 return null;
             }
@@ -60,9 +81,9 @@ public class PostService {
             postDto.setDateTime(dateTime);
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
+            postDto.setMedias(medias);
 
             Post post = new Post(postDto);
-
             postRepository.insert(post);
 
             return getPostsByCommunityId(community_id);
@@ -158,7 +179,7 @@ public class PostService {
             if (post == null) {
                 return -1;
             }
-            return post.getLikedBy().size() -1;
+        return post.getLikedBy().size();
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -187,29 +208,33 @@ public class PostService {
         }
     }
 
-    public boolean likePost(Map<String, String> data) {
+    public int likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
             String user = data.get("userId");
             if (post == null) {
-                return false;
+                return 0;
             }
-
             List<String> likedBy = post.getLikedBy();
-            if (likedBy != null && likedBy.contains(user)) {
+
+            if (likedBy.size() == 0) {
+                likedBy.add(user);
+                post.setLikedBy(likedBy);
+            } else if (likedBy.contains(user)) {
                 likedBy.remove(user);
                 post.setLikedBy(likedBy);
-                System.out.println("Unliked");
             } else {
                 likedBy.add(user);
                 post.setLikedBy(likedBy);
-                System.out.println("liked");
             }
+
             postRepository.save(post);
-            return true;
+
+            return post.getLikedBy().size();
+
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
     }
 

@@ -19,14 +19,19 @@ public class PostDto {
     private List<String> likedBy;
     private List<String> reportedBy;
     private List<String> tagged;
+    private List<String> medias;
 
     public List<String> getReportedBy() {
         return reportedBy;
     }
 
-    public void setLikedBy(List<String> likedBy) {this.likedBy = likedBy; }
+    public void setLikedBy(List<String> likedBy) {
+        this.likedBy = likedBy;
+    }
 
-    public List<String> getLikedBy() { return likedBy;}
+    public List<String> getLikedBy() {
+        return likedBy;
+    }
 
     public PostDto() {
     }
@@ -73,6 +78,14 @@ public class PostDto {
 
     public void setComments(List<HashMap<String, String>> comments) {
         this.comments = comments;
+    }
+
+    public List<String> getMedias() {
+        return this.medias;
+    }
+
+    public void setMedias(List<String> medias) {
+        this.medias = medias;
     }
 
     public void setTagged(List<String> tagged) {

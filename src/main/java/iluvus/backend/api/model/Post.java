@@ -27,6 +27,9 @@ public class Post {
     private List<String>reportedBy;
     private List<String> tagged;
 
+    @Field("medias")
+    private List<String> medias;
+
     public List<String> getReportedBy() {
         return reportedBy;
     }
@@ -47,16 +50,12 @@ public class Post {
         return tagged;
     }
 
-    public void setLikedBy(List<String> tagged) {
+    public void setTagged(List<String> tagged) {
         this.tagged = tagged;
     }
 
     public String getId() {
         return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setText(String text) {
@@ -91,6 +90,7 @@ public class Post {
         this.likedBy = new ArrayList<String>();
         this.reportedBy = new ArrayList<String>();
         this.tagged = new ArrayList<String>();
+        this.medias = postDto.getMedias();
     }
 
     public String getText() {
@@ -148,6 +148,14 @@ public class Post {
         comment.put("id", id);
 
         this.comments.add(comment);
+    }
+
+    public void setMedias(List<String> medias) {
+        this.medias = medias;
+    }
+
+    public List<String> getMedias() {
+        return this.medias;
     }
 
 }

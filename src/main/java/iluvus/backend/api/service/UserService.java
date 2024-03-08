@@ -1,19 +1,17 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.UserDto;
+import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.Random;
-import java.util.Properties;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 
@@ -62,6 +60,7 @@ public class UserService {
             // we need a way to put List in Frontend into a String seperated by commas
             // then we can split the String into a List in Backend
             // FOR NOW, we will just create an empty List
+            userDto.setNotification(new ArrayList<HashMap<String, String>>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
             userDto.setWork(new ArrayList<>());
@@ -124,6 +123,23 @@ public class UserService {
         }
     }
 
+    public Map<String, String> getUser(String userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return null;
+            }
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("username", user.getUsername());
+            userMap.put("email", user.getEmail());
+            userMap.put("fname", user.getFname());
+            userMap.put("lname", user.getLname());
+            return userMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
             return false;
@@ -171,7 +187,7 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusapp@gmail.com";
-        
+
         final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();
@@ -199,5 +215,17 @@ public class UserService {
             mex.printStackTrace();
             return false;
         }
+    }
+
+    public List<HashMap<String, String>> getNotification(Map<String, String> data) {
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            List<HashMap<String, String>> notification = user.getNotification();
+            return notification;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
