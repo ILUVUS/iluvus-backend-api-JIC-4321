@@ -29,6 +29,8 @@ public class Post {
     @Field("medias")
     private List<String> medias;
 
+    private List<HashMap<String,String>> urlInfos;
+
     public List<String> getReportedBy() {
         return reportedBy;
     }
@@ -148,4 +150,18 @@ public class Post {
         return this.medias;
     }
 
+    public void setUrlInfos(List<HashMap<String, String>> urlInfos) {
+        this.urlInfos = urlInfos;
+    }
+
+    public List<HashMap<String, String>> getUrlInfos() {
+        return this.urlInfos;
+    }
+
+    public void saveUrlInfos(String url, String author_id) {
+        HashMap<String, String> urlData = new HashMap<>();
+        urlData.put("url", url);
+        urlData.put("author_id", author_id);
+        this.urlInfos.add(urlData);
+    }
 }

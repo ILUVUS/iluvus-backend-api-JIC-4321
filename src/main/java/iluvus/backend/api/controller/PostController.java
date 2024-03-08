@@ -105,13 +105,33 @@ public class PostController {
         }
     }
 
-@PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> reportPost(@RequestBody Map<String, String> data) {
         boolean isReported = postService.reportPost(data);
         if (isReported) {
             return ResponseEntity.ok().body("Post reported successfully");
         } else {
             return ResponseEntity.badRequest().body("Post reporting failed");
+        }
+    }
+
+    @PostMapping(value = "/storeUrlInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> storeUrlInfo(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> urlInfos = postService.saveUrlInfos(data);
+        if (urlInfos != null) {
+            return ResponseEntity.ok().body(urlInfos);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping(value = "/retrieveUrlInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> retrieveUrlInfo(@RequestBody Map<String, String> data) {
+        List<HashMap<String, String>> urlInfos = postService.getUrlInfos(data);
+        if (urlInfos != null) {
+            return ResponseEntity.ok().body(urlInfos);
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

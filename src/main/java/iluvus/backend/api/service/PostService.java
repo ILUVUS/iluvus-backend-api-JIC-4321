@@ -276,4 +276,55 @@ public class PostService {
             return false;
         }
     }
+
+    public List<HashMap<String, String>> saveUrlInfos(Map<String, String> data) {
+        try {
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            String authorId = data.get("author_id");
+            User user = userRepository.findById(authorId).orElse(null);
+            if (user == null) {
+                return null;
+            }
+            List<String> medias = post.getMedias();
+            if (medias == null || medias.isEmpty()) {
+                return null;
+            }
+            for (String media : medias) {
+                post.saveUrlInfos(media, authorId);
+            }
+            postRepository.save(post);
+            return post.getUrlInfos();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<HashMap<String, String>> getUrlInfos(Map<String, String> data) {
+        try {
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
+            if (post == null) {
+                return null;
+            }
+            List<HashMap<String, String>> urlInfos = post.getUrlInfos();
+            for (HashMap<String, String> urlInfo : urlInfos) {
+                String authorId = urlInfo.get("author_id");
+                User user = userRepository.findById(authorId).orElse(null);
+                if (user == null) {
+                    continue;
+                }
+                urlInfo.put("author_id", user.getLname() + ", " + user.getFname());
+            }
+            return urlInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
