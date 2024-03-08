@@ -74,4 +74,10 @@ public class CommunityController {
         return ResponseEntity.ok().body(communityInfo);
     }
 
+    @GetMapping(value = "/getVisibility", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getVisibility(@RequestParam String id) {
+        boolean isPublic = communityService.isCommunityPublic(id);
+        return ResponseEntity.ok().body(String.valueOf(isPublic));
+    }
+
 }

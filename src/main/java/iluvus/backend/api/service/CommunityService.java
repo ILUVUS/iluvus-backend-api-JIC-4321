@@ -142,4 +142,16 @@ public class CommunityService {
             return null;
         }
     }
+
+    public boolean isCommunityPublic(String communityId) {
+        try {
+            Community community = communityRepository.findById(communityId).orElse(null);
+            if (community != null) {
+                return community.isPublic();
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
 }

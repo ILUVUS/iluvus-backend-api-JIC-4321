@@ -25,6 +25,7 @@ public class Post {
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
     private List<String>reportedBy;
+    private List<String> tagged;
 
     @Field("medias")
     private List<String> medias;
@@ -43,6 +44,14 @@ public class Post {
 
     public void setLikedBy(List<String> likedBy) {
         this.likedBy = likedBy;
+    }
+
+    public List<String> getTagged() {
+        return tagged;
+    }
+
+    public void setTagged(List<String> tagged) {
+        this.tagged = tagged;
     }
 
     public String getId() {
@@ -80,6 +89,7 @@ public class Post {
         this.comments = new ArrayList<HashMap<String, String>>();
         this.likedBy = new ArrayList<String>();
         this.reportedBy = new ArrayList<String>();
+        this.tagged = new ArrayList<String>();
         this.medias = postDto.getMedias();
     }
 

@@ -1,7 +1,13 @@
 package iluvus.backend.api.dto;
 
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class PostDto {
 
@@ -12,6 +18,7 @@ public class PostDto {
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
     private List<String> reportedBy;
+    private List<String> tagged;
     private List<String> medias;
 
     public List<String> getReportedBy() {
@@ -79,5 +86,13 @@ public class PostDto {
 
     public void setMedias(List<String> medias) {
         this.medias = medias;
+    }
+
+    public void setTagged(List<String> tagged) {
+        this.tagged = tagged;
+    }
+
+    public List<String> getTagged() {
+        return tagged;
     }
 }
