@@ -211,4 +211,7 @@ public class CommunityService {
     }
 
 
+    public List<String> getPendingRequests(String communityId) {
+        return communityRepository.findById(communityId).orElse(null).getPendingJoinRequests();
+    }
 }

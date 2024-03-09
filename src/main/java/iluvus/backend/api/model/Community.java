@@ -33,6 +33,7 @@ public class Community {
         this.isPublic = communityDto.isPublic();
         this.owner = communityDto.getOwner();
         this.members = communityDto.getMembers();
+        this.pendingJoinRequests = new ArrayList<>();
     }
 
     // get id
@@ -106,14 +107,7 @@ public class Community {
         this.pendingJoinRequests = pendingJoinRequests;
     }
 
-    public void initPendingJoinRequests() {
-        this.pendingJoinRequests = new ArrayList<>();
-    }
-
     public boolean addPendingJoinRequest(String userId) {
-        if (pendingJoinRequests == null) {
-            initPendingJoinRequests();
-        }
         return this.pendingJoinRequests.add(userId);
     }
 

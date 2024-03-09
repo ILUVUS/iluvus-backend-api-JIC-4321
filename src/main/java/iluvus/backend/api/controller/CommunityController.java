@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -108,5 +109,12 @@ public class CommunityController {
             return ResponseEntity.badRequest().body("Failed to reject join request");
         }
     }
+
+    @GetMapping(value = "/getPendingRequests", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getPendingRequests(@RequestParam String communityId) {
+        List<String> requestList = communityService.getPendingRequests(communityId);
+        return ResponseEntity.ok().body(requestList);
+    }
+
 
 }
