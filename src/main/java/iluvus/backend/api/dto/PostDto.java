@@ -1,5 +1,12 @@
 package iluvus.backend.api.dto;
 
+import org.springframework.boot.actuate.autoconfigure.hazelcast.HazelcastHealthContributorAutoConfiguration;
+
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +22,9 @@ public class PostDto {
     private List<String> tagged;
     private List<String> medias;
 
+    public PostDto() {
+    }
+
     public List<String> getReportedBy() {
         return reportedBy;
     }
@@ -25,9 +35,6 @@ public class PostDto {
 
     public List<String> getLikedBy() {
         return likedBy;
-    }
-
-    public PostDto() {
     }
 
     public void setReportedBy(List<String> reportedBy) {
