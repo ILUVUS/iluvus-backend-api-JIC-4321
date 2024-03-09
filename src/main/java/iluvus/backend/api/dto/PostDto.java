@@ -21,7 +21,9 @@ public class PostDto {
     private List<String> reportedBy;
     private List<String> tagged;
     private List<String> medias;
-    private List<HashMap<String, String>> urlInfos;
+
+    public PostDto() {
+    }
 
     public List<String> getReportedBy() {
         return reportedBy;
@@ -33,9 +35,6 @@ public class PostDto {
 
     public List<String> getLikedBy() {
         return likedBy;
-    }
-
-    public PostDto() {
     }
 
     public void setReportedBy(List<String> reportedBy) {
@@ -88,14 +87,6 @@ public class PostDto {
 
     public void setMedias(List<String> medias) {
         this.medias = medias;
-    }
-
-    public void setUrlInfos(List<HashMap<String, String>> urlInfos) {
-        this.urlInfos = urlInfos;
-    }
-
-    public List<HashMap<String, String>> getUrlInfos() {
-        return this.urlInfos;
     }
 
     public void setTagged(List<String> tagged) {

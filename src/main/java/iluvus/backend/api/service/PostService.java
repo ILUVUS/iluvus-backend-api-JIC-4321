@@ -38,20 +38,7 @@ public class PostService {
 
             String raw_media = data.get("medias");
 
-            List<String> medias = new ArrayList<>();
-
-            if (raw_media != null && raw_media.strip().length() != 0) {
-                try {
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    Map<String, List<String>> media = objectMapper.readValue(raw_media,
-                            new TypeReference<Map<String, List<String>>>() {
-                            });
-                    medias = media.get("urls");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
+            List<String> medias = processMedia(raw_media);
 
             if (text == null || text.trim().isEmpty() || text.length() > 1000) {
                 return null;
@@ -91,10 +78,6 @@ public class PostService {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public List<Post> getPostsByAuthorId(String id) {
-        return postRepository.findPostByAuthor_id(id);
     }
 
     public List<Post> getPostsByCommunityId(String id) {
@@ -170,19 +153,6 @@ public class PostService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public int getLikeNumber(String postId) {
-        try {
-            Post post = postRepository.findById(postId).orElse(null);
-            if (post == null) {
-                return -1;
-            }
-            return post.getLikedBy().size();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
         }
     }
 
@@ -279,54 +249,22 @@ public class PostService {
         }
     }
 
-    public List<HashMap<String, String>> saveUrlInfos(Map<String, String> data) {
-        try {
-            String postId = data.get("postId");
-            Post post = postRepository.findById(postId).orElse(null);
-            if (post == null) {
-                return null;
-            }
-            String authorId = data.get("author_id");
-            User user = userRepository.findById(authorId).orElse(null);
-            if (user == null) {
-                return null;
-            }
-            List<String> medias = post.getMedias();
-            if (medias == null || medias.isEmpty()) {
-                return null;
-            }
-            for (String media : medias) {
-                post.saveUrlInfos(media, authorId);
-            }
-            postRepository.save(post);
-            return post.getUrlInfos();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public List<String> processMedia(String raw_media) {
+        List<String> medias = new ArrayList<>();
 
-    public List<HashMap<String, String>> getUrlInfos(Map<String, String> data) {
-        try {
-            String postId = data.get("postId");
-            Post post = postRepository.findById(postId).orElse(null);
-            if (post == null) {
+        if (raw_media != null && raw_media.strip().length() != 0) {
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, List<String>> media = objectMapper.readValue(raw_media,
+                        new TypeReference<Map<String, List<String>>>() {
+                        });
+                medias = media.get("urls");
+            } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
-            List<HashMap<String, String>> urlInfos = post.getUrlInfos();
-            for (HashMap<String, String> urlInfo : urlInfos) {
-                String authorId = urlInfo.get("author_id");
-                User user = userRepository.findById(authorId).orElse(null);
-                if (user == null) {
-                    continue;
-                }
-                urlInfo.put("author_id", user.getLname() + ", " + user.getFname());
-            }
-            return urlInfos;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
+        return medias;
     }
 
 }
