@@ -1,5 +1,9 @@
 package iluvus.backend.api.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import iluvus.backend.api.util.SecurityConfig;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
@@ -18,6 +22,9 @@ import javax.mail.internet.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // get the password from application.properties
 
@@ -39,7 +46,8 @@ public class UserService {
             UserDto userDto = new UserDto();
             userDto.setUsername(data.get("username"));
             userDto.setEmail(data.get("email"));
-            userDto.setPassword(data.get("password"));
+            String hashedPassword = passwordEncoder.encode(data.get("password"));
+            userDto.setPassword(hashedPassword);
             userDto.setFname(data.get("fname"));
             userDto.setLname(data.get("lname"));
             userDto.setGender(data.get("gender"));
@@ -94,8 +102,7 @@ public class UserService {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
 
-            // simple checking for now
-            if (user.getPassword().equals(data.get("password"))) {
+            if (passwordEncoder.matches(data.get("password"), user.getPassword())) {
                 return user;
             }
             return null;
