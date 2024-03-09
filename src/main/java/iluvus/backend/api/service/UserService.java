@@ -1,7 +1,6 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.UserDto;
-import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
@@ -123,6 +122,23 @@ public class UserService {
         }
     }
 
+    public Map<String, String> getUser(String userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return null;
+            }
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("username", user.getUsername());
+            userMap.put("email", user.getEmail());
+            userMap.put("fname", user.getFname());
+            userMap.put("lname", user.getLname());
+            return userMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
             return false;
@@ -170,7 +186,7 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusapp@gmail.com";
-        
+
         final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();
@@ -211,4 +227,22 @@ public class UserService {
         }
 
     }
+
+    public List<HashMap<String, Object>> getMatchedUser(String filter) {
+        try {
+            // get all users matched
+            List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
+            List<HashMap<String, Object>> userMapList = new ArrayList<>();
+            for (User user : userList) {
+                UserDto userDto = new UserDto(user);
+                HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+                userMapList.add(userMap);
+            }
+            return userMapList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

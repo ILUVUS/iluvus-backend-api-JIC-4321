@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 public class PostDto {
 
@@ -20,6 +19,7 @@ public class PostDto {
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
     private List<String> reportedBy;
+    private List<String> tagged;
     private List<String> medias;
     private List<HashMap<String, String>> urlInfos;
 
@@ -27,9 +27,13 @@ public class PostDto {
         return reportedBy;
     }
 
-    public void setLikedBy(List<String> likedBy) {this.likedBy = likedBy; }
+    public void setLikedBy(List<String> likedBy) {
+        this.likedBy = likedBy;
+    }
 
-    public List<String> getLikedBy() { return likedBy;}
+    public List<String> getLikedBy() {
+        return likedBy;
+    }
 
     public PostDto() {
     }
@@ -92,5 +96,13 @@ public class PostDto {
 
     public List<HashMap<String, String>> getUrlInfos() {
         return this.urlInfos;
+    }
+
+    public void setTagged(List<String> tagged) {
+        this.tagged = tagged;
+    }
+
+    public List<String> getTagged() {
+        return tagged;
     }
 }

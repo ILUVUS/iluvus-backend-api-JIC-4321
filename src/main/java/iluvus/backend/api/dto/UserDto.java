@@ -1,7 +1,5 @@
 package iluvus.backend.api.dto;
 
-import iluvus.backend.api.model.Community;
-import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 
 import java.text.ParseException;
@@ -29,11 +27,17 @@ public class UserDto {
     private List<String> work;
     private List<String> skills;
     private List<String> hobbies;
-    
+
     private List<User> friends;
     private List<String> groups;
 
+    private User user;
+
     public UserDto() {
+    }
+
+    public UserDto(User user) {
+        this.user = user;
     }
 
     public String getUsername() {
@@ -118,9 +122,13 @@ public class UserDto {
         }
     }
 
-    public void setNotification(List<HashMap<String, String>> notification) { this.notification = notification; }
+    public void setNotification(List<HashMap<String, String>> notification) {
+        this.notification = notification;
+    }
 
-    public List<HashMap<String, String>> getNotification() { return notification; }
+    public List<HashMap<String, String>> getNotification() {
+        return notification;
+    }
 
     public String getRace() {
         return race;
@@ -131,11 +139,11 @@ public class UserDto {
     }
 
     public int getVerifyCode() {
-         return verifyCode;
+        return verifyCode;
     }
 
     public void setVerifyCode(int verifyCode) {
-         this.verifyCode = verifyCode;
+        this.verifyCode = verifyCode;
     }
 
     public List<String> getInterests() {
@@ -178,7 +186,6 @@ public class UserDto {
         this.hobbies = hobbies;
     }
 
-
     public List<User> getFriends() {
         return friends;
     }
@@ -201,5 +208,16 @@ public class UserDto {
 
     public void setProEmail(String proEmail) {
         this.proEmail = proEmail;
+    }
+
+    public HashMap<String, Object> getPublicUserInfo() {
+        HashMap<String, Object> publicInfo = new HashMap<>();
+        publicInfo.put("id", user.getId());
+        publicInfo.put("username", user.getUsername());
+        publicInfo.put("email", user.getEmail());
+        publicInfo.put("isVerified", user.isVerified());
+        publicInfo.put("fname", user.getFname());
+        publicInfo.put("lname", user.getLname());
+        return publicInfo;
     }
 }

@@ -70,9 +70,9 @@ public class PostController {
 
     @PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> likePost(@RequestBody Map<String, String> data) {
-        boolean isLiked = postService.likePost(data);
-        if (isLiked) {
-            return ResponseEntity.ok().body(postService.getLikeNumber(data.get("postId")));
+        int upLifeNumber = postService.likePost(data);
+        if (upLifeNumber != -1) {
+            return ResponseEntity.ok().body(upLifeNumber);
         } else {
             return ResponseEntity.badRequest().body(0);
         }

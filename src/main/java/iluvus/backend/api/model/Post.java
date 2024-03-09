@@ -24,7 +24,8 @@ public class Post {
     @Field("comments")
     private List<HashMap<String, String>> comments;
     private List<String> likedBy;
-    private List<String>reportedBy;
+    private List<String> reportedBy;
+    private List<String> tagged;
 
     @Field("medias")
     private List<String> medias;
@@ -45,6 +46,14 @@ public class Post {
 
     public void setLikedBy(List<String> likedBy) {
         this.likedBy = likedBy;
+    }
+
+    public List<String> getTagged() {
+        return tagged;
+    }
+
+    public void setTagged(List<String> tagged) {
+        this.tagged = tagged;
     }
 
     public String getId() {
@@ -82,6 +91,7 @@ public class Post {
         this.comments = new ArrayList<HashMap<String, String>>();
         this.likedBy = new ArrayList<String>();
         this.reportedBy = new ArrayList<String>();
+        this.tagged = new ArrayList<String>();
         this.medias = postDto.getMedias();
     }
 
@@ -113,7 +123,9 @@ public class Post {
         this.author_id = fullname;
     }
 
-    public BigInteger getReport_count() { return this.report_count; }
+    public BigInteger getReport_count() {
+        return this.report_count;
+    }
 
     /**
      * Comment hashmap inside a comment list
