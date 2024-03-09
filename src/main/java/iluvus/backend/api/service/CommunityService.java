@@ -3,6 +3,7 @@ package iluvus.backend.api.service;
 import iluvus.backend.api.dto.CommunityDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
+import iluvus.backend.api.model.CommunityUserStatus;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
@@ -26,9 +27,9 @@ public class CommunityService {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private CommunityUserRepository communityUserRepository;
+
     // @Autowired
     // private UserService userService;
 
@@ -99,7 +100,15 @@ public class CommunityService {
             CommunityUser communityUser = new CommunityUser();
             communityUser.setCommunityId(communityId);
             communityUser.setMemberId(userId);
-            communityUserRepository.insert(communityUser);
+
+            if (community.isPublic()) {
+                communityUser.setStatus(CommunityUserStatus.APPROVED);
+                communityUserRepository.insert(communityUser);
+            } else {
+                community.addPendingJoinRequest(userId);
+                communityRepository.save(community);
+                return sendJoinRequest(userId, communityId);
+            }
 
             return true;
         } catch (Exception e) {
@@ -154,4 +163,52 @@ public class CommunityService {
         }
         return false;
     }
+
+    public boolean sendJoinRequest(String userId, String communityId) {
+        Community community = communityRepository.findById(communityId).orElse(null);
+        if (community == null || !community.isPublic()) {
+            CommunityUser communityUser = new CommunityUser();
+            communityUser.setCommunityId(communityId);
+            communityUser.setMemberId(userId);
+            communityUser.setStatus(CommunityUserStatus.PENDING);
+            communityUserRepository.save(communityUser);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean approveJoinRequest(String userId, String communityId) {
+        CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            communityUser.setStatus(CommunityUserStatus.APPROVED);
+            communityUserRepository.save(communityUser);
+
+            Community community = communityRepository.findById(communityId).orElse(null);
+            if (community != null) {
+                community.addMember(userId);
+                community.removePendingJoinRequest(userId);
+                communityRepository.save(community);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean rejectJoinRequest(String userId, String communityId) {
+        CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            communityUser.setStatus(CommunityUserStatus.REJECTED);
+            communityUserRepository.save(communityUser);
+
+            Community community = communityRepository.findById(communityId).orElse(null);
+            if (community != null) {
+                community.removePendingJoinRequest(userId);
+                communityRepository.save(community);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
 }

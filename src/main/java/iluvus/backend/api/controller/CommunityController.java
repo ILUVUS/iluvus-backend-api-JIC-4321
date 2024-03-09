@@ -46,9 +46,14 @@ public class CommunityController {
         String communityId = data.get("communityId");
         boolean userJoined = communityService.joinCommunity(userId, communityId);
         if (userJoined) {
-            return ResponseEntity.ok().body("User joined the community successfully");
+            boolean isPublic = communityService.isCommunityPublic(communityId);
+            if (!isPublic) {
+                return ResponseEntity.ok().body("Join request sent successfully");
+            } else {
+                return ResponseEntity.ok().body("User joined the community successfully");
+            }
         } else {
-            return ResponseEntity.badRequest().body("User failed to join the community");
+            return ResponseEntity.badRequest().body("Failed to join the community");
         }
     }
 
@@ -78,6 +83,30 @@ public class CommunityController {
     public ResponseEntity<String> getVisibility(@RequestParam String id) {
         boolean isPublic = communityService.isCommunityPublic(id);
         return ResponseEntity.ok().body(String.valueOf(isPublic));
+    }
+
+    @PostMapping(value = "/approveRequest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> approveJoinRequest(@RequestBody Map<String, String> data) {
+        String userId = data.get("userId");
+        String communityId = data.get("communityId");
+        boolean requestApproved = communityService.approveJoinRequest(userId, communityId);
+        if (requestApproved) {
+            return ResponseEntity.ok().body("Join request approved successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to approve join request");
+        }
+    }
+
+    @PostMapping(value = "/rejectRequest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> rejectJoinRequest(@RequestBody Map<String, String> data) {
+        String userId = data.get("userId");
+        String communityId = data.get("communityId");
+        boolean requestRejected = communityService.rejectJoinRequest(userId, communityId);
+        if (requestRejected) {
+            return ResponseEntity.ok().body("Join request rejected successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to reject join request");
+        }
     }
 
 }

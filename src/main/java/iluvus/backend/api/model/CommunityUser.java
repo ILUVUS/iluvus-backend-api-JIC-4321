@@ -9,6 +9,7 @@ public class CommunityUser {
     private String id;
     private String communityId;
     private String memberId;
+    private CommunityUserStatus status;
 
     public CommunityUser() {
     }
@@ -32,5 +33,13 @@ public class CommunityUser {
 
     public void setMemberId(String memberId) {
         this.memberId = memberId;
+    }
+
+    public CommunityUserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CommunityUserStatus status) {
+        this.status = status;
     }
 }
