@@ -43,7 +43,6 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
-
     }
 
     /**
