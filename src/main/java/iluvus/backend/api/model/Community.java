@@ -3,8 +3,6 @@ package iluvus.backend.api.model;
 import iluvus.backend.api.dto.CommunityDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import java.util.*;
 
 @Document(collection = "communities")
 public class Community {
@@ -18,11 +16,6 @@ public class Community {
 
     private String owner;
 
-//    @Field("members")
-//    private List<String> members;
-
-//    private List<String> pendingJoinRequests;
-
     public Community() {
     }
 
@@ -32,7 +25,6 @@ public class Community {
         this.rule = communityDto.getRule();
         this.isPublic = communityDto.isPublic();
         this.owner = communityDto.getOwner();
-//        this.members = communityDto.getMembers();
     }
 
     // get id
@@ -84,44 +76,5 @@ public class Community {
     public void setOwner(String owner) {
         this.owner = owner;
     }
-
-    // Getter and Setter methods for members
-//    public List<String> getMembers() {
-//        return members;
-//    }
-//
-//    public void initMembers() {
-//        this.members = new ArrayList<String>();
-//    }
-//
-//    public boolean addMember(String userId) {
-//        return this.members.add(userId);
-//    }
-//
-//    public List<String> getPendingJoinRequests() {
-//        return pendingJoinRequests;
-//    }
-//
-//    public void setPendingJoinRequests(List<String> pendingJoinRequests) {
-//        this.pendingJoinRequests = pendingJoinRequests;
-//    }
-//
-//    public void initPendingJoinRequests() {
-//        this.pendingJoinRequests = new ArrayList<>();
-//    }
-//
-//    public boolean addPendingJoinRequest(String userId) {
-//        if (pendingJoinRequests == null) {
-//            initPendingJoinRequests();
-//        }
-//        return this.pendingJoinRequests.add(userId);
-//    }
-//
-//    public boolean removePendingJoinRequest(String userId) {
-//        if (pendingJoinRequests == null) {
-//            return false;
-//        }
-//        return this.pendingJoinRequests.remove(userId);
-//    }
 
 }
