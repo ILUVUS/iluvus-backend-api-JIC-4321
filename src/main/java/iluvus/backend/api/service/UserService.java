@@ -208,7 +208,7 @@ public class UserService {
             message.setSubject("Email Verification");
             message.setText("Your verification code is: " + verificationCode);
             Transport.send(message);
-            System.out.println("Verification email sent successfully...");
+
             return true;
         } catch (MessagingException mex) {
             mex.printStackTrace();

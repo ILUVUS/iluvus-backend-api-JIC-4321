@@ -62,7 +62,7 @@ public class UserDataCheck {
     }
 
     public boolean checkDOB(String dob) {
-        System.out.println(dob.strip());
+
         // check if dob in yyyy-MM-dd
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {

@@ -14,8 +14,6 @@ public class CommunityDto {
     private String owner;
     private List<String> members;
 
-//    private List<String> pendingJoinRequests;
-
     public CommunityDto() {
     }
 
@@ -80,14 +78,6 @@ public class CommunityDto {
     public void setMembers(List<String> members) {
         this.members = members;
     }
-
-//    public List<String> getPendingJoinRequests() {
-//        return pendingJoinRequests;
-//    }
-
-//    public void setPendingJoinRequests(List<String> pendingJoinRequests) {
-//        this.pendingJoinRequests = pendingJoinRequests;
-//    }
 
     public Map<String, Object> getCommunityPublicInfo() {
         Map<String, Object> community = new HashMap<>();

@@ -32,9 +32,6 @@ public class CommunityService {
     @Autowired
     private CommunityUserRepository communityUserRepository;
 
-    // @Autowired
-    // private UserService userService;
-
     public boolean createCommunity(Map<String, String> data) {
         try {
             CommunityDto communityDto = new CommunityDto();
@@ -147,10 +144,6 @@ public class CommunityService {
 
             List<CommunityUser> communityUsers = communityUserRepository.findByCommunityId(communityId);
             communityInfo.put("members", communityUsers);
-//            List<User> members = getCommunityMembers(communityId);
-//            List<HashMap<String, Object>> memberList = new ArrayList<>();
-//            String membersString = members.stream().map(User::getId).collect(Collectors.joining(", "));
-//            communityInfo.put("members", membersString);
 
             return communityInfo;
         } catch (Exception e) {
