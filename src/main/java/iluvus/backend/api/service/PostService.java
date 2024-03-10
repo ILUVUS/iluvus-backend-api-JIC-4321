@@ -226,7 +226,7 @@ public class PostService {
             }
 
             if (reporter.equals(community.getOwner())) {
-                System.out.println("Already reported by the user!");
+
                 postRepository.delete(post);
                 return true;
             }
