@@ -4,6 +4,7 @@ import iluvus.backend.api.model.CommunityUser;
 
 import java.util.List;
 
+import iluvus.backend.api.model.CommunityUserStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -16,4 +17,7 @@ public interface CommunityUserRepository extends MongoRepository<CommunityUser, 
 
     @Query("{ 'communityId' : ?0, 'memberId' : ?1 }")
     CommunityUser findByCommunityIdAndMemberId(String communityId, String memberId);
+
+    @Query("{ 'communityId' : ?0, 'status' : ?1 }")
+    List<CommunityUser> findByCommunityIdAndStatus(String communityId, CommunityUserStatus status);
 }
