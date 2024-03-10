@@ -30,6 +30,21 @@ public class Post {
     @Field("medias")
     private List<String> medias;
 
+    public Post() {
+    }
+
+    public Post(PostDto postDto) {
+        this.text = postDto.getText();
+        this.dateTime = postDto.getDateTime();
+        this.author_id = postDto.getAuthor_id();
+        this.community_id = postDto.getCommunity_id();
+        this.comments = new ArrayList<HashMap<String, String>>();
+        this.likedBy = new ArrayList<String>();
+        this.reportedBy = new ArrayList<String>();
+        this.tagged = postDto.getTagged();
+        this.medias = postDto.getMedias();
+    }
+
     public List<String> getReportedBy() {
         return reportedBy;
     }
@@ -78,20 +93,6 @@ public class Post {
         this.report_count = report_count;
     }
 
-    public Post() {
-    }
-
-    public Post(PostDto postDto) {
-        this.text = postDto.getText();
-        this.dateTime = postDto.getDateTime();
-        this.author_id = postDto.getAuthor_id();
-        this.community_id = postDto.getCommunity_id();
-        this.comments = new ArrayList<HashMap<String, String>>();
-        this.likedBy = new ArrayList<String>();
-        this.reportedBy = new ArrayList<String>();
-        this.tagged = new ArrayList<String>();
-        this.medias = postDto.getMedias();
-    }
 
     public String getText() {
         return this.text;
