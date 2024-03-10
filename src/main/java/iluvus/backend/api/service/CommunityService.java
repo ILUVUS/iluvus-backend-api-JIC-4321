@@ -1,8 +1,10 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.CommunityDto;
+import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
+import iluvus.backend.api.model.CommunityUserStatus;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CommunityService {
@@ -26,11 +29,8 @@ public class CommunityService {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private CommunityUserRepository communityUserRepository;
-    // @Autowired
-    // private UserService userService;
 
     public boolean createCommunity(Map<String, String> data) {
         try {
@@ -72,12 +72,28 @@ public class CommunityService {
         return communityMap;
     }
 
+    public Map<String, String> searchCommunity(String filter) {
+        Map<String, String> communityList = this.getCommunityInfo();
+        // Convert the filter to lowercase for case-insensitive comparison
+        String lowercaseFilter = filter.toLowerCase();
+
+        // Filter the communityList based on the specified filter (case-insensitive)
+        Map<String, String> filteredCommunityList = communityList.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return filteredCommunityList;
+    }
+
     public int getPostNumber(String communityId) {
         return postRepository.findPostByCommunity_id(communityId).size();
     }
 
-    public boolean joinCommunity(String userId, String communityId) {
+    public boolean joinCommunity(Map<String, String> data) {
         try {
+            String userId = data.get("userId");
+            String communityId = data.get("communityId");
+
             User user = userRepository.findById(userId).orElse(null);
             Community community = communityRepository.findById(communityId).orElse(null);
 
@@ -99,7 +115,14 @@ public class CommunityService {
             CommunityUser communityUser = new CommunityUser();
             communityUser.setCommunityId(communityId);
             communityUser.setMemberId(userId);
-            communityUserRepository.insert(communityUser);
+
+            if (community.isPublic()) {
+                communityUser.setStatus(CommunityUserStatus.APPROVED);
+                communityUserRepository.insert(communityUser);
+            } else {
+                String requestDateTime = data.get("requestDateTime");
+                return sendJoinRequest(userId, communityId, requestDateTime);
+            }
 
             return true;
         } catch (Exception e) {
@@ -108,39 +131,37 @@ public class CommunityService {
         }
     }
 
-    public Map<String, String> getCommunityInformation(String communityId) {
+    public Map<String, Object> getCommunityInformation(String communityId) {
         try {
             Community community = communityRepository.findById(communityId).orElse(null);
+
             if (community == null) {
                 throw new IllegalArgumentException("Community not found");
             }
 
-            // List<String> memberList = community.getMembers();
-
-            Map<String, String> communityInfo = new HashMap<>();
-            communityInfo.put("name", community.getName());
-            communityInfo.put("description", community.getDescription());
-            communityInfo.put("rules", community.getRule());
-            // communityInfo.put("members", String.join(", ", memberList));
-
-            List<String> members = new ArrayList<>();
+            CommunityDto communityDto = new CommunityDto(community);
+            Map<String, Object> communityInfo = communityDto.getCommunityPublicInfo();
 
             List<CommunityUser> communityUsers = communityUserRepository.findByCommunityId(communityId);
-            for (CommunityUser communityUser : communityUsers) {
-                members.add(communityUser.getMemberId());
-            }
-            String membersString = String.join(", ", members);
-            communityInfo.put("members", membersString);
-
-            communityInfo.put("visibility", String.valueOf(community.isPublic()));
-            communityInfo.put("posts", String.valueOf(getPostNumber(communityId)));
-            communityInfo.put("owner", community.getOwner());
+            communityInfo.put("members", communityUsers);
 
             return communityInfo;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<User> getCommunityMembers(String communityId) {
+        List<User> members = new ArrayList<>();
+        List<CommunityUser> communityUsers = communityUserRepository.findByCommunityId(communityId);
+        for (CommunityUser communityUser : communityUsers) {
+            User user = userRepository.findById(communityUser.getMemberId()).orElse(null);
+            if (user != null) {
+                members.add(user);
+            }
+        }
+        return members;
     }
 
     public boolean isCommunityPublic(String communityId) {
@@ -153,5 +174,59 @@ public class CommunityService {
             return false;
         }
         return false;
+    }
+
+    public boolean sendJoinRequest(String userId, String communityId, String requestDateTime) {
+        Community community = communityRepository.findById(communityId).orElse(null);
+        if (community != null && !community.isPublic()) {
+            CommunityUser communityUser = new CommunityUser();
+            communityUser.setCommunityId(communityId);
+            communityUser.setMemberId(userId);
+            communityUser.setStatus(CommunityUserStatus.PENDING);
+            communityUser.setRequestDateTime(requestDateTime);
+            communityUserRepository.save(communityUser);
+            return true;
+        }
+        return false;
+    }
+
+    public List<CommunityUser> findCommunityUserByStatus(String communityId, CommunityUserStatus status) {
+        return communityUserRepository
+                .findByCommunityIdAndStatus(communityId, status);
+    }
+
+    public List<HashMap<String, Object>> getPendingJoinRequests(String communityId) {
+        List<CommunityUser> communityUsers = findCommunityUserByStatus(communityId, CommunityUserStatus.PENDING);
+        List<HashMap<String, Object>> pendingJoinRequests = new ArrayList<>();
+        for (CommunityUser communityUser : communityUsers) {
+            User user = userRepository.findById(communityUser.getMemberId()).orElse(null);
+            UserDto userDto = new UserDto(user);
+            HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+            userMap.put("requestDateTime", communityUser.getRequestDateTime());
+            userMap.put("communityId", communityId);
+            pendingJoinRequests.add(userMap);
+        }
+        return pendingJoinRequests;
+    }
+
+    public List<HashMap<String, Object>> approveJoinRequest(Map<String, String> data) {
+        String userId = data.get("userId");
+        String communityId = data.get("communityId");
+        CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            communityUser.setStatus(CommunityUserStatus.APPROVED);
+            communityUserRepository.save(communityUser);
+        }
+        return getPendingJoinRequests(communityId);
+    }
+
+    public List<HashMap<String, Object>> rejectJoinRequest(Map<String, String> data) {
+        String userId = data.get("userId");
+        String communityId = data.get("communityId");
+        CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            communityUserRepository.delete(communityUser);
+        }
+        return getPendingJoinRequests(communityId);
     }
 }

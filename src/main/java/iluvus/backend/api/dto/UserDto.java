@@ -106,7 +106,7 @@ public class UserDto {
             this.dob = formatter.parse(yyyy + "-" + mm + "-" + dd);
         } catch (ParseException e) {
             this.dob = null;
-            System.out.println("Invalid date format");
+
             e.printStackTrace();
         }
     }
@@ -117,7 +117,7 @@ public class UserDto {
             this.dob = formatter.parse(dob);
         } catch (ParseException e) {
             this.dob = null;
-            System.out.println("Invalid date format");
+
             e.printStackTrace();
         }
     }

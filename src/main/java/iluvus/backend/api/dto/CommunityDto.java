@@ -1,5 +1,7 @@
 package iluvus.backend.api.dto;
 
+import iluvus.backend.api.model.Community;
+
 import java.util.*;
 
 public class CommunityDto {
@@ -13,6 +15,14 @@ public class CommunityDto {
     private List<String> members;
 
     public CommunityDto() {
+    }
+
+    public CommunityDto(Community community) {
+        this.name = community.getName();
+        this.description = community.getDescription();
+        this.rule = community.getRule();
+        this.isPublic = community.isPublic();
+        this.owner = community.getOwner();
     }
 
     // Getter and Setter methods for name
@@ -67,5 +77,16 @@ public class CommunityDto {
 
     public void setMembers(List<String> members) {
         this.members = members;
+    }
+
+    public Map<String, Object> getCommunityPublicInfo() {
+        Map<String, Object> community = new HashMap<>();
+        community.put("name", name);
+        community.put("description", description);
+        community.put("rules", rule);
+        community.put("visibility", isPublic);
+        community.put("owner", owner);
+        return community;
+
     }
 }
