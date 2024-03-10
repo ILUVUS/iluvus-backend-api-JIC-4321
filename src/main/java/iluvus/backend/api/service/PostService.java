@@ -37,6 +37,12 @@ public class PostService {
             String community_id = data.get("communityId");
 
             String raw_media = data.get("medias");
+            String tagged = data.get("tagged");
+
+            List<String> taggedList = new ArrayList<>();
+            if (tagged != null && tagged.strip().length() != 0) {
+                taggedList = List.of(tagged.split(","));
+            }
 
             List<String> medias = processMedia(raw_media);
 
@@ -69,6 +75,7 @@ public class PostService {
             postDto.setAuthor_id(author_id);
             postDto.setCommunity_id(community_id);
             postDto.setMedias(medias);
+            postDto.setTagged(taggedList);
 
             Post post = new Post(postDto);
             postRepository.insert(post);
