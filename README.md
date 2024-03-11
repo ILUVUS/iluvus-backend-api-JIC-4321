@@ -90,14 +90,17 @@ mvn spring-boot:run
 - Users receive notifications if they are tagged in a post.
 - Communities can now be set as either public or private.
 - Added a "Request Join" button for private communities.
-- Owners of private communities can now accept/decline join requests
+- Owners of private communities can now accept/decline join requests.
 
 ### Bug Fixes
 
 - Corrected the display of the number of likes/uplifts.
 - Fixed the problem where posts were not displaying properly.
+- Fixed the report button and added a report message when reporting.
 
 ### Known Issues
+
+- Users can tag people not in the community.
 
 ## Version 0.2.0
 
