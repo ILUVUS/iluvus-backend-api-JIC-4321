@@ -85,6 +85,7 @@ mvn spring-boot:run
 ### New Features
 
 - Users can now upload and share images along with their posts.
+- Users can view/zoom images in a post.
 - Implemented image processing capabilities such as resizing and compression.
 - Ability to tag other users in a post has been added.
 - Communities can now be set as either public or private.
