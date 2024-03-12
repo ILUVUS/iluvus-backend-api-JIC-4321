@@ -87,7 +87,6 @@ mvn spring-boot:run
 - Users can now upload and share images along with their posts.
 - Implemented image processing capabilities such as resizing and compression.
 - Ability to tag other users in a post has been added.
-- Users receive notifications if they are tagged in a post.
 - Communities can now be set as either public or private.
 - Added a "Request Join" button for private communities.
 - Owners of private communities can now accept/decline join requests.
