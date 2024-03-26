@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import iluvus.backend.api.model.InterestTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +92,12 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping(value = "/interestTopic", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getInterestTopic() {
+        List<String> interestTopic = InterestTopic.getTopicList();
+        return ResponseEntity.ok().body(interestTopic);
     }
 
 }

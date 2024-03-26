@@ -39,6 +39,8 @@ public class PostService {
             String raw_media = data.get("medias");
             String tagged = data.get("tagged");
 
+            String interestTopic = data.get("topics");
+
             List<String> taggedList = new ArrayList<>();
             if (tagged != null && tagged.strip().length() != 0) {
                 taggedList = List.of(tagged.split(","));
@@ -272,6 +274,25 @@ public class PostService {
             }
         }
         return medias;
+    }
+
+    public List<Post> getHomePagePost() {
+
+        List<Post> posts = postRepository.findAll();
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : posts) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User user = userRepository.findById(authorId).orElse(null);
+                String fname = user.getFname();
+                String lname = user.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+        return posts;
     }
 
 }

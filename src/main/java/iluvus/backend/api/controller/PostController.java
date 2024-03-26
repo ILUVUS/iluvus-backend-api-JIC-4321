@@ -114,4 +114,15 @@ public class PostController {
         }
     }
 
+    @GetMapping(value = "/getHomePagePost", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> getHomePagePost() {
+        List<Post> posts = postService.getHomePagePost();
+        if (posts != null && !posts.isEmpty()) {
+            System.out.println("Returned Post!!!!");
+            return ResponseEntity.ok().body(posts);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
