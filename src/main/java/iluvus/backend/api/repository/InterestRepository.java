@@ -9,5 +9,6 @@ import org.springframework.data.mongodb.repository.Query;
 public interface InterestRepository extends MongoRepository<InterestTopic, String> {
     @Query("{ 'name' : ?0 }")
     InterestTopic findInterestTopicByName(String name);
+
 }
 

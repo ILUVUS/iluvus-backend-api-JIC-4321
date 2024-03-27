@@ -20,7 +20,7 @@ public class Startup implements CommandLineRunner {
     @Autowired
     private CommunityUserRepository communityUserRepository;
     @Autowired
-    private InterestRepository interestRepository;
+    private  InterestRepository interestRepository;
 
     @Override
     public void run(String... args) {
@@ -28,21 +28,22 @@ public class Startup implements CommandLineRunner {
     }
 
     private void initDatabaseIfEmpty() {
-        User user = new User();
-        userRepository.insert(user);
-        userRepository.deleteById(user.getId());
 
-        Post post = new Post();
-        postRepository.insert(post);
-        postRepository.deleteById(post.getId());
-
-        Community community = new Community();
-        communityRepository.insert(community);
-        communityRepository.deleteById(community.getId());
-
-        CommunityUser communityUser = new CommunityUser();
-        communityUserRepository.insert(communityUser);
-        communityUserRepository.deleteById(communityUser.getId());
+//        User user = new User();
+//        userRepository.insert(user);
+//        userRepository.deleteById(user.getId());
+//
+//        Post post = new Post();
+//        postRepository.insert(post);
+//        postRepository.deleteById(post.getId());
+//
+//        Community community = new Community();
+//        communityRepository.insert(community);
+//        communityRepository.deleteById(community.getId());
+//
+//        CommunityUser communityUser = new CommunityUser();
+//        communityUserRepository.insert(communityUser);
+//        communityUserRepository.deleteById(communityUser.getId());
 
 //        InterestTopic interestTopic = new InterestTopic();
 //        interestRepository.insert(interestTopic);
