@@ -94,10 +94,6 @@ public class UserController {
         }
     }
 
-//    @GetMapping(value = "/interestTopic", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<String>> getInterestTopic() {
-//        List<String> interestTopic = InterestTopic.getTopicList();
-//        return ResponseEntity.ok().body(interestTopic);
-//    }
+
 
 }

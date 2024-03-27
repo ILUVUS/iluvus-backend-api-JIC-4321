@@ -20,7 +20,7 @@ public class Startup implements CommandLineRunner {
     @Autowired
     private CommunityUserRepository communityUserRepository;
     @Autowired
-    private InterestRepository interestRepository;
+    private InterestTopicRepository interestTopicRepository;
 
     @Override
     public void run(String... args) {
@@ -28,25 +28,25 @@ public class Startup implements CommandLineRunner {
     }
 
     private void initDatabaseIfEmpty() {
-        User user = new User();
-        userRepository.insert(user);
-        userRepository.deleteById(user.getId());
-
-        Post post = new Post();
-        postRepository.insert(post);
-        postRepository.deleteById(post.getId());
-
-        Community community = new Community();
-        communityRepository.insert(community);
-        communityRepository.deleteById(community.getId());
-
-        CommunityUser communityUser = new CommunityUser();
-        communityUserRepository.insert(communityUser);
-        communityUserRepository.deleteById(communityUser.getId());
-
-        InterestTopic interestTopic = new InterestTopic();
-        interestRepository.insert(interestTopic);
-        interestRepository.deleteById(String.valueOf(interestTopic.getId()));
+//        User user = new User();
+//        userRepository.insert(user);
+//        userRepository.deleteById(user.getId());
+//
+//        Post post = new Post();
+//        postRepository.insert(post);
+//        postRepository.deleteById(post.getId());
+//
+//        Community community = new Community();
+//        communityRepository.insert(community);
+//        communityRepository.deleteById(community.getId());
+//
+//        CommunityUser communityUser = new CommunityUser();
+//        communityUserRepository.insert(communityUser);
+//        communityUserRepository.deleteById(communityUser.getId());
+//
+//        InterestTopic interestTopic = new InterestTopic();
+//        interestTopicRepository.insert(interestTopic);
+//        interestTopicRepository.deleteById(String.valueOf(interestTopic.getId()));
 
         // use with care
 //        insertInterestTopics();
@@ -55,14 +55,14 @@ public class Startup implements CommandLineRunner {
 
     private void insertInterestTopics() {
         // remove all interests
-        interestRepository.deleteAll();
+        interestTopicRepository.deleteAll();
 
         List<String> topics = InterestTopic.topicList;
         for (int i = 0; i < topics.size(); i++) {
             InterestTopic interestTopic = new InterestTopic();
             interestTopic.setId(i);
             interestTopic.setName(topics.get(i));
-            interestRepository.insert(interestTopic);
+            interestTopicRepository.insert(interestTopic);
         }
     }
 
