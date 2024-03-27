@@ -30,6 +30,8 @@ public class Post {
     @Field("medias")
     private List<String> medias;
 
+    private int interestId;
+
     public Post() {
     }
 
@@ -159,6 +161,14 @@ public class Post {
 
     public List<String> getMedias() {
         return this.medias;
+    }
+
+    public int getInterestId() {
+        return interestId;
+    }
+
+    public void setInterestId(int interestId) {
+        this.interestId = interestId;
     }
 
 }

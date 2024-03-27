@@ -25,4 +25,9 @@ public class InterestTopicController {
         return ResponseEntity.ok().body(interestTopicService.getInterestTopic());
     }
 
+    @GetMapping(value = "/getByName", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HashMap<Integer, String>> getInterestTopic(@RequestParam String name) {
+        return ResponseEntity.ok().body(interestTopicService.filterInterestTopic(name));
+    }
+
 }
