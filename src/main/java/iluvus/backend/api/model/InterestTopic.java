@@ -1,15 +1,36 @@
 package iluvus.backend.api.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Arrays;
 import java.util.List;
 
+@Document(collection = "interests")
 public class InterestTopic {
 
-    public static List<String> getTopicList() {
-        return topicList;
+    @Id
+    private int id;
+
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-    private static final List<String> topicList = Arrays.asList(
+    public String getName() {
+        return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static final List<String> topicList = Arrays.asList(
                 "Tech Innovation",
                 "College Tips",
                 "LGBTQIA Rights",
@@ -209,7 +230,8 @@ public class InterestTopic {
                 "Virtual Cooking Classes",
                 "Environmental Sustainability Projects",
                 "Movie Recommendations",
-                "Book Recommendations"
+                "Book Recommendations",
+                "Other"
         );
 
 
