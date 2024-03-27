@@ -127,7 +127,6 @@ public class PostController {
 
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
-        System.out.println("I am Here");
         List<Post> posts = postService.getPostForHomePage(userId);
         if (posts != null && !posts.isEmpty()) {
             System.out.println("Returned Post!!!!");
