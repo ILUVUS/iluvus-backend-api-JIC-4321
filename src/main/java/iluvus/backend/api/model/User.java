@@ -28,7 +28,7 @@ public class User {
     private List<HashMap<String, String>> notification;
     private LocationDto location;
 
-    private List<String> interests;
+    private List<Integer> interests;
     private List<String> education;
     private List<String> work;
     private List<String> skills;
@@ -155,11 +155,11 @@ public class User {
         this.location = location;
     }
 
-    public List<String> getInterests() {
+    public List<Integer> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(List<Integer> interests) {
         this.interests = interests;
     }
 

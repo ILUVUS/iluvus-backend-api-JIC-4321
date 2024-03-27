@@ -26,7 +26,7 @@ public class Post {
     private List<String> likedBy;
     private List<String> reportedBy;
     private List<String> tagged;
-
+    private  List<Integer> interestList;
     @Field("medias")
     private List<String> medias;
 
@@ -42,6 +42,7 @@ public class Post {
         this.likedBy = new ArrayList<String>();
         this.reportedBy = new ArrayList<String>();
         this.tagged = postDto.getTagged();
+        this.interestList = postDto.getInterestList();;
         this.medias = postDto.getMedias();
     }
 
@@ -159,6 +160,14 @@ public class Post {
 
     public List<String> getMedias() {
         return this.medias;
+    }
+
+    public List<Integer> getInterestList() {
+        return interestList;
+    }
+
+    public void setInterestList(List<Integer> interestList) {
+        this.interestList = interestList;
     }
 
 }

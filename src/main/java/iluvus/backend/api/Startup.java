@@ -44,9 +44,9 @@ public class Startup implements CommandLineRunner {
         communityUserRepository.insert(communityUser);
         communityUserRepository.deleteById(communityUser.getId());
 
-        InterestTopic interestTopic = new InterestTopic();
-        interestRepository.insert(interestTopic);
-        interestRepository.deleteById(String.valueOf(interestTopic.getId()));
+//        InterestTopic interestTopic = new InterestTopic();
+//        interestRepository.insert(interestTopic);
+//        interestRepository.deleteById(String.valueOf(interestTopic.getId()));
 
         // use with care
 //        insertInterestTopics();

@@ -15,6 +15,8 @@ public class PostDto {
     private List<String> tagged;
     private List<String> medias;
 
+    private List<Integer> interestList;
+
     public PostDto() {
     }
 
@@ -84,6 +86,15 @@ public class PostDto {
 
     public void setTagged(List<String> tagged) {
         this.tagged = tagged;
+    }
+
+    public List<Integer> getInterestList() {
+        return interestList;
+    }
+
+    public void setInterestList(List<Integer> interestList) {
+
+        this.interestList = interestList;
     }
 
     public List<String> getTagged() {
