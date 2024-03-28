@@ -16,6 +16,9 @@ public class Community {
 
     private String owner;
 
+    //store base64 image
+    private String image;
+
     public Community() {
     }
 
@@ -25,6 +28,7 @@ public class Community {
         this.rule = communityDto.getRule();
         this.isPublic = communityDto.isPublic();
         this.owner = communityDto.getOwner();
+        this.image = communityDto.getImage();
     }
 
     // get id
@@ -76,5 +80,10 @@ public class Community {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    public String getImage() {
+        return image;
+    }
+
 
 }

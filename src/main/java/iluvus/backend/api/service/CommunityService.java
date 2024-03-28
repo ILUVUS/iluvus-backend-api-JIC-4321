@@ -46,6 +46,8 @@ public class CommunityService {
 
             communityDto.setMembers(new ArrayList<>());
 
+            communityDto.setImage(data.get("image"));
+
             Community community = new Community(communityDto);
 
             communityRepository.insert(community);
