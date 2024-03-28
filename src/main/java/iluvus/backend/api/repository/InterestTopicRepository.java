@@ -13,4 +13,7 @@ public interface InterestTopicRepository extends MongoRepository<InterestTopic, 
     // filter interest topic if input matches any part of the name
     @Query("{ 'name' : { $regex: '^.*(?0).*$', $options: 'i' } }")
     List<InterestTopic> findInterestTopicsByName(String name);
+
+    @Query("{ 'id' : ?0 }")
+    InterestTopic findInterestTopicById(int id);
 }

@@ -116,6 +116,7 @@ public class PostService {
                 post.setAuthor_id(fname, lname);
                 authorIdName.put(authorId, post.getAuthor_id());
             }
+
         }
         return posts;
     }

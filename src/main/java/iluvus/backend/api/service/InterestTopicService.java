@@ -1,5 +1,6 @@
 package iluvus.backend.api.service;
 
+import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.repository.InterestTopicRepository;
 import iluvus.backend.api.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class InterestTopicService {
         interestTopics.forEach(interestTopic -> {
             interestTopicMap.put(interestTopic.getId(), interestTopic.getName());
         });
+        return interestTopicMap;
+    }
+
+    public HashMap<Integer, String> getInterestTopicById(int id) {
+        InterestTopic interestTopic = interestTopicRepository.findInterestTopicById(id);
+        HashMap<Integer, String> interestTopicMap = interestTopic.getInterestTopic();
         return interestTopicMap;
     }
 

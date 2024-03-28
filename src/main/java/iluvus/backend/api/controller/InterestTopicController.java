@@ -30,4 +30,9 @@ public class InterestTopicController {
         return ResponseEntity.ok().body(interestTopicService.filterInterestTopic(name));
     }
 
+    @GetMapping(value = "/getById", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HashMap<Integer, String>> getInterestTopicById(@RequestParam int id) {
+        return ResponseEntity.ok().body(interestTopicService.getInterestTopicById(id));
+    }
+
 }

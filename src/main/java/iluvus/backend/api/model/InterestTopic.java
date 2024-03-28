@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Document(collection = "interests")
@@ -28,6 +29,13 @@ public class InterestTopic {
 
     public int getId() {
         return id;
+    }
+
+    public HashMap<Integer, String> getInterestTopic() {
+        // get all interest topics
+        HashMap<Integer, String> interestTopicMap = new HashMap<>();
+        interestTopicMap.put(this.getId(), this.getName());
+        return interestTopicMap;
     }
 
     public static final List<String> topicList = Arrays.asList(

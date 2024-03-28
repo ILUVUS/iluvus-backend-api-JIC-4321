@@ -26,9 +26,7 @@ public class Post {
     private List<String> likedBy;
     private List<String> reportedBy;
     private List<String> tagged;
-
     private  Integer topicId;
-
     @Field("medias")
     private List<String> medias;
 
@@ -44,7 +42,6 @@ public class Post {
         this.likedBy = new ArrayList<String>();
         this.reportedBy = new ArrayList<String>();
         this.tagged = postDto.getTagged();
-        this.topicId = postDto.getTopicId();
         this.medias = postDto.getMedias();
     }
 
