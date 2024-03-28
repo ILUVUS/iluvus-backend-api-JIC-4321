@@ -83,6 +83,16 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/getNotificationByUserId", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, String>>> getNotificationByUserId(@RequestParam String userId) {
+        List<HashMap<String, String>> userNotifications = userService.getNotificationByUserId(userId);
+        if (userNotifications != null && !userNotifications.isEmpty()) {
+            return ResponseEntity.ok().body(userNotifications);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter) {
         List<HashMap<String, Object>> userList = userService.getMatchedUser(filter);
