@@ -14,7 +14,8 @@ public class PostDto {
     private List<String> reportedBy;
     private List<String> tagged;
     private List<String> medias;
-    private int interestId;
+
+    private Integer topicId;
 
     public PostDto() {
     }
@@ -91,11 +92,11 @@ public class PostDto {
         return tagged;
     }
 
-    public int getInterestId() {
-        return interestId;
+    public Integer getTopicId() {
+        return topicId;
+    }
+    public void setTopicId(Integer topicId) {
+        this.topicId = topicId;
     }
 
-    public void setInterestId(int interestId) {
-        this.interestId = interestId;
-    }
 }

@@ -5,6 +5,7 @@ import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
+import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import java.util.List;
@@ -28,6 +29,8 @@ public class PostService {
     private UserRepository userRepository;
     @Autowired
     private CommunityRepository communityRepository;
+    @Autowired
+    private InterestRepository interestRepository;
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -39,10 +42,10 @@ public class PostService {
             String raw_media = data.get("medias");
             String tagged = data.get("tagged");
 
-            String interestTopic = data.get("topics");
+            String raw_topicId = data.get("topicId");
 
             List<String> taggedList = new ArrayList<>();
-            if (tagged != null && tagged.strip().length() != 0) {
+            if (tagged != null && !tagged.isBlank()) {
                 taggedList = List.of(tagged.split(","));
             }
 
@@ -71,6 +74,12 @@ public class PostService {
                 return null;
             }
 
+            Integer topicId = null;
+
+            if (raw_topicId == null || raw_topicId.strip().length() == 0) {
+                raw_topicId = interestRepository.findAll().size() - 1 + "";
+            }
+
             PostDto postDto = new PostDto();
             postDto.setText(text);
             postDto.setDateTime(dateTime);
@@ -78,6 +87,7 @@ public class PostService {
             postDto.setCommunity_id(community_id);
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
+            postDto.setTopicId(Integer.parseInt(raw_topicId));
 
             Post post = new Post(postDto);
             postRepository.insert(post);
@@ -295,4 +305,43 @@ public class PostService {
         return posts;
     }
 
+    public List<Post> getPostForHomePage(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        List<String> groups = user.getGroups();
+        List<Post> posts = new ArrayList<>();
+//        posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
+        for (String group : groups) {
+            List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
+            posts.addAll(groupPosts);
+        }
+
+        List<Post> returningPost = new ArrayList<>();
+
+        for (Post post : posts) {
+            List<Integer> userInterest = user.getInterests();
+            for (Integer interest : userInterest) {
+                if (post.getTopicId() == interest) {
+                    returningPost.add(post);
+                    break;
+                }
+            }
+        }
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : returningPost) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User theuser = userRepository.findById(authorId).orElse(null);
+                String fname = theuser.getFname();
+                String lname = theuser.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+        return returningPost;
+    }
 }

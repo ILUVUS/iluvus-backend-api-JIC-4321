@@ -22,7 +22,7 @@ public class UserDto {
     private int verifyCode;
     private List<HashMap<String, String>> notification;
 
-    private List<String> interests;
+    private List<Integer> interests;
     private List<String> education;
     private List<String> work;
     private List<String> skills;
@@ -146,11 +146,11 @@ public class UserDto {
         this.verifyCode = verifyCode;
     }
 
-    public List<String> getInterests() {
+    public List<Integer> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(List<Integer> interests) {
         this.interests = interests;
     }
 

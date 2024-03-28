@@ -1,5 +1,6 @@
 package iluvus.backend.api.service;
 
+import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ import javax.mail.internet.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private InterestRepository interestRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -252,4 +256,20 @@ public class UserService {
         }
     }
 
+    public boolean setUserInterestList(Map<String, String> data) {
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            List<String> interestName = new ArrayList<>(Arrays.asList(data.get("interestList").split(",")));
+            List<Integer> interestList = new ArrayList<>();
+            for (String interest : interestName) {
+                interestList.add(interestRepository.findInterestTopicByName(interest).getId());
+            }
+            user.setInterests(interestList);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
