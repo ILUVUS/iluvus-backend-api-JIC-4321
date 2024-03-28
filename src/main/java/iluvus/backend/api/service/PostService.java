@@ -42,19 +42,11 @@ public class PostService {
             String raw_media = data.get("medias");
             String tagged = data.get("tagged");
 
-            String interestTopic = data.get("topics");
+            String raw_topicId = data.get("topicId");
 
             List<String> taggedList = new ArrayList<>();
             if (tagged != null && !tagged.isBlank()) {
                 taggedList = List.of(tagged.split(","));
-            }
-
-            List<Integer> interestList = new ArrayList<>();
-            if (interestTopic != null && !interestTopic.isBlank()) {
-                List<String> interestName = List.of(interestTopic.split(","));
-                for (String interest : interestName) {
-                    interestList.add(interestRepository.findInterestTopicByName(interest).getId());
-                }
             }
 
             List<String> medias = processMedia(raw_media);
@@ -82,6 +74,12 @@ public class PostService {
                 return null;
             }
 
+            Integer topicId = null;
+
+            if (raw_topicId == null || raw_topicId.strip().length() == 0) {
+                raw_topicId = interestRepository.findAll().size() - 1 + "";
+            }
+
             PostDto postDto = new PostDto();
             postDto.setText(text);
             postDto.setDateTime(dateTime);
@@ -89,7 +87,7 @@ public class PostService {
             postDto.setCommunity_id(community_id);
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
-            postDto.setInterestList(interestList);
+            postDto.setTopicId(Integer.parseInt(raw_topicId));
 
             Post post = new Post(postDto);
             postRepository.insert(post);
@@ -325,7 +323,7 @@ public class PostService {
         for (Post post : posts) {
             List<Integer> userInterest = user.getInterests();
             for (Integer interest : userInterest) {
-                if (post.getInterestList().contains(interest)) {
+                if (post.getTopicId() == interest) {
                     returningPost.add(post);
                     break;
                 }
