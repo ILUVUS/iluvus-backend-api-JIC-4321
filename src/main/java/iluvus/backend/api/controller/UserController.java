@@ -93,4 +93,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/searchTagged", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter, @RequestParam String communityId) {
+        List<HashMap<String, Object>> userList = userService.getCommunityUsers(filter, communityId);
+        if (userList != null) {
+            return ResponseEntity.ok().body(userList);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
