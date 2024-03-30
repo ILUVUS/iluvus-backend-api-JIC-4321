@@ -237,7 +237,7 @@ public class PostService {
             }
             String senderId = userId;
             String receiverId = post.getAuthor_id();
-            String type = "LIKE";
+            String type = "UPLIFT";
             String message = String.format("%s liked your post in %s", user.getFname(), community.getName());
             String dateTime = data.get("dateTime");
             addNotification(senderId, receiverId, type, message, dateTime);
