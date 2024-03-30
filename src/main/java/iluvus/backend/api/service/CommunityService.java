@@ -40,7 +40,7 @@ public class CommunityService {
             communityDto.setDescription(data.get("description"));
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(data.get("visibility").equals("Public"));
-
+            communityDto.setModerators(data.get("moderators") == null ? new ArrayList<>() : List.of(data.get("moderators").split(",")));
             User owner = userRepository.findById(data.get("ownerId")).orElse(null);
             communityDto.setOwner(owner.getId());
 
