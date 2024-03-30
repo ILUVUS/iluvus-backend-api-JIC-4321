@@ -242,12 +242,8 @@ public class PostService {
                 postRepository.save(post);
             } else {
                 reportedBy.add(user);
-                if (reportedBy.size() >= 5) {
-                    postRepository.delete(post);
-                } else {
-                    post.setReportedBy(reportedBy);
-                    postRepository.save(post);
-                }
+                post.setReportedBy(reportedBy);
+                postRepository.save(post);
             }
             return true;
         } catch (Exception e) {
@@ -272,6 +268,18 @@ public class PostService {
             }
         }
         return medias;
+    }
+
+    //method to get all posts with 5 or more reports
+    public List<Post> getReportedPosts() {
+        List<Post> posts = postRepository.findAll();
+        List<Post> reportedPosts = new ArrayList<>();
+        for (Post post : posts) {
+            if (post.getReportedBy().size() >= 5) {
+                reportedPosts.add(post);
+            }
+        }
+        return reportedPosts;
     }
 
 }
