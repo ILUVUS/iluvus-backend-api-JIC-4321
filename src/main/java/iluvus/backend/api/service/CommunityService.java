@@ -4,7 +4,7 @@ import iluvus.backend.api.dto.CommunityDto;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
-import iluvus.backend.api.model.CommunityUserStatus;
+import iluvus.backend.api.resources.CommunityUserStatus;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;

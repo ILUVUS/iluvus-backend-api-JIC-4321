@@ -2,14 +2,12 @@ package iluvus.backend.api.model;
 
 import iluvus.backend.api.dto.LocationDto;
 import iluvus.backend.api.dto.UserDto;
+import iluvus.backend.api.resources.NotificationType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Document(collection = "users")
 public class User {
@@ -26,7 +24,7 @@ public class User {
     private String gender;
     private Date dob;
     private String race;
-    private List<HashMap<String, String>> notification;
+    private List<HashMap<String, Object>> notification;
     private LocationDto location;
 
     private List<Integer> interests;
@@ -216,16 +214,19 @@ public class User {
         return this.groups.add(groupId);
     }
 
-    public List<HashMap<String, String>> getNotification() {
+    public List<HashMap<String, Object>> getNotification() {
         return notification;
     }
 
-    public void setNotification(List<HashMap<String, String>> notification) {
+    public void setNotification(List<HashMap<String, Object>> notification) {
         this.notification = notification;
     }
 
-    public void createNotification(String senderId, String type, String message, String dateTime) {
-        HashMap<String, String> notification = new HashMap<>();
+    public void createNotification(String senderId, NotificationType type, String message, String dateTime) {
+        if (this.notification == null) {
+            this.notification = new ArrayList<>();
+        }
+        HashMap<String, Object> notification = new HashMap<>();
         notification.put("id", UUID.randomUUID().toString());
         notification.put("senderId", senderId);
         notification.put("type", type);
