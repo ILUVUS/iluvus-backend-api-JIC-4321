@@ -2,6 +2,7 @@ package iluvus.backend.api;
 
 import iluvus.backend.api.model.*;
 import iluvus.backend.api.repository.*;
+import iluvus.backend.api.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,8 @@ public class Startup implements CommandLineRunner {
     }
 
     private void initDatabaseIfEmpty() {
+
+        NotificationService.init(userRepository);
 
 //        User user = new User();
 //        userRepository.insert(user);

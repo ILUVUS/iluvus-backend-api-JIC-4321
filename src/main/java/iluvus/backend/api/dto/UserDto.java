@@ -20,7 +20,7 @@ public class UserDto {
     private Date dob;
     private String race;
     private int verifyCode;
-    private List<HashMap<String, String>> notification;
+    private List<HashMap<String, Object>> notification;
 
     private List<Integer> interests;
     private List<String> education;
@@ -122,11 +122,11 @@ public class UserDto {
         }
     }
 
-    public void setNotification(List<HashMap<String, String>> notification) {
+    public void setNotification(List<HashMap<String, Object>> notification) {
         this.notification = notification;
     }
 
-    public List<HashMap<String, String>> getNotification() {
+    public List<HashMap<String, Object>> getNotification() {
         return notification;
     }
 

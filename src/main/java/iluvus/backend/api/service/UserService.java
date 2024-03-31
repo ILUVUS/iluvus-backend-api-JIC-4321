@@ -71,7 +71,7 @@ public class UserService {
             // we need a way to put List in Frontend into a String seperated by commas
             // then we can split the String into a List in Backend
             // FOR NOW, we will just create an empty List
-            userDto.setNotification(new ArrayList<HashMap<String, String>>());
+            userDto.setNotification(new ArrayList<>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
             userDto.setWork(new ArrayList<>());
@@ -227,10 +227,10 @@ public class UserService {
         }
     }
 
-    public List<HashMap<String, String>> getNotification(Map<String, String> data) {
+    public List<HashMap<String, Object>> getNotification(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
-            List<HashMap<String, String>> notification = user.getNotification();
+            List<HashMap<String, Object>> notification = user.getNotification();
             return notification;
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,10 +239,10 @@ public class UserService {
 
     }
 
-    public List<HashMap<String, String>> getNotificationByUserId(String userId) {
+    public List<HashMap<String, Object>> getNotificationByUserId(String userId) {
         try {
             User user = userRepository.findById(userId).orElse(null);
-            List<HashMap<String, String>> userNotification = user.getNotification();
+            List<HashMap<String, Object>> userNotification = user.getNotification();
             return userNotification;
         } catch (Exception e) {
             e.printStackTrace();

@@ -75,8 +75,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
-        List<HashMap<String, String>> notifications = userService.getNotification(data);
+    public ResponseEntity<List<HashMap<String, Object>>> getNotification(@RequestBody Map<String, String> data) {
+        List<HashMap<String, Object>> notifications = userService.getNotification(data);
         if (notifications != null) {
             return ResponseEntity.ok().body(notifications);
         } else {
@@ -85,8 +85,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/getNotificationByUserId", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<HashMap<String, String>>> getNotificationByUserId(@RequestParam String userId) {
-        List<HashMap<String, String>> userNotifications = userService.getNotificationByUserId(userId);
+    public ResponseEntity<List<HashMap<String, Object>>> getNotificationByUserId(@RequestParam String userId) {
+        List<HashMap<String, Object>> userNotifications = userService.getNotificationByUserId(userId);
         if (userNotifications != null && !userNotifications.isEmpty()) {
             return ResponseEntity.ok().body(userNotifications);
         } else {

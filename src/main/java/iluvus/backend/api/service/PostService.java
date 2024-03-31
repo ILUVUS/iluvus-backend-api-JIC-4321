@@ -2,6 +2,7 @@ package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.PostDto;
 import iluvus.backend.api.model.Community;
+import iluvus.backend.api.resources.NotificationType;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -76,8 +76,8 @@ public class PostService {
 
             Integer topicId = null;
 
-            if (raw_topicId == null || raw_topicId.strip().length() == 0) {
-                raw_topicId = interestRepository.findAll().size() - 1 + "";
+            if (raw_topicId == null || raw_topicId.isBlank()) {
+                raw_topicId = String.valueOf(interestRepository.findAll().size() - 1);
             }
 
             PostDto postDto = new PostDto();
@@ -90,6 +90,16 @@ public class PostService {
             postDto.setTopicId(Integer.parseInt(raw_topicId));
 
             Post post = new Post(postDto);
+
+            String senderId = author.getId();
+            List<String> receiverIds = taggedList;
+            if (receiverIds != null && !receiverIds.isEmpty()) {
+                String message = String.format("%s tagged you in a post in %s", author.getFname(), community.getName());
+                for (String receiverId : receiverIds) {
+                    NotificationService.addNotification(senderId, receiverId, NotificationType.TAG, message, dateTime);
+                }
+            }
+
             postRepository.insert(post);
 
             return getPostsByCommunityId(community_id);
@@ -100,7 +110,7 @@ public class PostService {
     }
 
     public List<Post> getPostsByCommunityId(String id) {
-        if (id == null || id.strip().length() == 0) {
+        if (id == null || id.isBlank()) {
             return null;
         }
         List<Post> posts = postRepository.findPostByCommunity_id(id);
@@ -116,7 +126,6 @@ public class PostService {
                 post.setAuthor_id(fname, lname);
                 authorIdName.put(authorId, post.getAuthor_id());
             }
-
         }
         return posts;
     }
@@ -131,7 +140,7 @@ public class PostService {
 
             Post post = postRepository.findById(postId).orElse(null);
 
-            if (comment == null || comment.strip().length() == 0) {
+            if (comment == null || comment.isBlank()) {
                 return null;
             }
 
@@ -140,10 +149,20 @@ public class PostService {
                 if (user == null) {
                     return null;
                 }
-                if (comment.strip().length() == 0) {
+                if (comment.isBlank()) {
                     return null;
                 }
                 post.writeComment(id, comment, authorId, dateTime);
+
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return null;
+                }
+                String senderId = authorId;
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s commented on your post in %s", user.getFname(), community.getName());
+                NotificationService.addNotification(senderId, receiverId, NotificationType.COMMENT, message, dateTime);
+
                 postRepository.save(post);
 
                 return this.getCommentsWithAuthorName(postId);
@@ -200,22 +219,41 @@ public class PostService {
 
     public int likePost(Map<String, String> data) {
         try {
+            boolean upliftSignal = false;
             Post post = postRepository.findById(data.get("postId")).orElse(null);
-            String user = data.get("userId");
+            String userId = data.get("userId");
             if (post == null) {
                 return 0;
             }
             List<String> likedBy = post.getLikedBy();
 
             if (likedBy.size() == 0) {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
-            } else if (likedBy.contains(user)) {
-                likedBy.remove(user);
+                upliftSignal = true;
+            } else if (likedBy.contains(userId)) {
+                likedBy.remove(userId);
                 post.setLikedBy(likedBy);
             } else {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
+                upliftSignal = true;
+            }
+
+            if (upliftSignal) {
+                User user = userRepository.findById(userId).orElse(null);
+                if (user == null) {
+                    return 0;
+                }
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return 0;
+                }
+                String senderId = userId;
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s uplift your post in %s", user.getFname(), community.getName());
+                String dateTime = java.time.OffsetDateTime.now().toString();
+                NotificationService.addNotification(senderId, receiverId, NotificationType.UPLIFT, message, dateTime);
             }
 
             postRepository.save(post);
@@ -259,7 +297,15 @@ public class PostService {
                     postRepository.delete(post);
                 } else {
                     post.setReportedBy(reportedBy);
+
+                    String senderId = reporter.getId();
+                    String receiverId = post.getAuthor_id();
+                    String message = String.format("%s reported your post in %s", reporter.getFname(), community.getName());
+                    String dateTime = java.time.OffsetDateTime.now().toString();
+                    NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message, dateTime);
+
                     postRepository.save(post);
+
                 }
             }
             return true;
@@ -336,7 +382,6 @@ public class PostService {
             }
         }
 
-
         // add otherPost after returningPost
         returningPost.addAll(otherPost);
 
@@ -357,4 +402,6 @@ public class PostService {
 
         return returningPost;
     }
+
+
 }
