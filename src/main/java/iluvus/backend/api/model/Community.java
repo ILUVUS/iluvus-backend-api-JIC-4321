@@ -18,10 +18,10 @@ public class Community {
 
     private String owner;
 
-    //store base64 image
+    // store base64 image
     private String image;
 
-    //moderators
+    // moderators
     private List<String> moderators;
 
     public Community() {
@@ -90,7 +90,7 @@ public class Community {
     public String getImage() {
         return image;
     }
-    
+
     public List<String> getModerators() {
         return moderators;
     }

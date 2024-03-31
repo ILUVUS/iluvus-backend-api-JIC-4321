@@ -136,7 +136,6 @@ public class PostController {
         }
     }
 
-
     // Get method to get all the posts with 5 or more reports
     @GetMapping(value = "/getReportedPosts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getReportedPosts(@RequestParam String communityId) {

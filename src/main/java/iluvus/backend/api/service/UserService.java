@@ -4,7 +4,7 @@ import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import iluvus.backend.api.util.SecurityConfig;
+
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.User;
@@ -13,9 +13,7 @@ import iluvus.backend.api.util.UserDataCheck;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -284,6 +282,7 @@ public class UserService {
             return null;
         }
     }
+
     public List<HashMap<String, Object>> getCommunityUsers(String filter, String communityId) {
         try {
             List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);

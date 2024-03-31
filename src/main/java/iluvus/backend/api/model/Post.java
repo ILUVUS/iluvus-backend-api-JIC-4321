@@ -26,7 +26,7 @@ public class Post {
     private List<String> likedBy;
     private List<String> reportedBy;
     private List<String> tagged;
-    private  Integer topicId;
+    private Integer topicId;
     @Field("medias")
     private List<String> medias;
 
@@ -92,7 +92,6 @@ public class Post {
     public void setReport_count(BigInteger report_count) {
         this.report_count = report_count;
     }
-
 
     public String getText() {
         return this.text;
