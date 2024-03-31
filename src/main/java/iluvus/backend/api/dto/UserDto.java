@@ -151,6 +151,7 @@ public class UserDto {
     }
 
     public void setInterests(List<Integer> interests) {
+
         this.interests = interests;
     }
 
@@ -218,6 +219,7 @@ public class UserDto {
         publicInfo.put("isVerified", user.isVerified());
         publicInfo.put("fname", user.getFname());
         publicInfo.put("lname", user.getLname());
+        publicInfo.put("dob", user.getDob());
         return publicInfo;
     }
 }

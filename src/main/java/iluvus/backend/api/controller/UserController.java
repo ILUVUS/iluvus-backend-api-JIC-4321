@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> getUser(@RequestParam String userId) {
+    public ResponseEntity<Map<String, Object>> getUser(@RequestParam String userId) {
         return ResponseEntity.ok().body(userService.getUser(userId));
     }
 
@@ -81,6 +81,16 @@ public class UserController {
             return ResponseEntity.ok().body(notifications);
         } else {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editInterest(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Interest Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Interest Set Failed");
         }
     }
 

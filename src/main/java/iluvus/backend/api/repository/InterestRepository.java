@@ -10,5 +10,8 @@ public interface InterestRepository extends MongoRepository<InterestTopic, Strin
     @Query("{ 'name' : ?0 }")
     InterestTopic findInterestTopicByName(String name);
 
+    @Query("{ 'id' : ?0 }")
+    InterestTopic findInterestTopicById(Integer id);
+
 }
 
