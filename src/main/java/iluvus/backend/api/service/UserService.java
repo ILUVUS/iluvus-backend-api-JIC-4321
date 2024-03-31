@@ -239,6 +239,17 @@ public class UserService {
 
     }
 
+    public List<HashMap<String, String>> getNotificationByUserId(String userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            List<HashMap<String, String>> userNotification = user.getNotification();
+            return userNotification;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<HashMap<String, Object>> getMatchedUser(String filter) {
         try {
             // get all users matched
