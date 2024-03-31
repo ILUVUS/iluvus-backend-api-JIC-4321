@@ -119,6 +119,8 @@ public class CommunityService {
             communityUser.setMemberId(userId);
 
             if (community.isPublic()) {
+                user.addGroup(communityId);
+                userRepository.save(user);
                 communityUser.setStatus(CommunityUserStatus.APPROVED);
                 communityUserRepository.insert(communityUser);
             } else {
@@ -215,7 +217,10 @@ public class CommunityService {
         String userId = data.get("userId");
         String communityId = data.get("communityId");
         CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        User user = userRepository.findById(userId).orElse(null);
         if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            user.addGroup(communityId);
+            userRepository.save(user);
             communityUser.setStatus(CommunityUserStatus.APPROVED);
             communityUserRepository.save(communityUser);
         }

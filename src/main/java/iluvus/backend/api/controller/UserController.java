@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import iluvus.backend.api.model.InterestTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +91,22 @@ public class UserController {
             return ResponseEntity.ok().body(userList);
         } else {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping(value = "/interestList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getInterestTopic() {
+        List<String> interestTopic = InterestTopic.topicList;
+        return ResponseEntity.ok().body(interestTopic);
+    }
+
+    @PostMapping(value = "/setInterestList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> setInterestList(@RequestBody Map<String, String> data) {
+        boolean interestList = userService.setUserInterestList(data);
+        if (interestList) {
+            return ResponseEntity.ok().body("Interest List Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Interest List Set Failed");
         }
     }
 
