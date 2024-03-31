@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import iluvus.backend.api.model.InterestTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -74,10 +75,20 @@ public class UserController {
     }
 
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
-        List<HashMap<String, String>> notifications = userService.getNotification(data);
+    public ResponseEntity<List<HashMap<String, Object>>> getNotification(@RequestBody Map<String, String> data) {
+        List<HashMap<String, Object>> notifications = userService.getNotification(data);
         if (notifications != null) {
             return ResponseEntity.ok().body(notifications);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping(value = "/getNotificationByUserId", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, Object>>> getNotificationByUserId(@RequestParam String userId) {
+        List<HashMap<String, Object>> userNotifications = userService.getNotificationByUserId(userId);
+        if (userNotifications != null && !userNotifications.isEmpty()) {
+            return ResponseEntity.ok().body(userNotifications);
         } else {
             return ResponseEntity.badRequest().body(null);
         }
@@ -86,6 +97,16 @@ public class UserController {
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter) {
         List<HashMap<String, Object>> userList = userService.getMatchedUser(filter);
+        if (userList != null) {
+            return ResponseEntity.ok().body(userList);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping(value = "/searchUsersInCommunity", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter, @RequestParam String communityId) {
+        List<HashMap<String, Object>> userList = userService.getCommunityUsers(filter, communityId);
         if (userList != null) {
             return ResponseEntity.ok().body(userList);
         } else {

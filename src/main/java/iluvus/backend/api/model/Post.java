@@ -26,7 +26,7 @@ public class Post {
     private List<String> likedBy;
     private List<String> reportedBy;
     private List<String> tagged;
-
+    private  Integer topicId;
     @Field("medias")
     private List<String> medias;
 
@@ -159,6 +159,14 @@ public class Post {
 
     public List<String> getMedias() {
         return this.medias;
+    }
+
+    public Integer getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(Integer topicId) {
+        this.topicId = topicId;
     }
 
 }

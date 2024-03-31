@@ -15,6 +15,8 @@ public class PostDto {
     private List<String> tagged;
     private List<String> medias;
 
+    private Integer topicId;
+
     public PostDto() {
     }
 
@@ -89,4 +91,12 @@ public class PostDto {
     public List<String> getTagged() {
         return tagged;
     }
+
+    public Integer getTopicId() {
+        return topicId;
+    }
+    public void setTopicId(Integer topicId) {
+        this.topicId = topicId;
+    }
+
 }

@@ -20,9 +20,9 @@ public class UserDto {
     private Date dob;
     private String race;
     private int verifyCode;
-    private List<HashMap<String, String>> notification;
+    private List<HashMap<String, Object>> notification;
 
-    private List<String> interests;
+    private List<Integer> interests;
     private List<String> education;
     private List<String> work;
     private List<String> skills;
@@ -122,11 +122,11 @@ public class UserDto {
         }
     }
 
-    public void setNotification(List<HashMap<String, String>> notification) {
+    public void setNotification(List<HashMap<String, Object>> notification) {
         this.notification = notification;
     }
 
-    public List<HashMap<String, String>> getNotification() {
+    public List<HashMap<String, Object>> getNotification() {
         return notification;
     }
 
@@ -146,11 +146,11 @@ public class UserDto {
         this.verifyCode = verifyCode;
     }
 
-    public List<String> getInterests() {
+    public List<Integer> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(List<Integer> interests) {
         this.interests = interests;
     }
 

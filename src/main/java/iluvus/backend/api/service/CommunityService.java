@@ -4,12 +4,13 @@ import iluvus.backend.api.dto.CommunityDto;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
-import iluvus.backend.api.model.CommunityUserStatus;
+import iluvus.backend.api.resources.CommunityUserStatus;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.resources.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -41,14 +42,27 @@ public class CommunityService {
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(data.get("visibility").equals("Public"));
 
+            communityDto.setModerators(
+                    data.get("moderators") == null
+                            ? new ArrayList<>()
+                            : List.of(data.get("moderators").split(",")));
+
             User owner = userRepository.findById(data.get("ownerId")).orElse(null);
+
             communityDto.setOwner(owner.getId());
-
             communityDto.setMembers(new ArrayList<>());
-
             communityDto.setImage(data.get("image"));
-
             Community community = new Community(communityDto);
+
+            List<String> receiverIds = community.getModerators();
+            String dateTime = java.time.OffsetDateTime.now().toString();
+            if (receiverIds != null && !receiverIds.isEmpty()) {
+                String message = String.format("%s added you as moderator in %s", owner.getFname(), community.getName());
+                for (String receiverId : receiverIds) {
+                    NotificationService.addNotification(owner.getId(), receiverId,
+                            NotificationType.MODERATOR_ADD, message, dateTime);
+                }
+            }
 
             communityRepository.insert(community);
             return true;
@@ -119,6 +133,8 @@ public class CommunityService {
             communityUser.setMemberId(userId);
 
             if (community.isPublic()) {
+                user.addGroup(communityId);
+                userRepository.save(user);
                 communityUser.setStatus(CommunityUserStatus.APPROVED);
                 communityUserRepository.insert(communityUser);
             } else {
@@ -215,7 +231,10 @@ public class CommunityService {
         String userId = data.get("userId");
         String communityId = data.get("communityId");
         CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+        User user = userRepository.findById(userId).orElse(null);
         if (communityUser != null && communityUser.getStatus() == CommunityUserStatus.PENDING) {
+            user.addGroup(communityId);
+            userRepository.save(user);
             communityUser.setStatus(CommunityUserStatus.APPROVED);
             communityUserRepository.save(communityUser);
         }

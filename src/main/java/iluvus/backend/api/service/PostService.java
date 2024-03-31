@@ -2,9 +2,11 @@ package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.PostDto;
 import iluvus.backend.api.model.Community;
+import iluvus.backend.api.resources.NotificationType;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
+import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import java.util.List;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,6 +29,8 @@ public class PostService {
     private UserRepository userRepository;
     @Autowired
     private CommunityRepository communityRepository;
+    @Autowired
+    private InterestRepository interestRepository;
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -39,8 +42,10 @@ public class PostService {
             String raw_media = data.get("medias");
             String tagged = data.get("tagged");
 
+            String raw_topicId = data.get("topicId");
+
             List<String> taggedList = new ArrayList<>();
-            if (tagged != null && tagged.strip().length() != 0) {
+            if (tagged != null && !tagged.isBlank()) {
                 taggedList = List.of(tagged.split(","));
             }
 
@@ -69,6 +74,12 @@ public class PostService {
                 return null;
             }
 
+            Integer topicId = null;
+
+            if (raw_topicId == null || raw_topicId.isBlank()) {
+                raw_topicId = String.valueOf(interestRepository.findAll().size() - 1);
+            }
+
             PostDto postDto = new PostDto();
             postDto.setText(text);
             postDto.setDateTime(dateTime);
@@ -76,8 +87,19 @@ public class PostService {
             postDto.setCommunity_id(community_id);
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
+            postDto.setTopicId(Integer.parseInt(raw_topicId));
 
             Post post = new Post(postDto);
+
+            String senderId = author.getId();
+            List<String> receiverIds = taggedList;
+            if (receiverIds != null && !receiverIds.isEmpty()) {
+                String message = String.format("%s tagged you in a post in %s", author.getFname(), community.getName());
+                for (String receiverId : receiverIds) {
+                    NotificationService.addNotification(senderId, receiverId, NotificationType.TAG, message, dateTime);
+                }
+            }
+
             postRepository.insert(post);
 
             return getPostsByCommunityId(community_id);
@@ -88,7 +110,7 @@ public class PostService {
     }
 
     public List<Post> getPostsByCommunityId(String id) {
-        if (id == null || id.strip().length() == 0) {
+        if (id == null || id.isBlank()) {
             return null;
         }
         List<Post> posts = postRepository.findPostByCommunity_id(id);
@@ -118,7 +140,7 @@ public class PostService {
 
             Post post = postRepository.findById(postId).orElse(null);
 
-            if (comment == null || comment.strip().length() == 0) {
+            if (comment == null || comment.isBlank()) {
                 return null;
             }
 
@@ -127,10 +149,20 @@ public class PostService {
                 if (user == null) {
                     return null;
                 }
-                if (comment.strip().length() == 0) {
+                if (comment.isBlank()) {
                     return null;
                 }
                 post.writeComment(id, comment, authorId, dateTime);
+
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return null;
+                }
+                String senderId = authorId;
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s commented on your post in %s", user.getFname(), community.getName());
+                NotificationService.addNotification(senderId, receiverId, NotificationType.COMMENT, message, dateTime);
+
                 postRepository.save(post);
 
                 return this.getCommentsWithAuthorName(postId);
@@ -187,22 +219,41 @@ public class PostService {
 
     public int likePost(Map<String, String> data) {
         try {
+            boolean upliftSignal = false;
             Post post = postRepository.findById(data.get("postId")).orElse(null);
-            String user = data.get("userId");
+            String userId = data.get("userId");
             if (post == null) {
                 return 0;
             }
             List<String> likedBy = post.getLikedBy();
 
             if (likedBy.size() == 0) {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
-            } else if (likedBy.contains(user)) {
-                likedBy.remove(user);
+                upliftSignal = true;
+            } else if (likedBy.contains(userId)) {
+                likedBy.remove(userId);
                 post.setLikedBy(likedBy);
             } else {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
+                upliftSignal = true;
+            }
+
+            if (upliftSignal) {
+                User user = userRepository.findById(userId).orElse(null);
+                if (user == null) {
+                    return 0;
+                }
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return 0;
+                }
+                String senderId = userId;
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s uplift your post in %s", user.getFname(), community.getName());
+                String dateTime = java.time.OffsetDateTime.now().toString();
+                NotificationService.addNotification(senderId, receiverId, NotificationType.UPLIFT, message, dateTime);
             }
 
             postRepository.save(post);
@@ -242,8 +293,20 @@ public class PostService {
                 postRepository.save(post);
             } else {
                 reportedBy.add(user);
-                post.setReportedBy(reportedBy);
-                postRepository.save(post);
+                if (reportedBy.size() >= 5) {
+                    postRepository.delete(post);
+                } else {
+                    post.setReportedBy(reportedBy);
+
+                    String senderId = reporter.getId();
+                    String receiverId = post.getAuthor_id();
+                    String message = String.format("%s reported your post in %s", reporter.getFname(), community.getName());
+                    String dateTime = java.time.OffsetDateTime.now().toString();
+                    NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message, dateTime);
+
+                    postRepository.save(post);
+
+                }
             }
             return true;
         } catch (Exception e) {
@@ -270,6 +333,76 @@ public class PostService {
         return medias;
     }
 
+    public List<Post> getHomePagePost() {
+
+        List<Post> posts = postRepository.findAll();
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : posts) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User user = userRepository.findById(authorId).orElse(null);
+                String fname = user.getFname();
+                String lname = user.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+        return posts;
+    }
+
+    public List<Post> getPostForHomePage(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        List<String> groups = user.getGroups();
+        List<Post> posts = new ArrayList<>();
+//        posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
+        for (String group : groups) {
+            List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
+            posts.addAll(groupPosts);
+        }
+
+        List<Post> returningPost = new ArrayList<>();
+        List<Post> otherPost = new ArrayList<>();
+
+        for (Post post : posts) {
+            List<Integer> userInterest = user.getInterests();
+            for (Integer interest : userInterest) {
+                if (post.getTopicId() == interest) {
+                    returningPost.add(post);
+                    break;
+                }
+                else {
+                    otherPost.add(post);
+                    break;
+                }
+            }
+        }
+
+        // add otherPost after returningPost
+        returningPost.addAll(otherPost);
+
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : returningPost) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User theuser = userRepository.findById(authorId).orElse(null);
+                String fname = theuser.getFname();
+                String lname = theuser.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+
+
+        return returningPost;
+    }
+
     //method to get all posts with 5 or more reports
     public List<Post> getReportedPosts() {
         List<Post> posts = postRepository.findAll();
@@ -281,5 +414,6 @@ public class PostService {
         }
         return reportedPosts;
     }
+
 
 }
