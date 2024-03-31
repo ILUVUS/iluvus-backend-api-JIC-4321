@@ -4,6 +4,8 @@ import iluvus.backend.api.dto.CommunityDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document(collection = "communities")
 public class Community {
     @Id
@@ -16,6 +18,12 @@ public class Community {
 
     private String owner;
 
+    //store base64 image
+    private String image;
+
+    //moderators
+    private List<String> moderators;
+
     public Community() {
     }
 
@@ -25,6 +33,8 @@ public class Community {
         this.rule = communityDto.getRule();
         this.isPublic = communityDto.isPublic();
         this.owner = communityDto.getOwner();
+        this.image = communityDto.getImage();
+        this.moderators = communityDto.getModerators();
     }
 
     // get id
@@ -77,4 +87,15 @@ public class Community {
         this.owner = owner;
     }
 
+    public String getImage() {
+        return image;
+    }
+    
+    public List<String> getModerators() {
+        return moderators;
+    }
+
+    public void setModerators(List<String> moderators) {
+        this.moderators = moderators;
+    }
 }

@@ -137,4 +137,36 @@ public class PostController {
     }
 
 
+    // Get method to get all the posts with 5 or more reports
+    @GetMapping(value = "/getReportedPosts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> getReportedPosts(@RequestParam String communityId) {
+        List<Post> reportedPosts = postService.getReportedPosts(communityId);
+        if (reportedPosts != null) {
+            return ResponseEntity.ok().body(reportedPosts);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    // moderator decides to delete the reported post
+    @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deletePost(@RequestBody Map<String, String> data) {
+        boolean isDeleted = postService.deletePost(data);
+        if (isDeleted) {
+            return ResponseEntity.ok().body("Post deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Post deletion failed");
+        }
+    }
+
+    // moderator decides to keep the reported post
+    @PostMapping(value = "/keep", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> keepPost(@RequestBody Map<String, String> data) {
+        boolean isKept = postService.keepPost(data);
+        if (isKept) {
+            return ResponseEntity.ok().body("Post kept successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Post keeping failed");
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package iluvus.backend.api.model;
+package iluvus.backend.api.resources;
 
 public enum CommunityUserStatus {
     PENDING,

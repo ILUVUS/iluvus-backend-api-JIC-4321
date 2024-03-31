@@ -72,7 +72,7 @@ public class UserService {
             // we need a way to put List in Frontend into a String seperated by commas
             // then we can split the String into a List in Backend
             // FOR NOW, we will just create an empty List
-            userDto.setNotification(new ArrayList<HashMap<String, String>>());
+            userDto.setNotification(new ArrayList<>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
             userDto.setWork(new ArrayList<>());
@@ -245,10 +245,10 @@ public class UserService {
         }
     }
 
-    public List<HashMap<String, String>> getNotification(Map<String, String> data) {
+    public List<HashMap<String, Object>> getNotification(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
-            List<HashMap<String, String>> notification = user.getNotification();
+            List<HashMap<String, Object>> notification = user.getNotification();
             return notification;
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,12 +257,44 @@ public class UserService {
 
     }
 
+    public List<HashMap<String, Object>> getNotificationByUserId(String userId) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            List<HashMap<String, Object>> userNotification = user.getNotification();
+            return userNotification;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<HashMap<String, Object>> getMatchedUser(String filter) {
         try {
             // get all users matched
             List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
             List<HashMap<String, Object>> userMapList = new ArrayList<>();
             for (User user : userList) {
+                UserDto userDto = new UserDto(user);
+                HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+                userMapList.add(userMap);
+            }
+            return userMapList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<HashMap<String, Object>> getCommunityUsers(String filter, String communityId) {
+        try {
+            List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
+            List<User> communityUsers = new ArrayList<>();
+            for (User user : userList) {
+                if (user.getGroups().contains(communityId)) {
+                    communityUsers.add(user);
+                }
+            }
+            List<HashMap<String, Object>> userMapList = new ArrayList<>();
+            for (User user : communityUsers) {
                 UserDto userDto = new UserDto(user);
                 HashMap<String, Object> userMap = userDto.getPublicUserInfo();
                 userMapList.add(userMap);
