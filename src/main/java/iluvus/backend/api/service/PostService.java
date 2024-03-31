@@ -274,4 +274,37 @@ public class PostService {
         return medias;
     }
 
+    public boolean deletePost(Map<String, String> data) {
+        try {
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            if (post == null) {
+                return false;
+            }
+            postRepository.delete(post);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean keepPost(Map<String, String> data) {
+        try {
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            if (post == null) {
+                return false;
+            }
+            List<String> reportedBy = post.getReportedBy();
+            // empty reported by
+            reportedBy.clear();
+            post.setReportedBy(reportedBy);
+            postRepository.save(post);
+            
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
