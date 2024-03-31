@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Document(collection = "users")
 public class User {
@@ -221,6 +222,16 @@ public class User {
 
     public void setNotification(List<HashMap<String, String>> notification) {
         this.notification = notification;
+    }
+
+    public void createNotification(String senderId, String type, String message, String dateTime) {
+        HashMap<String, String> notification = new HashMap<>();
+        notification.put("id", UUID.randomUUID().toString());
+        notification.put("senderId", senderId);
+        notification.put("type", type);
+        notification.put("message", message);
+        notification.put("datetime", dateTime);
+        this.notification.add(notification);
     }
 
 }

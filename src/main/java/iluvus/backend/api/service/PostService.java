@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.script.ScriptEngine;
 
 // create post service class
 @Service
@@ -76,8 +76,8 @@ public class PostService {
 
             Integer topicId = null;
 
-            if (raw_topicId == null || raw_topicId.strip().length() == 0) {
-                raw_topicId = interestRepository.findAll().size() - 1 + "";
+            if (raw_topicId == null || raw_topicId.isBlank()) {
+                raw_topicId = String.valueOf(interestRepository.findAll().size() - 1);
             }
 
             PostDto postDto = new PostDto();
@@ -92,6 +92,14 @@ public class PostService {
             Post post = new Post(postDto);
             postRepository.insert(post);
 
+            String senderId = author.getId();
+            List<String> receiverIds = taggedList;
+            String type = "TAG";
+            String message = String.format("%s tagged you in a post in %s", author.getFname(), community.getName());
+            for (String receiverId : receiverIds) {
+                addNotification(senderId, receiverId, type, message, dateTime);
+            }
+
             return getPostsByCommunityId(community_id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,7 +108,7 @@ public class PostService {
     }
 
     public List<Post> getPostsByCommunityId(String id) {
-        if (id == null || id.strip().length() == 0) {
+        if (id == null || id.isBlank()) {
             return null;
         }
         List<Post> posts = postRepository.findPostByCommunity_id(id);
@@ -116,7 +124,6 @@ public class PostService {
                 post.setAuthor_id(fname, lname);
                 authorIdName.put(authorId, post.getAuthor_id());
             }
-
         }
         return posts;
     }
@@ -131,7 +138,7 @@ public class PostService {
 
             Post post = postRepository.findById(postId).orElse(null);
 
-            if (comment == null || comment.strip().length() == 0) {
+            if (comment == null || comment.isBlank()) {
                 return null;
             }
 
@@ -140,11 +147,21 @@ public class PostService {
                 if (user == null) {
                     return null;
                 }
-                if (comment.strip().length() == 0) {
+                if (comment.isBlank()) {
                     return null;
                 }
                 post.writeComment(id, comment, authorId, dateTime);
                 postRepository.save(post);
+
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return null;
+                }
+                String senderId = authorId;
+                String receiverId = post.getAuthor_id();
+                String type = "COMMENT";
+                String message = String.format("%s commented on your post in %s", user.getFname(), community.getName());
+                addNotification(senderId, receiverId, type, message, dateTime);
 
                 return this.getCommentsWithAuthorName(postId);
             }
@@ -201,24 +218,39 @@ public class PostService {
     public int likePost(Map<String, String> data) {
         try {
             Post post = postRepository.findById(data.get("postId")).orElse(null);
-            String user = data.get("userId");
+            String userId = data.get("userId");
             if (post == null) {
                 return 0;
             }
             List<String> likedBy = post.getLikedBy();
 
             if (likedBy.size() == 0) {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
-            } else if (likedBy.contains(user)) {
-                likedBy.remove(user);
+            } else if (likedBy.contains(userId)) {
+                likedBy.remove(userId);
                 post.setLikedBy(likedBy);
             } else {
-                likedBy.add(user);
+                likedBy.add(userId);
                 post.setLikedBy(likedBy);
             }
 
             postRepository.save(post);
+
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return 0;
+            }
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            if (community == null) {
+                return 0;
+            }
+            String senderId = userId;
+            String receiverId = post.getAuthor_id();
+            String type = "UPLIFT";
+            String message = String.format("%s uplift your post in %s", user.getFname(), community.getName());
+            String dateTime = data.get("dateTime");
+            addNotification(senderId, receiverId, type, message, dateTime);
 
             return post.getLikedBy().size();
 
@@ -260,6 +292,14 @@ public class PostService {
                 } else {
                     post.setReportedBy(reportedBy);
                     postRepository.save(post);
+
+                    String senderId = reporter.getId();
+                    String receiverId = post.getAuthor_id();
+                    String type = "REPORT";
+                    String message = String.format("%s reported your post in %s", reporter.getFname(), community.getName());
+                    String dateTime = data.get("dateTime");
+                    addNotification(senderId, receiverId, type, message, dateTime);
+
                 }
             }
             return true;
@@ -336,7 +376,6 @@ public class PostService {
             }
         }
 
-
         // add otherPost after returningPost
         returningPost.addAll(otherPost);
 
@@ -357,4 +396,36 @@ public class PostService {
 
         return returningPost;
     }
+    public void addNotification(String senderId, String receiverId, String type, String message, String dateTime) {
+        try {
+            boolean notificationValid = checkNotification(senderId, receiverId, type, dateTime, message);
+            User receiver = userRepository.findById(receiverId).orElse(null);
+            if (receiver != null && notificationValid) {
+                receiver.createNotification(senderId, type, message, dateTime);
+                userRepository.save(receiver);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkNotification(String senderId, String receiverId, String type, String message, String dateTime) {
+        if (senderId == null) {
+            return false;
+        }
+        if (receiverId == null) {
+            return false;
+        }
+        if (type == null) {
+            return false;
+        }
+        if (message == null) {
+            return false;
+        }
+        if (dateTime == null) {
+            return false;
+        }
+        return true;
+    }
+
 }
