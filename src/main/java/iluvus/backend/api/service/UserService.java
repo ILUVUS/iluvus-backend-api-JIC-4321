@@ -266,6 +266,27 @@ public class UserService {
             return null;
         }
     }
+    public List<HashMap<String, Object>> getCommunityUsers(String filter, String communityId) {
+        try {
+            List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
+            List<User> communityUsers = new ArrayList<>();
+            for (User user : userList) {
+                if (user.getGroups().contains(communityId)) {
+                    communityUsers.add(user);
+                }
+            }
+            List<HashMap<String, Object>> userMapList = new ArrayList<>();
+            for (User user : communityUsers) {
+                UserDto userDto = new UserDto(user);
+                HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+                userMapList.add(userMap);
+            }
+            return userMapList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public boolean setUserInterestList(Map<String, String> data) {
         try {

@@ -104,19 +104,13 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/interestList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getInterestTopic() {
-        List<String> interestTopic = InterestTopic.topicList;
-        return ResponseEntity.ok().body(interestTopic);
-    }
-
-    @PostMapping(value = "/setInterestList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> setInterestList(@RequestBody Map<String, String> data) {
-        boolean interestList = userService.setUserInterestList(data);
-        if (interestList) {
-            return ResponseEntity.ok().body("Interest List Set Successfully");
+    @GetMapping(value = "/searchTagged", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter, @RequestParam String communityId) {
+        List<HashMap<String, Object>> userList = userService.getCommunityUsers(filter, communityId);
+        if (userList != null) {
+            return ResponseEntity.ok().body(userList);
         } else {
-            return ResponseEntity.badRequest().body("Interest List Set Failed");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
