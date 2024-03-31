@@ -75,8 +75,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<HashMap<String, String>>> getNotification(@RequestBody Map<String, String> data) {
-        List<HashMap<String, String>> notifications = userService.getNotification(data);
+    public ResponseEntity<List<HashMap<String, Object>>> getNotification(@RequestBody Map<String, String> data) {
+        List<HashMap<String, Object>> notifications = userService.getNotification(data);
         if (notifications != null) {
             return ResponseEntity.ok().body(notifications);
         } else {
@@ -91,16 +91,6 @@ public class UserController {
             return ResponseEntity.ok().body(userNotifications);
         } else {
             return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
-        boolean isSet = userService.editInterest(data);
-        if (isSet) {
-            return ResponseEntity.ok().body("Interest Set Successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Interest Set Failed");
         }
     }
 
@@ -130,13 +120,13 @@ public class UserController {
         return ResponseEntity.ok().body(interestTopic);
     }
 
-    @PostMapping(value = "/setInterestList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> setInterestList(@RequestBody Map<String, String> data) {
-        boolean interestList = userService.setUserInterestList(data);
-        if (interestList) {
-            return ResponseEntity.ok().body("Interest List Set Successfully");
+    @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editInterest(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Interest Set Successfully");
         } else {
-            return ResponseEntity.badRequest().body("Interest List Set Failed");
+            return ResponseEntity.badRequest().body("Interest Set Failed");
         }
     }
 

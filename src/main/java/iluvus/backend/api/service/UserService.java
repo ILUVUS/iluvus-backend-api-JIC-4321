@@ -306,23 +306,6 @@ public class UserService {
         }
     }
 
-    public boolean setUserInterestList(Map<String, String> data) {
-        try {
-            User user = userRepository.findById(data.get("userId")).orElse(null);
-            List<String> interestName = new ArrayList<>(Arrays.asList(data.get("interestList").split(",")));
-            List<Integer> interestList = new ArrayList<>();
-            for (String interest : interestName) {
-                interestList.add(interestRepository.findInterestTopicByName(interest).getId());
-            }
-            user.setInterests(interestList);
-            userRepository.save(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public boolean editInterest(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
