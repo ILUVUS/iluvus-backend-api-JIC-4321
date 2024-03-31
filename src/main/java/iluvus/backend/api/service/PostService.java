@@ -416,10 +416,23 @@ public class PostService {
     }
     public boolean deletePost(Map<String, String> data) {
         try {
-            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
             if (post == null) {
                 return false;
             }
+            if (post.getReportedBy().size() < 5) {
+                return false;
+            }
+
+            // add notification
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            String dateTime = java.time.OffsetDateTime.now().toString();
+            String receiverId = post.getAuthor_id();
+            String message = String.format("Your post is removed from %s", community.getName());
+            NotificationService.addNotification(community.getOwner(), receiverId,
+                    NotificationType.MODERATOR_REMOVE_POST, message, dateTime);
+
             postRepository.delete(post);
             return true;
         } catch (Exception e) {
@@ -430,7 +443,8 @@ public class PostService {
 
     public boolean keepPost(Map<String, String> data) {
         try {
-            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String postId = data.get("postId");
+            Post post = postRepository.findById(postId).orElse(null);
             if (post == null) {
                 return false;
             }
@@ -438,8 +452,16 @@ public class PostService {
             // empty reported by
             reportedBy.clear();
             post.setReportedBy(reportedBy);
-            postRepository.save(post);
 
+            // add notification
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            String dateTime = java.time.OffsetDateTime.now().toString();
+            String receiverId = post.getAuthor_id();
+            String message = String.format("Your post is kept in %s", community.getName());
+            NotificationService.addNotification(community.getOwner(), receiverId,
+                    NotificationType.MODERATOR_KEEP_POST, message, dateTime);
+
+            postRepository.save(post);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
