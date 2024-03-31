@@ -93,8 +93,8 @@ public class CommunityDto {
         this.image = image;
     }
 
-    public void getModerators(List<String> moderators){
-        this.moderators = moderators;
+    public List<String> getModerators(){
+        return moderators = moderators;
     }
 
     //setter method for moderators
