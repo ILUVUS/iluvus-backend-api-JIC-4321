@@ -15,6 +15,9 @@ public class CommunityDto {
     private List<String> members;
     private String image;
 
+    //moderators
+    private List<String> moderators;
+
     public CommunityDto() {
     }
 
@@ -25,6 +28,7 @@ public class CommunityDto {
         this.isPublic = community.isPublic();
         this.owner = community.getOwner();
         this.image = community.getImage();
+        this.moderators = community.getModerators();
     }
 
     // Getter and Setter methods for name
@@ -89,6 +93,15 @@ public class CommunityDto {
         this.image = image;
     }
 
+    public void getModerators(List<String> moderators){
+        this.moderators = moderators;
+    }
+
+    //setter method for moderators
+    public void setModerators(List<String> members) {
+        this.members = members;
+    }
+
     public Map<String, Object> getCommunityPublicInfo() {
         Map<String, Object> community = new HashMap<>();
         community.put("name", name);
@@ -97,6 +110,7 @@ public class CommunityDto {
         community.put("visibility", isPublic);
         community.put("owner", owner);
         community.put("image", image);
+        community.put("moderators", moderators);
         return community;
 
     }
