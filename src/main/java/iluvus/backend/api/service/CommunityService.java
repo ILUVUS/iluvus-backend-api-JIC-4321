@@ -42,10 +42,17 @@ public class CommunityService {
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(data.get("visibility").equals("Public"));
 
-            communityDto.setModerators(
-                    data.get("moderators") == null
-                            ? new ArrayList<>()
-                            : List.of(data.get("moderators").split(",")));
+            String moderators = data.get("moderators");
+
+            ArrayList<String> moderatorList = new ArrayList<>();
+            if (moderators != null || !moderators.isBlank()) {
+                String[] moderatorArray = moderators.split(",");
+                for (String moderator : moderatorArray) {
+                    moderatorList.add(moderator);
+                }
+            }
+
+            communityDto.setModerators(moderatorList);
 
             User owner = userRepository.findById(data.get("ownerId")).orElse(null);
 
