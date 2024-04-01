@@ -2,11 +2,7 @@ package iluvus.backend.api.service;
 
 import iluvus.backend.api.resources.NotificationType;
 import iluvus.backend.api.model.User;
-import iluvus.backend.api.repository.CommunityRepository;
-import iluvus.backend.api.repository.InterestRepository;
-import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

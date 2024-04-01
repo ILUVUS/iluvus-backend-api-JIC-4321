@@ -99,7 +99,7 @@ public class CommunityDto {
 
     // setter method for moderators
     public void setModerators(List<String> members) {
-        this.members = members;
+        this.moderators = members;
     }
 
     public Map<String, Object> getCommunityPublicInfo() {

@@ -3,7 +3,6 @@ package iluvus.backend.api.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import iluvus.backend.api.model.InterestTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
