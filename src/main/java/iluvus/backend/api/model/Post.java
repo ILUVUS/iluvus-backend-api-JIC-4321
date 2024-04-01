@@ -42,6 +42,7 @@ public class Post {
         this.reportedBy = new ArrayList<String>();
         this.tagged = postDto.getTagged();
         this.medias = postDto.getMedias();
+        this.topicId = postDto.getTopicId();
     }
 
     public List<String> getReportedBy() {
