@@ -80,6 +80,26 @@ mvn spring-boot:run
 
 # Release Notes
 
+## Version 0.4.0
+
+### New Features
+
+-   Users can receive notifications for uplifts, comments, tags and report from communities.
+-   Users can view the posts that relevant to their interests in the newsfeed.
+-   Users can select the interest topic when create posts.
+-   Added the profile page to display user information.
+-   Users can select and edit their interests in profile page.
+-   Added moderator users for manage user-generated content reporting and moderation queues.
+-   Moderator users can view and accept/reject the content reporting posts.
+
+### Bug Fixes
+
+-   Fixed the problem where notification disappear.
+-   Fixed the images display on the posts in the communities.
+
+### Known Issues
+
+
 ## Version 0.3.0
 
 ### New Features
