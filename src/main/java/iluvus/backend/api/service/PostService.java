@@ -403,5 +403,15 @@ public class PostService {
         return returningPost;
     }
 
-
+    //method to get all posts with 5 or more reports
+    public List<Post> getReportedPosts(String communityId) {
+        List<Post> posts = postRepository.findPostByCommunity_id(communityId);
+        List<Post> reportedPosts = new ArrayList<>();
+        for (Post post : posts) {
+            if (post.getReportedBy().size() >= 5) {
+                reportedPosts.add(post);
+            }
+        }
+        return reportedPosts;
+    }
 }
