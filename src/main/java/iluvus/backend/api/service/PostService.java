@@ -371,6 +371,13 @@ public class PostService {
         List<Post> otherPost = new ArrayList<>();
 
         for (Post post : posts) {
+
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            if (community == null) {
+                postRepository.deleteById(post.getId());
+                continue;
+            }
+
             List<Integer> userInterest = user.getInterests();
             for (Integer interest : userInterest) {
                 if (post.getTopicId() == interest) {
