@@ -1,9 +1,7 @@
 package iluvus.backend.api.repository;
 
 import iluvus.backend.api.model.CommunityUser;
-
 import java.util.List;
-
 import iluvus.backend.api.resources.CommunityUserStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

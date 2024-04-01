@@ -2,7 +2,6 @@ package iluvus.backend.api.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

@@ -4,17 +4,13 @@ import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
-
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Value;
-
 import javax.mail.*;
 import javax.mail.internet.*;
 

@@ -415,6 +415,17 @@ public class PostService {
         List<Post> posts = postRepository.findPostByCommunity_id(communityId);
         List<Post> reportedPosts = new ArrayList<>();
         for (Post post : posts) {
+            HashMap<String, String> authorIdName = new HashMap<>();
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User theuser = userRepository.findById(authorId).orElse(null);
+                String fname = theuser.getFname();
+                String lname = theuser.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
             if (post.getReportedBy().size() >= 5) {
                 reportedPosts.add(post);
             }

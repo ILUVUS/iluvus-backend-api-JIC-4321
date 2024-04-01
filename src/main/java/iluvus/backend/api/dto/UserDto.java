@@ -1,7 +1,6 @@
 package iluvus.backend.api.dto;
 
 import iluvus.backend.api.model.User;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
