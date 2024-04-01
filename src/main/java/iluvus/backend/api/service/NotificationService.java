@@ -18,7 +18,8 @@ public class NotificationService {
         NotificationService.userRepository = userRepository;
     }
 
-    public static void addNotification(String senderId, String receiverId, NotificationType type, String message, String dateTime) {
+    public static void addNotification(String senderId, String receiverId, NotificationType type, String message,
+            String dateTime) {
         try {
             boolean notificationValid = checkNotification(senderId, receiverId, type, dateTime, message);
             User receiver = userRepository.findById(receiverId).orElse(null);
@@ -31,7 +32,8 @@ public class NotificationService {
         }
     }
 
-    public static boolean checkNotification(String senderId, String receiverId, NotificationType type, String message, String dateTime) {
+    public static boolean checkNotification(String senderId, String receiverId, NotificationType type, String message,
+            String dateTime) {
         if (senderId == null) {
             return false;
         }
@@ -49,6 +51,5 @@ public class NotificationService {
         }
         return true;
     }
-
 
 }

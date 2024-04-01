@@ -57,7 +57,8 @@ public class CommunityService {
             List<String> receiverIds = community.getModerators();
             String dateTime = java.time.OffsetDateTime.now().toString();
             if (receiverIds != null && !receiverIds.isEmpty()) {
-                String message = String.format("%s added you as moderator in %s", owner.getFname(), community.getName());
+                String message = String.format("%s added you as moderator in %s", owner.getFname(),
+                        community.getName());
                 for (String receiverId : receiverIds) {
                     NotificationService.addNotification(owner.getId(), receiverId,
                             NotificationType.MODERATOR_ADD, message, dateTime);

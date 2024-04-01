@@ -15,7 +15,7 @@ public class CommunityDto {
     private List<String> members;
     private String image;
 
-    //moderators
+    // moderators
     private List<String> moderators;
 
     public CommunityDto() {
@@ -93,11 +93,11 @@ public class CommunityDto {
         this.image = image;
     }
 
-    public List<String> getModerators(){
+    public List<String> getModerators() {
         return moderators = moderators;
     }
 
-    //setter method for moderators
+    // setter method for moderators
     public void setModerators(List<String> members) {
         this.members = members;
     }

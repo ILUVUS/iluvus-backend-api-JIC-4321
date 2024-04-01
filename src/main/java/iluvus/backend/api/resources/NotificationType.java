@@ -8,5 +8,4 @@ public enum NotificationType {
     MODERATOR_ADD,
     MODERATOR_KEEP_POST,
     MODERATOR_REMOVE_POST,
-
 }

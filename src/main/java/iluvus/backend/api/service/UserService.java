@@ -4,17 +4,16 @@ import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import iluvus.backend.api.util.SecurityConfig;
+
 import iluvus.backend.api.dto.UserDto;
+import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -133,18 +132,35 @@ public class UserService {
         }
     }
 
-    public Map<String, String> getUser(String userId) {
+    public Map<String, Object> getUser(String userId) {
         try {
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
                 return null;
             }
-            Map<String, String> userMap = new HashMap<>();
-            userMap.put("username", user.getUsername());
-            userMap.put("email", user.getEmail());
-            userMap.put("fname", user.getFname());
-            userMap.put("lname", user.getLname());
+            // Map<String, String> userMap = new HashMap<>();
+            // userMap.put("username", user.getUsername());
+            // userMap.put("email", user.getEmail());
+            // userMap.put("fname", user.getFname());
+            // userMap.put("lname", user.getLname());
+            // userMap.put("interest", user.getInterests().toString());
+            // userMap.put("dob", user.getDob().toString());
+            // return userMap;
+
+            UserDto userDto = new UserDto(user);
+            Map<String, Object> userMap = userDto.getPublicUserInfo();
+
+            Map<Integer, String> interestMap = new HashMap<>();
+            for (Integer interestId : user.getInterests()) {
+                InterestTopic interestTopic = interestRepository.findInterestTopicById(interestId);
+                if (interestTopic != null) {
+                    interestMap.put(interestTopic.getId(), interestTopic.getName());
+                }
+            }
+            userMap.put("interest", interestMap);
+
             return userMap;
+
         } catch (Exception e) {
             return null;
         }
@@ -266,6 +282,7 @@ public class UserService {
             return null;
         }
     }
+
     public List<HashMap<String, Object>> getCommunityUsers(String filter, String communityId) {
         try {
             List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
@@ -288,15 +305,17 @@ public class UserService {
         }
     }
 
-    public boolean setUserInterestList(Map<String, String> data) {
+    public boolean editInterest(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
-            List<String> interestName = new ArrayList<>(Arrays.asList(data.get("interestList").split(",")));
-            List<Integer> interestList = new ArrayList<>();
-            for (String interest : interestName) {
-                interestList.add(interestRepository.findInterestTopicByName(interest).getId());
+            user.getInterests().clear();
+            String interestListRaw = data.get("selectedTopic");
+            String[] interestList = interestListRaw.split(",");
+            ArrayList<Integer> interestListInt = new ArrayList<>();
+            for (String interest : interestList) {
+                interestListInt.add(Integer.valueOf(interest));
             }
-            user.setInterests(interestList);
+            user.setInterests(interestListInt);
             userRepository.save(user);
             return true;
         } catch (Exception e) {

@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-
 public interface InterestTopicRepository extends MongoRepository<InterestTopic, String> {
     // filter interest topic if input matches any part of the name
     @Query("{ 'name' : { $regex: '^.*(?0).*$', $options: 'i' } }")

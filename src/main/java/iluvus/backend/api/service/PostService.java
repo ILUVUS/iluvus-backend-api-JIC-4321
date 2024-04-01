@@ -300,9 +300,11 @@ public class PostService {
 
                     String senderId = reporter.getId();
                     String receiverId = post.getAuthor_id();
-                    String message = String.format("%s reported your post in %s", reporter.getFname(), community.getName());
+                    String message = String.format("%s reported your post in %s", reporter.getFname(),
+                            community.getName());
                     String dateTime = java.time.OffsetDateTime.now().toString();
-                    NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message, dateTime);
+                    NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message,
+                            dateTime);
 
                     postRepository.save(post);
 
@@ -359,7 +361,7 @@ public class PostService {
         }
         List<String> groups = user.getGroups();
         List<Post> posts = new ArrayList<>();
-//        posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
+        // posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
         for (String group : groups) {
             List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
             posts.addAll(groupPosts);
@@ -374,8 +376,7 @@ public class PostService {
                 if (post.getTopicId() == interest) {
                     returningPost.add(post);
                     break;
-                }
-                else {
+                } else {
                     otherPost.add(post);
                     break;
                 }
@@ -399,11 +400,10 @@ public class PostService {
             }
         }
 
-
         return returningPost;
     }
 
-    //method to get all posts with 5 or more reports
+    // method to get all posts with 5 or more reports
     public List<Post> getReportedPosts(String communityId) {
         List<Post> posts = postRepository.findPostByCommunity_id(communityId);
         List<Post> reportedPosts = new ArrayList<>();
@@ -414,6 +414,7 @@ public class PostService {
         }
         return reportedPosts;
     }
+
     public boolean deletePost(Map<String, String> data) {
         try {
             String postId = data.get("postId");

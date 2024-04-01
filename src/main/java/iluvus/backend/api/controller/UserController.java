@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> getUser(@RequestParam String userId) {
+    public ResponseEntity<Map<String, Object>> getUser(@RequestParam String userId) {
         return ResponseEntity.ok().body(userService.getUser(userId));
     }
 
@@ -105,12 +105,29 @@ public class UserController {
     }
 
     @GetMapping(value = "/searchUsersInCommunity", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter, @RequestParam String communityId) {
+    public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter,
+            @RequestParam String communityId) {
         List<HashMap<String, Object>> userList = userService.getCommunityUsers(filter, communityId);
         if (userList != null) {
             return ResponseEntity.ok().body(userList);
         } else {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping(value = "/interestList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getInterestTopic() {
+        List<String> interestTopic = InterestTopic.topicList;
+        return ResponseEntity.ok().body(interestTopic);
+    }
+
+    @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editInterest(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Interest Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Interest Set Failed");
         }
     }
 
