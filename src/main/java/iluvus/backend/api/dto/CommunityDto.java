@@ -94,12 +94,12 @@ public class CommunityDto {
     }
 
     public List<String> getModerators() {
-        return moderators = moderators;
+        return moderators;
     }
 
     // setter method for moderators
-    public void setModerators(List<String> members) {
-        this.moderators = members;
+    public void setModerators(List<String> moderators) {
+        this.moderators = moderators;
     }
 
     public Map<String, Object> getCommunityPublicInfo() {

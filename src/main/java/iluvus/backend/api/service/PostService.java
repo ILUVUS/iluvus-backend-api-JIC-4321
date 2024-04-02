@@ -76,9 +76,15 @@ public class PostService {
 
             Integer topicId = null;
 
+
             if (raw_topicId == null || raw_topicId.isBlank()) {
                 raw_topicId = String.valueOf(interestRepository.findAll().size() - 1);
+                topicId = Integer.parseInt(raw_topicId);
+            } else {
+                topicId = Integer.parseInt(raw_topicId);
             }
+
+
 
             PostDto postDto = new PostDto();
             postDto.setText(text);
@@ -87,7 +93,7 @@ public class PostService {
             postDto.setCommunity_id(community_id);
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
-            postDto.setTopicId(Integer.parseInt(raw_topicId));
+            postDto.setTopicId(topicId);
 
             Post post = new Post(postDto);
 

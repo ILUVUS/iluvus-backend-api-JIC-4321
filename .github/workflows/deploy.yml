@@ -3,7 +3,7 @@ name: Deploying to Cloud Run 1.1
 on:
     push:
         branches:
-            - "main"
+            - "containerize"
 
 jobs:
     build:
@@ -22,13 +22,15 @@ jobs:
 
             - name: Build and push Backend docker image
               run: |
-                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest \
+                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest \
                   --build-arg MONGODB_URI=$MONGODB_URI \
-                  --build-arg MONGODB_DB=$MONGODB_DB ./
-                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest
+                  --build-arg MONGODB_DB=$MONGODB_DB \
+                  --build-arg PROJECT_PASSWORDTOKEN=$PROJECT_PASSWORDTOKEN ./
+                  docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest
               env:
                   MONGODB_URI: ${{ secrets.MONGODB_URI }}
                   MONGODB_DB: ${{ secrets.MONGODB_DB }}
+                  PROJECT_PASSWORDTOKEN: ${{ secrets.PROJECT_PASSWORDTOKEN }}
 
     deploy:
         runs-on: ubuntu-latest
@@ -45,4 +47,4 @@ jobs:
                   project_id: ${{ secrets.PROJECT_ID }}
                   service: "${{ secrets.PROJECT_SERVICE }}"
                   region: "us-east1"
-                  image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/backend/testing:latest"
+                  image: "us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest"

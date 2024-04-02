@@ -1,4 +1,3 @@
-
 # ILUVUS - BACKEND API
 
 <p align="center">
@@ -15,27 +14,27 @@ We're developing our own platform instead of using existing ones because they do
 
 ### Technology Stack:
 
-- **Spring Boot**: A Java-based framework for building robust and scalable backend applications.
+-   **Spring Boot**: A Java-based framework for building robust and scalable backend applications.
 
-- **Google Cloud Platform (GCP)**: Google Cloud Run for deploying and running containerized applications.
+-   **Google Cloud Platform (GCP)**: Google Cloud Run for deploying and running containerized applications.
 
-- **Google Cloud Storage**: A scalable and secure object storage solution provided by Google Cloud Platform.
+-   **Google Cloud Storage**: A scalable and secure object storage solution provided by Google Cloud Platform.
 
-- **GitHub Actions**: GitHub's built-in CI/CD solution for automating workflows, including building, testing, and deploying applications.
+-   **GitHub Actions**: GitHub's built-in CI/CD solution for automating workflows, including building, testing, and deploying applications.
 
 ### Dependencies
 
-* Maven
+-   Maven
 
-* Generally, use the following [link](https://www.baeldung.com/install-maven-on-windows-linux-mac) to install maven on your system.
+-   Generally, use the following [link](https://www.baeldung.com/install-maven-on-windows-linux-mac) to install maven on your system.
 
-* For Mac OS: [Instruction](https://help.mulesoft.com/s/article/How-to-Setup-Maven-for-Mac-OS)
+-   For Mac OS: [Instruction](https://help.mulesoft.com/s/article/How-to-Setup-Maven-for-Mac-OS)
 
-* For Windows: [Instruction](https://mkyong.com/maven/how-to-install-maven-in-windows/)
+-   For Windows: [Instruction](https://mkyong.com/maven/how-to-install-maven-in-windows/)
 
-* JDK 8+
+-   JDK 8+
 
-* Use this link [https://adoptium.net/temurin/releases/]( https://adoptium.net/temurin/releases/) to download and install OpenJDK version that is compatible with your Operation System.
+-   Use this link [https://adoptium.net/temurin/releases/](https://adoptium.net/temurin/releases/) to download and install OpenJDK version that is compatible with your Operation System.
 
 ### Installing & Execute
 
@@ -43,9 +42,9 @@ We're developing our own platform instead of using existing ones because they do
 
 [https://www.baeldung.com/install-maven-on-windows-linux-mac](https://www.baeldung.com/install-maven-on-windows-linux-mac)
 
-- For Mac OS: [Instruction](https://help.mulesoft.com/s/article/How-to-Setup-Maven-for-Mac-OS)
+-   For Mac OS: [Instruction](https://help.mulesoft.com/s/article/How-to-Setup-Maven-for-Mac-OS)
 
-- For Windows: [Instruction](https://mkyong.com/maven/how-to-install-maven-in-windows/)
+-   For Windows: [Instruction](https://mkyong.com/maven/how-to-install-maven-in-windows/)
 
 2. Clone the ILUVUS Backend API Repository:
 
@@ -65,7 +64,6 @@ iluvus.email.passwordtoken=<GMAIL_GENERATED_PASSWORD>
 
 Modify `<USERNAME>` and `<PASSWORD>` with provided information.
 
-
 4. Go to the repository directory on your Operation System. Run SpringBoot:
 
 ```bash
@@ -84,77 +82,83 @@ mvn spring-boot:run
 
 ### New Features
 
--   Users can receive notifications for uplifts, comments, tags and report from communities.
--   Users can view the posts that relevant to their interests in the newsfeed.
--   Users can select the interest topic when create posts.
+-   Users can receive notifications for uplifts, comments, tags, reports, and other types from communities.
+-   Users can view the posts that are relevant to their interests in the newsfeed.
+-   Users can select the interest topic when creating posts.
 -   Added the profile page to display user information.
--   Users can select and edit their interests in profile page.
--   Added moderator users for manage user-generated content reporting and moderation queues.
--   Moderator users can view and accept/reject the content reporting posts.
+-   Users can select and edit their interests on the profile page.
+-   Added users as moderators at the creating community view to manage reporting posts (keep or remove from the community).
+-   Moderator users can view and accept or reject reporting posts.
+-   Community owner can set profile pictures for their community at the creating point.
 
 ### Bug Fixes
 
--   Fixed the problem where notification disappear.
--   Fixed the images display on the posts in the communities.
+-   Fixed the problem where notifications disappear.
+-   Fixed the image display on the posts in the communities.
+-   Change to switch button when asking for the professional or regular user at the registration screen.
+-   The community list is displayed in order.
 
 ### Known Issues
 
+-   The algorithm to sort the posts by interests sometimes goes wrong.
+-   The post page is frozen if no images are selected.
 
 ## Version 0.3.0
 
 ### New Features
 
-- Users can now upload and share images along with their posts.
-- Users can view/zoom images in a post.
-- Implemented image processing capabilities such as resizing and compression.
-- Ability to tag other users in a post has been added.
-- Communities can now be set as either public or private.
-- Added a "Request Join" button for private communities.
-- Owners of private communities can now accept/decline join requests.
-- All login passwords are now hashed to increase security.
-- 
+-   Users can now upload and share images along with their posts.
+-   Users can view/zoom images in a post.
+-   Implemented image processing capabilities such as resizing and compression.
+-   Ability to tag other users in a post has been added.
+-   Communities can now be set as either public or private.
+-   Added a "Request Join" button for private communities.
+-   Owners of private communities can now accept/decline join requests.
+-   All login passwords are now hashed to increase security.
+-
+
 ### Bug Fixes
 
-- Corrected the display of the number of likes/uplifts.
-- Fixed the problem where posts were not displaying properly.
-- Fixed the report button and added a report message when reporting.
+-   Corrected the display of the number of likes/uplifts.
+-   Fixed the problem where posts were not displaying properly.
+-   Fixed the report button and added a report message when reporting.
 
 ### Known Issues
 
-- Users can tag people not in the community.
+-   Users can tag people not in the community.
 
 ## Version 0.2.0
 
 ### New Features
 
-- Create text-only posts and display them on the community posts.
-- Like and dislike a post in a community.
-- Comment on a post in a community.
-- Report a post in a community.
-- Display the number of uplift(like) on the community posts.
-- Display the comment view on the community posts.
+-   Create text-only posts and display them on the community posts.
+-   Like and dislike a post in a community.
+-   Comment on a post in a community.
+-   Report a post in a community.
+-   Display the number of uplift(like) on the community posts.
+-   Display the comment view on the community posts.
 
 ### Bug Fix
 
 ### Known Issues
 
-- Registration will navigate to verification screen even the user existed.
-- Verification page may send 2 emails.
+-   Registration will navigate to verification screen even the user existed.
+-   Verification page may send 2 emails.
 
 ## Version 0.1.0
 
 ### Features
 
-- Search community by the community’s name
-- View, and join community
-- Register inputs indicator
-- Date picker for Date of Birth input on Register screen
+-   Search community by the community’s name
+-   View, and join community
+-   Register inputs indicator
+-   Date picker for Date of Birth input on Register screen
 
 ### Bug Fixes
 
-- Register new user with empty username and password
-- Create new community button did not show up
-- Verify does not work with userId
+-   Register new user with empty username and password
+-   Create new community button did not show up
+-   Verify does not work with userId
 
 ### Known Issues
 
@@ -164,11 +168,11 @@ This project is licensed under the MIT License.
 
 ## Contributors:
 
-- [Arjun Ramani](#)
-- [Binaya Timsina](#)
-- [Doan Tran](#)
-- [Thuan Vo](#)
-- [Tyler Lin](#)
+-   [Arjun Ramani](#)
+-   [Binaya Timsina](#)
+-   [Doan Tran](#)
+-   [Thuan Vo](#)
+-   [Tyler Lin](#)
 
 ## Acknowledgments
 
