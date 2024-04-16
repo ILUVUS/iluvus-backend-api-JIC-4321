@@ -130,4 +130,14 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/getMyGroups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> getMyGroups(@RequestParam String userId) {
+        Map<String, String> userGroups = userService.getUserGroups(userId);
+        if (userGroups != null) {
+            return ResponseEntity.ok().body(userGroups);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
