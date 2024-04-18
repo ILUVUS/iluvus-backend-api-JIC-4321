@@ -102,4 +102,11 @@ public class CommunityController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping(value = "/myCreatedGroup", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> myCreatedGroup(@RequestParam String userId) {
+        Map<String, String> myCreatedGroup = communityService.getMyCreatedGroup(userId);
+        return ResponseEntity.ok().body(myCreatedGroup);
+    }
+
 }
