@@ -1,6 +1,7 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.model.Community;
+import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +25,7 @@ public class UserService {
     private InterestRepository interestRepository;
 
     @Autowired
-    private InterestRepository communityRepository;
+    private CommunityRepository communityRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -329,9 +330,9 @@ public class UserService {
             Map<String, String> communityMap = new HashMap<>();
             User user = userRepository.findById(userId).orElse(null);
             if (user != null) {
-                for (String community : user.getGroups()) {
-                    String communityName =  communityRepository.findById(community).orElse(null).getName();
-                    communityMap.put(community, communityName);
+                for (String communityId : user.getGroups()) {
+                    Community community = communityRepository.findById(communityId).orElse(null);
+                    communityMap.put(community.getId(), community.getName());
                 }
             }
             return communityMap;
