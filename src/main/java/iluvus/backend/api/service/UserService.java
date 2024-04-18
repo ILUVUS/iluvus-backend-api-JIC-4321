@@ -332,7 +332,9 @@ public class UserService {
             if (user != null) {
                 for (String communityId : user.getGroups()) {
                     Community community = communityRepository.findById(communityId).orElse(null);
-                    communityMap.put(community.getId(), community.getName());
+                    if (community != null) {
+                        communityMap.put(community.getId(), community.getName());
+                    }
                 }
             }
             return communityMap;
