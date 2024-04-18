@@ -259,4 +259,12 @@ public class CommunityService {
         return getPendingJoinRequests(communityId);
     }
 
+    public Map<String, String> getMyCreatedGroup(String userId) {
+        Map<String, String> myCreatedGroup = new HashMap<>();
+        List<Community> communities = communityRepository.findByOwner(userId);
+        for (Community community : communities) {
+            myCreatedGroup.put(community.getId(), community.getName());
+        }
+        return myCreatedGroup;
+    }
 }
