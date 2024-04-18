@@ -9,11 +9,9 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -341,25 +339,6 @@ public class PostService {
         return medias;
     }
 
-    public List<Post> getHomePagePost() {
-
-        List<Post> posts = postRepository.findAll();
-        HashMap<String, String> authorIdName = new HashMap<>();
-        for (Post post : posts) {
-            String authorId = post.getAuthor_id();
-            if (authorIdName.containsKey(authorId)) {
-                post.setAuthor_id(authorIdName.get(authorId));
-            } else {
-                User user = userRepository.findById(authorId).orElse(null);
-                String fname = user.getFname();
-                String lname = user.getLname();
-                post.setAuthor_id(fname, lname);
-                authorIdName.put(authorId, post.getAuthor_id());
-            }
-        }
-        return posts;
-    }
-
     public List<Post> getPostForHomePage(String userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
@@ -372,9 +351,7 @@ public class PostService {
             List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
             posts.addAll(groupPosts);
         }
-
         List<Post> returningPost = new ArrayList<>();
-        List<Post> otherPost = new ArrayList<>();
 
         for (Post post : posts) {
 
@@ -385,19 +362,16 @@ public class PostService {
             }
 
             List<Integer> userInterest = user.getInterests();
+
             for (Integer interest : userInterest) {
+                System.out.println(interest);
                 if (post.getTopicId() == interest) {
                     returningPost.add(post);
-                    break;
-                } else {
-                    otherPost.add(post);
                     break;
                 }
             }
         }
 
-        // add otherPost after returningPost
-        returningPost.addAll(otherPost);
 
         HashMap<String, String> authorIdName = new HashMap<>();
         for (Post post : returningPost) {
@@ -410,6 +384,16 @@ public class PostService {
                 String lname = theuser.getLname();
                 post.setAuthor_id(fname, lname);
                 authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+
+        for (int i = 0; i < returningPost.size(); i++) {
+            for (int j = i + 1; j < returningPost.size(); j++) {
+                if (returningPost.get(i).getDateTime().compareTo(returningPost.get(j).getDateTime()) > 0) {
+                    Post temp = returningPost.get(i);
+                    returningPost.set(i, returningPost.get(j));
+                    returningPost.set(j, temp);
+                }
             }
         }
 
