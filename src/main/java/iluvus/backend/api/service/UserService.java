@@ -325,7 +325,7 @@ public class UserService {
         }
     }
 
-    public Map<String, String> getUserGroups(String userId) {
+    public Map<String, String> getUserFollowingGroups(String userId) {
         try {
             Map<String, String> communityMap = new HashMap<>();
             User user = userRepository.findById(userId).orElse(null);

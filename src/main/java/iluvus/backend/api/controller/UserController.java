@@ -130,11 +130,11 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/getMyGroups", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> getMyGroups(@RequestParam String userId) {
-        Map<String, String> userGroups = userService.getUserGroups(userId);
-        if (userGroups != null) {
-            return ResponseEntity.ok().body(userGroups);
+    @GetMapping(value = "/getMyFollowingGroups", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> getMyFollowingGroups(@RequestParam String userId) {
+        Map<String, String> followingGroups = userService.getUserFollowingGroups(userId);
+        if (followingGroups != null) {
+            return ResponseEntity.ok().body(followingGroups);
         } else {
             return ResponseEntity.badRequest().body(null);
         }
