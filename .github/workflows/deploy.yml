@@ -11,10 +11,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Create application.properties
-              working-directory: ./
+              working-directory: ./src/main/resources
               run: |
-                  touch ./src/main/resources/application.properties
-                  echo ${{ secrets.APPCONFIG }} >> ./src/main/resources/application.properties
+                  ls -al
 
             - name: Checkout code
               uses: actions/checkout@v3
