@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Create application.properties
-              working-directory: src/main/resources
+              working-directory: src/main
               run: |
                   touch application.properties
                   echo ${{ secrets.APPCONFIG }} >> application.properties
