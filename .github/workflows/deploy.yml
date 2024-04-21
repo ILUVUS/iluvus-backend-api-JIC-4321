@@ -29,7 +29,7 @@ jobs:
 
             - name: Build and push Backend docker image
               run: |
-                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest ./ \
+                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest ./
                   docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest
 
     deploy:
