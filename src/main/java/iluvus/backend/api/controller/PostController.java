@@ -117,7 +117,6 @@ public class PostController {
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
         List<Post> posts = postService.getPostForHomePage(userId);
         if (posts != null && !posts.isEmpty()) {
-            System.out.println("Returned Post!!!!");
             return ResponseEntity.ok().body(posts);
         } else {
             return ResponseEntity.badRequest().body(null);

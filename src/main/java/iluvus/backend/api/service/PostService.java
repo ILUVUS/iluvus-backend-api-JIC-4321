@@ -2,10 +2,12 @@ package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.PostDto;
 import iluvus.backend.api.model.Community;
+import iluvus.backend.api.model.CommunityUser;
 import iluvus.backend.api.resources.NotificationType;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
+import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
@@ -29,6 +31,8 @@ public class PostService {
     private CommunityRepository communityRepository;
     @Autowired
     private InterestRepository interestRepository;
+    @Autowired
+    private CommunityUserRepository communityUserRepository;
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -74,15 +78,12 @@ public class PostService {
 
             Integer topicId = null;
 
-
             if (raw_topicId == null || raw_topicId.isBlank()) {
                 raw_topicId = String.valueOf(interestRepository.findAll().size() - 1);
                 topicId = Integer.parseInt(raw_topicId);
             } else {
                 topicId = Integer.parseInt(raw_topicId);
             }
-
-
 
             PostDto postDto = new PostDto();
             postDto.setText(text);
@@ -344,7 +345,14 @@ public class PostService {
         if (user == null) {
             return null;
         }
-        List<String> groups = user.getGroups();
+        // List<String> groups = user.getGroups();
+
+        List<String> groups = new ArrayList<>();
+        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+        for (CommunityUser communityUser : communityUsers) {
+            groups.add(communityUser.getCommunityId());
+        }
+
         List<Post> posts = new ArrayList<>();
         // posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
         for (String group : groups) {
@@ -364,14 +372,13 @@ public class PostService {
             List<Integer> userInterest = user.getInterests();
 
             for (Integer interest : userInterest) {
-                System.out.println(interest);
+                // System.out.println(interest);
                 if (post.getTopicId() == interest) {
                     returningPost.add(post);
                     break;
                 }
             }
         }
-
 
         HashMap<String, String> authorIdName = new HashMap<>();
         for (Post post : returningPost) {
