@@ -6,8 +6,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-ARG MONGODB_URI
-ARG MONGODB_DB
+# ARG MONGODB_URI
+# ARG MONGODB_DB
 
 # RUN touch /app/src/main/resources/application.properties
 
