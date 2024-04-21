@@ -288,8 +288,7 @@ public class PostService {
                 return false;
             }
 
-            if (reporter.equals(community.getOwner())) {
-
+            if (reporter.getId().equals(community.getOwner())) {
                 postRepository.delete(post);
                 return true;
             }
@@ -298,22 +297,19 @@ public class PostService {
                 postRepository.save(post);
             } else {
                 reportedBy.add(user);
-                if (reportedBy.size() >= 5) {
-                    postRepository.delete(post);
-                } else {
-                    post.setReportedBy(reportedBy);
 
-                    String senderId = reporter.getId();
-                    String receiverId = post.getAuthor_id();
-                    String message = String.format("%s reported your post in %s", reporter.getFname(),
-                            community.getName());
-                    String dateTime = java.time.OffsetDateTime.now().toString();
-                    NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message,
-                            dateTime);
+                post.setReportedBy(reportedBy);
 
-                    postRepository.save(post);
+                String senderId = reporter.getId();
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s reported your post in %s", reporter.getFname(),
+                        community.getName());
+                String dateTime = java.time.OffsetDateTime.now().toString();
+                NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message,
+                        dateTime);
 
-                }
+                postRepository.save(post);
+
             }
             return true;
         } catch (Exception e) {
