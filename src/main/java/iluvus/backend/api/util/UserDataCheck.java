@@ -41,7 +41,7 @@ public class UserDataCheck {
             errorList.add("Password");
         }
 
-        if (data.get("proEmail").length() == 0) {
+        if (data.get("email").length() == 0) {
             if (!checkEmail(data.get("email"))) {
                 errorList.add("Email");
             }

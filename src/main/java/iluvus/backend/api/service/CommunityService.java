@@ -4,6 +4,7 @@ import iluvus.backend.api.dto.CommunityDto;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
+import iluvus.backend.api.model.Post;
 import iluvus.backend.api.resources.CommunityUserStatus;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.CommunityRepository;
@@ -14,10 +15,8 @@ import iluvus.backend.api.resources.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -83,6 +82,30 @@ public class CommunityService {
     public Map<String, String> getAllCommunity() {
         Map<String, String> communityMap = new HashMap<>();
         for (Community community : communityRepository.findAll()) {
+
+            String owner = community.getOwner();
+            User user = userRepository.findById(owner).orElse(null);
+
+            // AUTO CLEAN UP
+            if (user == null) {
+
+                List<CommunityUser> communityUsers = communityUserRepository.findByCommunityId(community.getId());
+                for (CommunityUser communityUser : communityUsers) {
+                    // delete the community user
+                    communityUserRepository.deleteById(communityUser.getId());
+                }
+
+                List<Post> posts = postRepository.findPostByCommunity_id(community.getId());
+                for (Post post : posts) {
+                    // delete the post
+                    postRepository.deleteById(post.getId());
+                }
+
+                // delete this community
+                communityRepository.deleteById(community.getId());
+                continue;
+            }
+
             communityMap.put(community.getId(), community.getName());
         }
         return communityMap;
@@ -96,16 +119,26 @@ public class CommunityService {
         return communityMap;
     }
 
-    public Map<String, String> searchCommunity(String filter) {
+    public Map<String, Object> searchCommunity(String filter) {
         Map<String, String> communityList = this.getCommunityInfo();
         // Convert the filter to lowercase for case-insensitive comparison
         String lowercaseFilter = filter.toLowerCase();
 
         // Filter the communityList based on the specified filter (case-insensitive)
-        Map<String, String> filteredCommunityList = communityList.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Map<String, String> filteredCommunityList = communityList.entrySet()
+        // .stream()
+        // .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
+        // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        List<Community> communities = communityRepository.findCommunitiesByName(filter);
+        HashMap<String, Object> filteredCommunityList = new HashMap<>();
+
+        for (Community community : communities) {
+            CommunityDto communityDto = new CommunityDto(community);
+            filteredCommunityList.put(community.getId(), communityDto.getCommunityPublicInfo());
+        }
+
         return filteredCommunityList;
     }
 
@@ -141,8 +174,6 @@ public class CommunityService {
             communityUser.setMemberId(userId);
 
             if (community.isPublic()) {
-                user.addGroup(communityId);
-                userRepository.save(user);
                 communityUser.setStatus(CommunityUserStatus.APPROVED);
                 communityUserRepository.insert(communityUser);
             } else {
