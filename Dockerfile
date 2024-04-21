@@ -6,14 +6,14 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-ARG MONGODB_URI
-ARG MONGODB_DB
+# ARG MONGODB_URI
+# ARG MONGODB_DB
 
-RUN touch /app/src/main/resources/application.properties
+# RUN touch /app/src/main/resources/application.properties
 
-RUN echo "spring.data.mongodb.uri=${MONGODB_URI}" >> /app/src/main/resources/application.properties \
-&& echo "spring.data.mongodb.database=${MONGODB_DB}" >> /app/src/main/resources/application.properties \
-&& echo "iluvus.email.passwordtoken=${PROJECT_PASSWORDTOKEN}" >> /app/src/main/resources/application.properties
+# RUN echo "spring.data.mongodb.uri=${MONGODB_URI}" >> /app/src/main/resources/application.properties \
+# && echo "spring.data.mongodb.database=${MONGODB_DB}" >> /app/src/main/resources/application.properties \
+# && echo "iluvus.email.passwordtoken=${PROJECT_PASSWORDTOKEN}" >> /app/src/main/resources/application.properties
 
 # Build the application using Maven
 RUN mvn clean package -DskipTests

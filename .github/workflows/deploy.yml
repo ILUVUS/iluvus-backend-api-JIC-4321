@@ -1,6 +1,6 @@
 name: Deploying to Cloud Run 1.1
 
-on: 
+on:
     workflow_dispatch:
     push:
         branches:
@@ -13,6 +13,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
+            - name: Create application.properties
+              working-directory: src/main/resources
+              run: |
+                  touch application.properties
+                  echo "${{ secrets.APPCONFIG }}" >> application.properties
+
             - name: Authenticate with Google Cloud
               uses: "google-github-actions/auth@v1"
               with:
@@ -23,15 +29,8 @@ jobs:
 
             - name: Build and push Backend docker image
               run: |
-                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest \
-                  --build-arg MONGODB_URI=$MONGODB_URI \
-                  --build-arg MONGODB_DB=$MONGODB_DB \
-                  --build-arg PROJECT_PASSWORDTOKEN=$PROJECT_PASSWORDTOKEN ./
+                  docker build -t us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest ./
                   docker push us-east1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/iluvus/testing:latest
-              env:
-                  MONGODB_URI: ${{ secrets.MONGODB_URI }}
-                  MONGODB_DB: ${{ secrets.MONGODB_DB }}
-                  PROJECT_PASSWORDTOKEN: ${{ secrets.PROJECT_PASSWORDTOKEN }}
 
     deploy:
         runs-on: ubuntu-latest
