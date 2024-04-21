@@ -94,16 +94,26 @@ public class CommunityService {
         return communityMap;
     }
 
-    public Map<String, String> searchCommunity(String filter) {
+    public Map<String, Object> searchCommunity(String filter) {
         Map<String, String> communityList = this.getCommunityInfo();
         // Convert the filter to lowercase for case-insensitive comparison
         String lowercaseFilter = filter.toLowerCase();
 
         // Filter the communityList based on the specified filter (case-insensitive)
-        Map<String, String> filteredCommunityList = communityList.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Map<String, String> filteredCommunityList = communityList.entrySet()
+        //         .stream()
+        //         .filter(entry -> entry.getValue().toLowerCase().contains(lowercaseFilter))
+        //         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        List<Community> communities = communityRepository.findCommunitiesByName(filter);
+        HashMap<String, Object> filteredCommunityList = new HashMap<>();
+        
+        for (Community community : communities) {
+            CommunityDto communityDto = new CommunityDto(community);
+            filteredCommunityList.put(community.getId(), communityDto.getCommunityPublicInfo());
+        }
+                
         return filteredCommunityList;
     }
 

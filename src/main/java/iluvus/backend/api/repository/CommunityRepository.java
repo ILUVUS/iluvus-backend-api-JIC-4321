@@ -9,4 +9,7 @@ import java.util.List;
 public interface CommunityRepository extends MongoRepository<Community, String> {
     @Query("{ 'owner' : ?0 }")
     List<Community> findByOwner(String ownerId);
+
+    @Query("{ 'name' : { $regex: '^.*(?0).*$', $options: 'i' } }")
+    List<Community> findCommunitiesByName(String name);
 }

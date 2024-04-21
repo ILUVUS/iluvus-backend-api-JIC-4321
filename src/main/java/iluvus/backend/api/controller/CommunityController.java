@@ -56,8 +56,8 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> searchCommunity(@RequestParam String filter) {
-        Map<String, String> filteredCommunityList = communityService.searchCommunity(filter);
+    public ResponseEntity<Map<String, Object>> searchCommunity(@RequestParam String filter) {
+        Map<String, Object> filteredCommunityList = communityService.searchCommunity(filter);
         return ResponseEntity.ok().body(filteredCommunityList);
     }
 
