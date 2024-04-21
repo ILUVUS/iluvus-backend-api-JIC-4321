@@ -17,7 +17,7 @@ jobs:
               working-directory: src/main/resources
               run: |
                   touch application.properties
-                  echo ${{ secrets.APPCONFIG }} >> application.properties
+                  echo "${{ secrets.APPCONFIG }}" >> application.properties
 
             - name: Authenticate with Google Cloud
               uses: "google-github-actions/auth@v1"
