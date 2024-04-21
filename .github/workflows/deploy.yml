@@ -10,14 +10,14 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
             - name: Create application.properties
-              working-directory: src/main
+              working-directory: src/main/resources
               run: |
                   touch application.properties
                   echo ${{ secrets.APPCONFIG }} >> application.properties
-
-            - name: Checkout code
-              uses: actions/checkout@v3
 
             - name: Authenticate with Google Cloud
               uses: "google-github-actions/auth@v1"
