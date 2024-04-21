@@ -10,6 +10,11 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+            - name: Create application.properties
+              run: |
+                  touch ./src/main/resources/application.properties
+                  echo ${{ secrets.APPCONFIG }} >> ./src/main/resources/application.properties
+                  
             - name: Checkout code
               uses: actions/checkout@v3
 
@@ -20,11 +25,6 @@ jobs:
 
             - name: Configure docker
               run: gcloud auth configure-docker us-east1-docker.pkg.dev
-
-            - name: Create application.properties
-              run: |
-                  touch ./src/main/resources/application.properties
-                  echo ${{ secrets.APPCONFIG }} >> ./src/main/resources/application.properties
 
             - name: Build and push Backend docker image
               run: |
