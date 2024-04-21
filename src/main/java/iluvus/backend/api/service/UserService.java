@@ -57,12 +57,13 @@ public class UserService {
             userDto.setGender(data.get("gender"));
             userDto.setDob(data.get("dob"));
             userDto.setRace(data.get("race"));
-            userDto.setProEmail(data.get("proEmail"));
+            // userDto.setProEmail(data.get("proEmail"));
             // we have the professional emailID
             // 1) we can call a function for email validity
-            userDto.setVerified(validateEmail(userDto.getProEmail()));
-            Random random = new Random();
-            userDto.setVerifyCode(100000 + random.nextInt(900000));
+            userDto.setVerified(Boolean.parseBoolean(data.get("isPro"))
+                    && validateEmail(userDto.getEmail()));
+            // Random random = new Random();
+            // userDto.setVerifyCode(100000 + random.nextInt(900000));
 
             // LocationDto locationDto = new LocationDto(data.get("location"));
             // userDto.setLocation(locationDto);
@@ -81,9 +82,10 @@ public class UserService {
             userDto.setGroups(new ArrayList<>());
             User user = new User(userDto);
             userRepository.insert(user);
-            sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
+            // sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
+            e.printStackTrace();
             return new HashMap<>() {
                 {
                     put("error", "");
@@ -338,7 +340,7 @@ public class UserService {
                 }
             }
             return communityMap;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

@@ -219,6 +219,7 @@ public class UserDto {
         publicInfo.put("fname", user.getFname());
         publicInfo.put("lname", user.getLname());
         publicInfo.put("dob", user.getDob());
+        publicInfo.put("gender", user.getGender());
         return publicInfo;
     }
 }

@@ -139,8 +139,8 @@ public class CommunityService {
             communityUser.setMemberId(userId);
 
             if (community.isPublic()) {
-                user.addGroup(communityId);
-                userRepository.save(user);
+                // user.addGroup(communityId);
+                // userRepository.save(user);
                 communityUser.setStatus(CommunityUserStatus.APPROVED);
                 communityUserRepository.insert(communityUser);
             } else {
