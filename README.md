@@ -76,6 +76,49 @@ mvn spring-boot:run
 
 5. Your browser should return: `Welcome to ILUVUS. API is running well!`
 
+### Deployment on Google Cloud
+
+1. [Create a new Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
+
+2. [Create an Artifact Registry Repository](https://cloud.google.com/artifact-registry/docs/repositories/create-repos)
+
+    - Name the Repo "iluvus", all lowercase
+    - Make sure the repo is created under the same service account
+
+3. [Create a Cloud Run Service](https://cloud.google.com/run/docs/deploying)
+
+    - Make sure the service is created under the same service account
+
+4. Locate to GCP Dashboard, use this to replace the `PROJECT_ID` on Github Secrets.
+
+ <img src='./img/gcp/dashboard.png' width=500 />
+
+5. Locate to GCP Cloud Run Dashboard, copy the Service Name and use this to replace `PROJECT_SERVICE` on Github Secrets.
+
+<img src='./img/gcp/cloudrun.png' width=700 />
+
+6. [Create a Google Service Account Credential](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account)
+
+    - Copy the content of the JSON file obtained from the step 5 above. Use the content to replace the `GG_CREDENTIAL` on Github Secrets.
+
+7. Create APPCONFIG
+
+Modify the following content:
+
+```java
+spring.data.mongodb.uri=mongodb+srv://<USERNAME:<PASSWORD>@iluvusdb.mocs11o.mongodb.net/iluvus
+spring.data.mongodb.database=iluvus
+iluvus.email.passwordtoken=<GMAIL_GENERATED_PASSWORD>
+```
+
+Modify `<USERNAME>` and `<PASSWORD>` with provided information.
+
+8. Use the APPCONFIG Content to replace the APPCONFIG on Github Secrets.
+
+After all, the Github Secrets should map with the above steps like below:
+
+<img src='./img/gcp/githubsecrets.png' width=700 />
+
 # Release Notes
 
 ## Version 0.5.0
