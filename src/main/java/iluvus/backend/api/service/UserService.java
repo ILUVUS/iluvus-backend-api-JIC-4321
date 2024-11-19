@@ -220,7 +220,7 @@ public class UserService {
     }
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
-        final String sender = "iluvusapp@gmail.com";
+        final String sender = "iluvusdonotreply@gmail.com";
 
         final String password = iluvusEmailPassword;
 
