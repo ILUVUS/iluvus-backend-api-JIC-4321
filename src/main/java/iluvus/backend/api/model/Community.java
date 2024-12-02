@@ -97,4 +97,13 @@ public class Community {
     public void setModerators(List<String> moderators) {
         this.moderators = moderators;
     }
+
+    private String tag;
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }
