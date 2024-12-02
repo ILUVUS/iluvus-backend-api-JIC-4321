@@ -16,6 +16,7 @@ public class Community {
     private boolean isPublic;
 
     private String owner;
+    
 
     // store base64 image
     private String image;
@@ -97,4 +98,7 @@ public class Community {
     public void setModerators(List<String> moderators) {
         this.moderators = moderators;
     }
+
+
+
 }
