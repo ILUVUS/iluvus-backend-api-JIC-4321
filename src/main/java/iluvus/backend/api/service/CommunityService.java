@@ -188,6 +188,52 @@ public class CommunityService {
         }
     }
 
+    public boolean leaveCommunity(Map<String, String> data) {
+        try {
+            String userId = data.get("userId");
+            String communityId = data.get("communityId");
+
+            User user = userRepository.findById(userId).orElse(null);
+            Community community = communityRepository.findById(communityId).orElse(null);
+
+            List<CommunityUser> communityUsers = communityUserRepository.findByCommunityId(communityId);
+
+            if (user == null) {
+                throw new IllegalArgumentException("User not found");
+            }
+            if (community == null) {
+                throw new IllegalArgumentException("Community not found");
+            }
+
+            CommunityUser communityUser = communityUserRepository.findByCommunityIdAndMemberId(communityId, userId);
+
+            // checks if user is a member & throws an exception if not
+            if (communityUser == null) {
+                throw new IllegalArgumentException("User is not a member of this community.");
+            }
+
+            //removes the user from the repository
+            communityUserRepository.delete(communityUser);
+
+
+            //if user was the moderator, we remove the user from the moderators list
+            //potential issues: don't think a community can have no moderators, run some function to promote an owner
+            //existing member to be a moderator
+            if (community.getModerators() != null && community.getModerators().contains(userId)) {
+                community.getModerators().remove(userId);
+                communityRepository.save(community);
+            }
+
+            //Later on: might add a notification to send to a community moderator
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     public Map<String, Object> getCommunityInformation(String communityId) {
         try {
             Community community = communityRepository.findById(communityId).orElse(null);
