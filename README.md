@@ -262,6 +262,11 @@ This project is licensed under the MIT License.
 -   [Doan Tran](#)
 -   [Thuan Vo](#)
 -   [Tyler Lin](#)
+-   [Shreya Devaraju](#)
+-   [Christeena Joby](#)
+-   [Devika Papal](#)
+-   [Sahil Virani](#)
+-   [Roham Wahabzada](#)
 
 ## Acknowledgments
 
