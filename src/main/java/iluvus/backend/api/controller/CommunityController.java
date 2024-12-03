@@ -7,10 +7,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,17 @@ public class CommunityController {
         } else {
             return ResponseEntity.badRequest().body("Failed to join the community");
         }
+    }
+
+    //DeleteMapping for leave community
+    @DeleteMapping(value = "/leave")
+    public ResponseEntity<String> leaveCommunity(@RequestBody Map<String, String> data) {
+        boolean userLeft = communityService.leaveCommunity(data);
+        if (userLeft) {
+            return ResponseEntity.ok().body("User left the community successfully");
+        }
+        return ResponseEntity.badRequest().body("Failed to leave the community");
+
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
