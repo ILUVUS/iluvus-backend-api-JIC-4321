@@ -35,42 +35,38 @@ public class CommunityService {
     public boolean createCommunity(Map<String, String> data) {
         try {
             CommunityDto communityDto = new CommunityDto();
-
+    
             communityDto.setName(data.get("name"));
             communityDto.setDescription(data.get("description"));
             communityDto.setRule(data.get("rules"));
             communityDto.setPublic(data.get("visibility").equals("Public"));
 
+            // tag
+            String tag = data.get("tag");
+            if (tag == null || (!tag.equals("General") && !tag.equals("Professional"))) {
+                throw new IllegalArgumentException("Invalid tag: must be 'General' or 'Professional'");
+            }
+            communityDto.setTag(tag);
+    
+          
+    
             String moderators = data.get("moderators");
-
             ArrayList<String> moderatorList = new ArrayList<>();
-            if (moderators != null || !moderators.isBlank()) {
+            if (moderators != null && !moderators.isBlank()) {
                 String[] moderatorArray = moderators.split(",");
                 for (String moderator : moderatorArray) {
                     moderatorList.add(moderator);
                 }
             }
-
             communityDto.setModerators(moderatorList);
-
+    
             User owner = userRepository.findById(data.get("ownerId")).orElse(null);
-
             communityDto.setOwner(owner.getId());
             communityDto.setMembers(new ArrayList<>());
             communityDto.setImage(data.get("image"));
+    
             Community community = new Community(communityDto);
-
-            List<String> receiverIds = community.getModerators();
-            String dateTime = java.time.OffsetDateTime.now().toString();
-            if (receiverIds != null && !receiverIds.isEmpty()) {
-                String message = String.format("%s added you as moderator in %s", owner.getFname(),
-                        community.getName());
-                for (String receiverId : receiverIds) {
-                    NotificationService.addNotification(owner.getId(), receiverId,
-                            NotificationType.MODERATOR_ADD, message, dateTime);
-                }
-            }
-
+    
             communityRepository.insert(community);
             return true;
         } catch (Exception e) {
@@ -78,6 +74,7 @@ public class CommunityService {
             return false;
         }
     }
+    
 
     public Map<String, String> getAllCommunity() {
         Map<String, String> communityMap = new HashMap<>();

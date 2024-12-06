@@ -30,7 +30,7 @@ public class CommunityController {
         boolean newCommunity = communityService.createCommunity(data);
 
         if (newCommunity) {
-            return ResponseEntity.ok().body("Community created successfully");
+            return ResponseEntity.ok().body("Community created successfully. The tag is " + data.get("tag"));
         } else {
             return ResponseEntity.badRequest().body("Community creation failed");
         }
