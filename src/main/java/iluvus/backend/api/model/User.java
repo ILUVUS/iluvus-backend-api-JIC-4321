@@ -23,6 +23,7 @@ public class User {
     private String gender;
     private Date dob;
     private String race;
+    private String image;
     private List<HashMap<String, Object>> notification;
     private LocationDto location;
 
@@ -52,6 +53,7 @@ public class User {
         this.gender = userDto.getGender();
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
+        this.image = userDto.getImage();
         this.notification = userDto.getNotification();
         // this.location = userDto.getLocation();
 
@@ -143,6 +145,14 @@ public class User {
 
     public void setRace(String race) {
         this.race = race;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public LocationDto getLocation() {

@@ -18,6 +18,7 @@ public class UserDto {
     private String gender;
     private Date dob;
     private String race;
+    private String image;
     private int verifyCode;
     private List<HashMap<String, Object>> notification;
 
@@ -137,6 +138,14 @@ public class UserDto {
         this.race = race;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public int getVerifyCode() {
         return verifyCode;
     }
@@ -220,6 +229,7 @@ public class UserDto {
         publicInfo.put("lname", user.getLname());
         publicInfo.put("dob", user.getDob());
         publicInfo.put("gender", user.getGender());
+        publicInfo.put("image", user.getImage());
         return publicInfo;
     }
 }
