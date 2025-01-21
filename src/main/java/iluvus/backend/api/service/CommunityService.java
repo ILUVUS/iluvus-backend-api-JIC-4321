@@ -43,12 +43,10 @@ public class CommunityService {
 
             // tag
             String tag = data.get("tag");
-            if (tag == null || (!tag.equals("General") && !tag.equals("Professional"))) {
-                throw new IllegalArgumentException("Invalid tag: must be 'General' or 'Professional'");
+            if (tag == null || (!tag.equals("general") && !tag.equals("professional"))) {
+                throw new IllegalArgumentException("Invalid tag: must be 'general' or 'professional'");
             }
             communityDto.setTag(tag);
-    
-          
     
             String moderators = data.get("moderators");
             ArrayList<String> moderatorList = new ArrayList<>();

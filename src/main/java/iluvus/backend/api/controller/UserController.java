@@ -21,6 +21,7 @@ public class UserController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
 
+
         Map<String, String> newUser = userService.createUser(data);
 
         String newUserRes = newUser.get("error");
@@ -130,6 +131,15 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editProfileImage(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Profile Image Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Profile Image Set Failed");
+        }
+    }
     @GetMapping(value = "/getMyFollowingGroups", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> getMyFollowingGroups(@RequestParam String userId) {
         Map<String, String> followingGroups = userService.getUserFollowingGroups(userId);
