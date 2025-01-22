@@ -6,6 +6,7 @@ import iluvus.backend.api.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
@@ -21,6 +22,8 @@ public class Startup implements CommandLineRunner {
     private CommunityUserRepository communityUserRepository;
     @Autowired
     private InterestRepository interestRepository;
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Override
     public void run(String... args) {
@@ -66,6 +69,19 @@ public class Startup implements CommandLineRunner {
             interestTopic.setId(i);
             interestTopic.setName(topics.get(i));
             interestRepository.insert(interestTopic);
+        }
+    }
+
+    private void insertSkillTopics() {
+        // remove all skills
+        skillRepository.deleteAll();
+
+        List<String> skills = Skill.skillList;
+        for (int i = 0; i < skills.size(); i++) {
+            Skill skill = new Skill();
+            skill.setId(i);
+            skill.setName(skills.get(i));
+            skillRepository.insert(skill);
         }
     }
 

@@ -5,12 +5,14 @@ import iluvus.backend.api.model.CommunityUser;
 import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
+import iluvus.backend.api.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import iluvus.backend.api.dto.UserDto;
 import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.User;
+import iluvus.backend.api.model.Skill;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
 import java.util.*;
@@ -25,6 +27,9 @@ public class UserService {
 
     @Autowired
     private InterestRepository interestRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Autowired
     private CommunityRepository communityRepository;
@@ -330,6 +335,28 @@ public class UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    
+    //add editing Skills suport here
+    public boolean editSkill(Map<String, String> data) {
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            user.getSkills().clear();
+            String skillListRaw = data.get("selectedTopic");
+            String[] skillList = skillListRaw.split(",");
+            ArrayList<Integer> skillListInt = new ArrayList<>();
+            for (String skill: skillList) {
+                skillListInt.add(Integer.valueOf(skill));
+            }
+            user.setSkills(skillListInt);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     public boolean editProfileImage(Map<String, String> data) {

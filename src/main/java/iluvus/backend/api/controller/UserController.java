@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import iluvus.backend.api.model.InterestTopic;
+import iluvus.backend.api.model.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -130,6 +131,23 @@ public class UserController {
             return ResponseEntity.badRequest().body("Interest Set Failed");
         }
     }
+
+    @GetMapping(value = "/skillList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getSkill() {
+        List<String> skills = Skill.skillList;
+        return ResponseEntity.ok().body(skills);
+    }
+
+    @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editSkill(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Skill Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Skill Set Failed");
+        }
+    }
+
 
     @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {

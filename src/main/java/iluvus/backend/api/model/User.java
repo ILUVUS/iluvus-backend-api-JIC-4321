@@ -30,7 +30,10 @@ public class User {
     private List<Integer> interests;
     private List<String> education;
     private List<String> work;
-    private List<String> skills;
+    
+    //Might need to change this back if it doesn't work (was String before)
+    private List<Integer> skills;
+    
     private List<String> hobbies;
 
     @Field("friends")
@@ -187,11 +190,11 @@ public class User {
         this.work = work;
     }
 
-    public List<String> getSkills() {
+    public List<Integer> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<String> skills) {
+    public void setSkills(List<Integer> skills) {
         this.skills = skills;
     }
 

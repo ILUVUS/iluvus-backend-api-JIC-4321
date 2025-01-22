@@ -25,7 +25,10 @@ public class UserDto {
     private List<Integer> interests;
     private List<String> education;
     private List<String> work;
-    private List<String> skills;
+
+    //testing this, need to check if it will work
+    private List<Integer> skills;
+
     private List<String> hobbies;
 
     private List<User> friends;
@@ -179,11 +182,11 @@ public class UserDto {
         this.work = work;
     }
 
-    public List<String> getSkills() {
+    public List<Integer> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<String> skills) {
+    public void setSkills(List<Integer> skills) {
         this.skills = skills;
     }
 
