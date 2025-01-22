@@ -313,6 +313,22 @@ public class UserService {
         }
     }
 
+    public boolean editBio(Map<String, String> data) {
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            String bio = data.get("bio");
+            if (bio == null) {
+                throw new IllegalArgumentException("Invalid bio: cannot be null");
+            }
+            user.setBio(bio); // set the new profile bio.
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean editInterest(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
