@@ -24,6 +24,7 @@ public class User {
     private Date dob;
     private String race;
     private String image;
+    private String bio;
     private List<HashMap<String, Object>> notification;
     private LocationDto location;
 
@@ -57,6 +58,7 @@ public class User {
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
         this.image = userDto.getImage();
+        this.bio = userDto.getBio();
         this.notification = userDto.getNotification();
         // this.location = userDto.getLocation();
 
@@ -156,6 +158,15 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        String truncated = bio.length() > 150 ? bio.substring(0, 150) : bio;
+        this.bio = truncated;
     }
 
     public LocationDto getLocation() {

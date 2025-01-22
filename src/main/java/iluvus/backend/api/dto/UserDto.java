@@ -19,6 +19,7 @@ public class UserDto {
     private Date dob;
     private String race;
     private String image;
+    private String bio;
     private int verifyCode;
     private List<HashMap<String, Object>> notification;
 
@@ -149,6 +150,15 @@ public class UserDto {
         this.image = image;
     }
 
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        String truncated = bio.length() > 150 ? bio.substring(0, 150) : bio;
+        this.bio = truncated;
+    }
+
     public int getVerifyCode() {
         return verifyCode;
     }
@@ -233,6 +243,7 @@ public class UserDto {
         publicInfo.put("dob", user.getDob());
         publicInfo.put("gender", user.getGender());
         publicInfo.put("image", user.getImage());
+        publicInfo.put("bio", user.getBio());
         return publicInfo;
     }
 }

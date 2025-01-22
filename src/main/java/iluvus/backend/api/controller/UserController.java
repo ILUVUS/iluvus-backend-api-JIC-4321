@@ -122,6 +122,16 @@ public class UserController {
         return ResponseEntity.ok().body(interestTopic);
     }
 
+    @PostMapping(value = "/editBio", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editBio(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editBio(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Profile Image Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Profile Image Set Failed");
+        }
+    }
+
     @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
         boolean isSet = userService.editInterest(data);
