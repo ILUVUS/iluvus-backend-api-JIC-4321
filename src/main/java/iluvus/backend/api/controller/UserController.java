@@ -21,7 +21,6 @@ public class UserController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
 
-
         Map<String, String> newUser = userService.createUser(data);
 
         String newUserRes = newUser.get("error");
@@ -71,7 +70,8 @@ public class UserController {
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getUser(@RequestParam String userId) {
-        return ResponseEntity.ok().body(userService.getUser(userId));
+        Map<String, Object> userDetails = userService.getUser(userId);
+    return ResponseEntity.ok().body(userDetails);
     }
 
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,6 +83,17 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @PostMapping(value = "/editProfile", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<String> editProfile(@RequestBody Map<String, String> data) {
+    boolean isUpdated = userService.editProfile(data);
+    if (isUpdated) {
+        return ResponseEntity.ok().body("Profile updated successfully");
+    } else {
+        return ResponseEntity.badRequest().body("Failed to update profile");
+    }
+}
+
 
     @GetMapping(value = "/getNotificationByUserId", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, Object>>> getNotificationByUserId(@RequestParam String userId) {
@@ -121,16 +132,6 @@ public class UserController {
         return ResponseEntity.ok().body(interestTopic);
     }
 
-    @PostMapping(value = "/editBio", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editBio(@RequestBody Map<String, String> data) {
-        boolean isSet = userService.editBio(data);
-        if (isSet) {
-            return ResponseEntity.ok().body("Profile Image Set Successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Profile Image Set Failed");
-        }
-    }
-
     @PostMapping(value = "/editInterest", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editInterest(@RequestBody Map<String, String> data) {
         boolean isSet = userService.editInterest(data);
@@ -141,15 +142,6 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
-        boolean isSet = userService.editProfileImage(data);
-        if (isSet) {
-            return ResponseEntity.ok().body("Profile Image Set Successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Profile Image Set Failed");
-        }
-    }
     @GetMapping(value = "/getMyFollowingGroups", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> getMyFollowingGroups(@RequestParam String userId) {
         Map<String, String> followingGroups = userService.getUserFollowingGroups(userId);

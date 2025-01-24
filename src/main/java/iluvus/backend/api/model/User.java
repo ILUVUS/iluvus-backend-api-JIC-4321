@@ -17,14 +17,15 @@ public class User {
     private String password;
 
     private boolean isVerified;
-
+    private String jobStatus; 
+    private String jobDetails; 
+    private String relationshipStatus; 
+    private String bio;
     private String fname;
     private String lname;
     private String gender;
     private Date dob;
     private String race;
-    private String image;
-    private String bio;
     private List<HashMap<String, Object>> notification;
     private LocationDto location;
 
@@ -54,8 +55,6 @@ public class User {
         this.gender = userDto.getGender();
         this.dob = userDto.getDob();
         this.race = userDto.getRace();
-        this.image = userDto.getImage();
-        this.bio = userDto.getBio();
         this.notification = userDto.getNotification();
         // this.location = userDto.getLocation();
 
@@ -79,6 +78,39 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getJobStatus() {
+        return jobStatus;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+    
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    
+    public void setJobStatus(String jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public String getJobDetails() {
+        return jobDetails;
+    }
+
+    public void setJobDetails(String jobDetails) {
+        this.jobDetails = jobDetails;
+    }
+
+    public String getRelationshipStatus() {
+        return relationshipStatus;
+    }
+
+    public void setRelationshipStatus(String relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
     }
 
     public void setUsername(String username) {
@@ -147,23 +179,6 @@ public class User {
 
     public void setRace(String race) {
         this.race = race;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        String truncated = bio.length() > 150 ? bio.substring(0, 150) : bio;
-        this.bio = truncated;
     }
 
     public LocationDto getLocation() {

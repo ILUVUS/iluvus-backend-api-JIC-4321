@@ -22,6 +22,9 @@ public class UserDto {
     private String bio;
     private int verifyCode;
     private List<HashMap<String, Object>> notification;
+    private String jobStatus;
+    private String jobDetails;
+    private String relationshipStatus;
 
     private List<Integer> interests;
     private List<String> education;
@@ -39,6 +42,29 @@ public class UserDto {
 
     public UserDto(User user) {
         this.user = user;
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.isVerified = user.isVerified();
+        this.proEmail = user.getEmail(); // Assuming proEmail is the same as email
+        this.fname = user.getFname();
+        this.lname = user.getLname();
+        this.gender = user.getGender();
+        this.dob = user.getDob();
+        this.race = user.getRace();
+        //this.image = user.getImage();
+        //this.bio = user.getBio();
+        this.jobStatus = user.getJobStatus(); // Map job status
+        this.jobDetails = user.getJobDetails(); // Map job details
+        this.relationshipStatus = user.getRelationshipStatus(); // Map relationship status
+        this.notification = user.getNotification();
+        this.interests = user.getInterests();
+        this.education = user.getEducation();
+        this.work = user.getWork();
+        this.skills = user.getSkills();
+        this.hobbies = user.getHobbies();
+        this.friends = user.getFriends();
+        this.groups = user.getGroups();
     }
 
     public String getUsername() {
@@ -101,6 +127,7 @@ public class UserDto {
         return dob;
     }
 
+    
     public void setDob(String mm, String dd, String yyyy) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -142,7 +169,7 @@ public class UserDto {
     public String getImage() {
         return image;
     }
-
+    
     public void setImage(String image) {
         this.image = image;
     }
@@ -229,6 +256,30 @@ public class UserDto {
         this.proEmail = proEmail;
     }
 
+    public String getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(String jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public String getJobDetails() {
+        return jobDetails;
+    }
+
+    public void setJobDetails(String jobDetails) {
+        this.jobDetails = jobDetails;
+    }
+
+    public String getRelationshipStatus() {
+        return relationshipStatus;
+    }
+
+    public void setRelationshipStatus(String relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
+    }
+
     public HashMap<String, Object> getPublicUserInfo() {
         HashMap<String, Object> publicInfo = new HashMap<>();
         publicInfo.put("id", user.getId());
@@ -239,8 +290,11 @@ public class UserDto {
         publicInfo.put("lname", user.getLname());
         publicInfo.put("dob", user.getDob());
         publicInfo.put("gender", user.getGender());
-        publicInfo.put("image", user.getImage());
-        publicInfo.put("bio", user.getBio());
+        //publicInfo.put("image", user.getImage());
+        //publicInfo.put("bio", user.getBio());
+        publicInfo.put("jobStatus", this.jobStatus); 
+        publicInfo.put("jobDetails", this.jobDetails); 
+        publicInfo.put("relationshipStatus", this.relationshipStatus); 
         return publicInfo;
     }
 }

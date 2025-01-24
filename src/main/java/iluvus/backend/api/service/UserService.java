@@ -77,6 +77,7 @@ public class UserService {
             // we need a way to put List in Frontend into a String seperated by commas
             // then we can split the String into a List in Backend
             // FOR NOW, we will just create an empty List
+          
             userDto.setNotification(new ArrayList<>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
@@ -89,6 +90,9 @@ public class UserService {
             userRepository.insert(user);
             // sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
             return newUserCheckResult;
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return new HashMap<>() {
@@ -165,14 +169,37 @@ public class UserService {
                     interestMap.put(interestTopic.getId(), interestTopic.getName());
                 }
             }
+            userMap.put("bio", user.getBio());
             userMap.put("interest", interestMap);
-
+            userMap.put("jobStatus", user.getJobStatus() != null ? user.getJobStatus() : "Not specified");
+            userMap.put("jobDetails", user.getJobDetails() != null ? user.getJobDetails() : "Not specified");
+            userMap.put("relationshipStatus", user.getRelationshipStatus() != null ? user.getRelationshipStatus() : "Not specified");
             return userMap;
 
         } catch (Exception e) {
             return null;
         }
     }
+
+    public boolean editProfile(Map<String, String> data) {
+        String userId = data.get("userId");
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            if (data.containsKey("jobStatus")) {
+                user.setJobStatus(data.get("jobStatus"));
+            }
+            if (data.containsKey("jobDetails")) {
+                user.setJobDetails(data.get("jobDetails"));
+            }
+            if (data.containsKey("relationshipStatus")) {
+                user.setRelationshipStatus(data.get("relationshipStatus"));
+            }
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+    
 
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
@@ -220,7 +247,7 @@ public class UserService {
     }
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
-        final String sender = "iluvusdonotreply@gmail.com";
+        final String sender = "iluvusapp@gmail.com";
 
         final String password = iluvusEmailPassword;
 
@@ -313,22 +340,6 @@ public class UserService {
         }
     }
 
-    public boolean editBio(Map<String, String> data) {
-        try {
-            User user = userRepository.findById(data.get("userId")).orElse(null);
-            String bio = data.get("bio");
-            if (bio == null) {
-                throw new IllegalArgumentException("Invalid bio: cannot be null");
-            }
-            user.setBio(bio); // set the new profile bio.
-            userRepository.save(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public boolean editInterest(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
@@ -340,23 +351,6 @@ public class UserService {
                 interestListInt.add(Integer.valueOf(interest));
             }
             user.setInterests(interestListInt);
-            userRepository.save(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean editProfileImage(Map<String, String> data) {
-        try {
-            User user = userRepository.findById(data.get("userId")).orElse(null);
-            user.setImage(""); // first, clear the profile image.
-            String pic = data.get("image");
-            if (pic == null) {
-                throw new IllegalArgumentException("Invalid image: cannot be null");
-            }
-            user.setImage(pic); // set the new profile image.
             userRepository.save(user);
             return true;
         } catch (Exception e) {
