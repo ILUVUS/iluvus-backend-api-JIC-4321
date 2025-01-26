@@ -21,6 +21,9 @@ public class Startup implements CommandLineRunner {
     private CommunityUserRepository communityUserRepository;
     @Autowired
     private InterestRepository interestRepository;
+    @Autowired
+    private SkillTopicRepository skillTopicRepository;
+
 
     @Override
     public void run(String... args) {
@@ -52,7 +55,8 @@ public class Startup implements CommandLineRunner {
         // interestRepository.deleteById(String.valueOf(interestTopic.getId()));
 
         // use with care
-        // insertInterestTopics();
+        insertInterestTopics();
+        insertSkillTopics();
 
     }
 
@@ -68,5 +72,22 @@ public class Startup implements CommandLineRunner {
             interestRepository.insert(interestTopic);
         }
     }
+    private void insertSkillTopics() {
+        // Clears out any existing skill docs
+        skillTopicRepository.deleteAll();
+
+        // Take the big static skillList from SkillTopic.java
+        List<String> skills = SkillTopic.skillList;
+    
+        // Insert them all with incremental IDs
+        for (int i = 0; i < skills.size(); i++) {
+            SkillTopic skillTopic = new SkillTopic();
+            skillTopic.setId(i);
+            skillTopic.setName(skills.get(i));
+            // Insert into the "skills" collection
+            skillTopicRepository.insert(skillTopic);
+        }
+    }
+
 
 }

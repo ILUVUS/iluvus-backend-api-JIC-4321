@@ -20,6 +20,7 @@ import javax.mail.internet.*;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -35,17 +36,12 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // get the password from application.properties
-
     @Value("${iluvus.email.passwordtoken}")
     private String iluvusEmailPassword;
 
     public Map<String, String> createUser(Map<String, String> data) {
-
         try {
-
             UserDataCheck userDataCheck = new UserDataCheck();
-
             Map<String, String> newUserCheckResult = userDataCheck.newUserCheck(data, userRepository);
 
             if (newUserCheckResult.get("error").strip() != "") {
@@ -55,28 +51,20 @@ public class UserService {
             UserDto userDto = new UserDto();
             userDto.setUsername(data.get("username"));
             userDto.setEmail(data.get("email"));
+
             String hashedPassword = passwordEncoder.encode(data.get("password"));
             userDto.setPassword(hashedPassword);
+
             userDto.setFname(data.get("fname"));
             userDto.setLname(data.get("lname"));
             userDto.setGender(data.get("gender"));
             userDto.setDob(data.get("dob"));
             userDto.setRace(data.get("race"));
-            // userDto.setProEmail(data.get("proEmail"));
-            // we have the professional emailID
-            // 1) we can call a function for email validity
+
             userDto.setVerified(Boolean.parseBoolean(data.get("isPro"))
                     && validateEmail(userDto.getEmail()));
-            // Random random = new Random();
-            // userDto.setVerifyCode(100000 + random.nextInt(900000));
 
-            // LocationDto locationDto = new LocationDto(data.get("location"));
-            // userDto.setLocation(locationDto);
-
-            // need to fix this
-            // we need a way to put List in Frontend into a String seperated by commas
-            // then we can split the String into a List in Backend
-            // FOR NOW, we will just create an empty List
+            // Initialize empty arrays/lists
             userDto.setNotification(new ArrayList<>());
             userDto.setInterests(new ArrayList<>());
             userDto.setEducation(new ArrayList<>());
@@ -85,9 +73,9 @@ public class UserService {
             userDto.setHobbies(new ArrayList<>());
             userDto.setFriends(new ArrayList<>());
             userDto.setGroups(new ArrayList<>());
+
             User user = new User(userDto);
             userRepository.insert(user);
-            // sendVerificationEmail(userDto.getProEmail(), userDto.getVerifyCode());
             return newUserCheckResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,7 +90,6 @@ public class UserService {
     public boolean verify(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
-
             return user.isVerified();
         } catch (Exception e) {
             return false;
@@ -112,7 +99,6 @@ public class UserService {
     public User loginUser(Map<String, String> data) {
         try {
             User user = userRepository.findUserbyUsername(data.get("username"));
-
             if (passwordEncoder.matches(data.get("password"), user.getPassword())) {
                 return user;
             }
@@ -146,18 +132,11 @@ public class UserService {
             if (user == null) {
                 return null;
             }
-            // Map<String, String> userMap = new HashMap<>();
-            // userMap.put("username", user.getUsername());
-            // userMap.put("email", user.getEmail());
-            // userMap.put("fname", user.getFname());
-            // userMap.put("lname", user.getLname());
-            // userMap.put("interest", user.getInterests().toString());
-            // userMap.put("dob", user.getDob().toString());
-            // return userMap;
 
             UserDto userDto = new UserDto(user);
             Map<String, Object> userMap = userDto.getPublicUserInfo();
 
+            // Convert user's interest IDs -> {id -> name}
             Map<Integer, String> interestMap = new HashMap<>();
             for (Integer interestId : user.getInterests()) {
                 InterestTopic interestTopic = interestRepository.findInterestTopicById(interestId);
@@ -167,8 +146,12 @@ public class UserService {
             }
             userMap.put("interest", interestMap);
 
-            return userMap;
+            // ----------------------------------------------------------
+            // ADD this line to include skills in the returned userMap:
+            // ----------------------------------------------------------
+            userMap.put("skills", user.getSkills());
 
+            return userMap;
         } catch (Exception e) {
             return null;
         }
@@ -178,21 +161,13 @@ public class UserService {
         if (proemail == null) {
             return false;
         }
-
-        String[] parts = proemail.split("@"); // Split at the "@" character
-
+        String[] parts = proemail.split("@"); // Split at "@"
         if (parts.length == 2) {
-            String username = parts[0];
             String domain = parts[1];
-            String[] domainParts = domain.split("\\."); // Split the domain at "."
-
+            String[] domainParts = domain.split("\\.");
             if (domainParts.length == 2) {
                 String domainName = domainParts[0];
-                String domainExtension = domainParts[1];
-
                 String[] genericDomains = { "gmail", "outlook", "yahoo", "hotmail", "aol" };
-
-                // Check if the domain name is generic
                 boolean isGeneric = false;
                 for (String generic : genericDomains) {
                     if (domainName.equalsIgnoreCase(generic)) {
@@ -203,16 +178,6 @@ public class UserService {
                 if (isGeneric) {
                     return false;
                 }
-
-                String[] result = { username, domainName, domainExtension };
-                String verificationToken = UUID.randomUUID().toString(); // random token to verify
-                // here I want to verify if the email ID exists. Can I do this by sending a
-                // verification code?
-                // or is there a method I can use to find out?
-                // we can build an email and send a verification link, but how do we know if the
-                // link was clicked
-                // and where do we direct them
-                // api call etc.
                 return true;
             }
         }
@@ -221,14 +186,13 @@ public class UserService {
 
     public boolean sendVerificationEmail(String userEmail, int verificationCode) {
         final String sender = "iluvusdonotreply@gmail.com";
-
         final String password = iluvusEmailPassword;
 
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true"); // Use this line for TLS
+        properties.put("mail.smtp.starttls.enable", "true"); // TLS
         properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587"); // Use 465 for SSL
+        properties.put("mail.smtp.port", "587"); // 465 for SSL
 
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -243,7 +207,6 @@ public class UserService {
             message.setSubject("Email Verification");
             message.setText("Your verification code is: " + verificationCode);
             Transport.send(message);
-
             return true;
         } catch (MessagingException mex) {
             mex.printStackTrace();
@@ -260,7 +223,6 @@ public class UserService {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public List<HashMap<String, Object>> getNotificationByUserId(String userId) {
@@ -276,7 +238,6 @@ public class UserService {
 
     public List<HashMap<String, Object>> getMatchedUser(String filter) {
         try {
-            // get all users matched
             List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
             List<HashMap<String, Object>> userMapList = new ArrayList<>();
             for (User user : userList) {
@@ -320,7 +281,7 @@ public class UserService {
             if (bio == null) {
                 throw new IllegalArgumentException("Invalid bio: cannot be null");
             }
-            user.setBio(bio); // set the new profile bio.
+            user.setBio(bio);
             userRepository.save(user);
             return true;
         } catch (Exception e) {
@@ -333,8 +294,10 @@ public class UserService {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
             user.getInterests().clear();
+
             String interestListRaw = data.get("selectedTopic");
             String[] interestList = interestListRaw.split(",");
+
             ArrayList<Integer> interestListInt = new ArrayList<>();
             for (String interest : interestList) {
                 interestListInt.add(Integer.valueOf(interest));
@@ -356,7 +319,7 @@ public class UserService {
             if (pic == null) {
                 throw new IllegalArgumentException("Invalid image: cannot be null");
             }
-            user.setImage(pic); // set the new profile image.
+            user.setImage(pic);
             userRepository.save(user);
             return true;
         } catch (Exception e) {
@@ -389,6 +352,45 @@ public class UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // --------------------------------------------------
+    // NEW Method: editSkills
+    // --------------------------------------------------
+    public boolean editSkills(Map<String, String> data) {
+        try {
+            // 1. Load the user
+            String userId = data.get("userId");
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return false;
+            }
+
+            // 2. Clear old skills
+            user.getSkills().clear();
+
+            // 3. Parse selected skills
+            String skillsRaw = data.get("selectedSkills");
+            if (skillsRaw == null || skillsRaw.trim().isEmpty()) {
+                // If no skills provided, set an empty list
+                user.setSkills(new ArrayList<>());
+            } else {
+                String[] skillsArray = skillsRaw.split(",");
+                List<String> skillList = new ArrayList<>();
+                for (String skill : skillsArray) {
+                    skillList.add(skill.trim());
+                }
+                user.setSkills(skillList);
+            }
+
+            // 4. Save updated user
+            userRepository.save(user);
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
