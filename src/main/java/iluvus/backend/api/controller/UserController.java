@@ -142,22 +142,24 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/skillList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> getSkill() {
-        List<String> skills = Skill.skillList;
-        return ResponseEntity.ok().body(skills);
-    }
+//     @GetMapping(value = "/skillList", produces = MediaType.APPLICATION_JSON_VALUE)
+//     public ResponseEntity<List<String>> getSkill() {
+//         List<String> skills = Skill.skillList;
+//         return ResponseEntity.ok().body(skills);
+//     }
 
-    @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
-        boolean isSet = userService.editSkill(data);
-        if (isSet) {
-            return ResponseEntity.ok().body("Skill Set Successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Skill Set Failed");
-        }
-    }
+//     @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
+//     public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
+//         boolean isSet = userService.editSkill(data);
+//         if (isSet) {
+//             return ResponseEntity.ok().body("Skill Set Successfully");
+//         } else {
+//             return ResponseEntity.badRequest().body("Skill Set Failed");
+//         }
+//     }
 
+    //Will need to add editSkill and skillList later tomorrow potentially
+    //Also add method descriptions
 
     @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
@@ -177,5 +179,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    
 
 }

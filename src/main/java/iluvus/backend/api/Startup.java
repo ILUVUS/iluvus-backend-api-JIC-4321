@@ -23,7 +23,8 @@ public class Startup implements CommandLineRunner {
     @Autowired
     private InterestRepository interestRepository;
     @Autowired
-    private SkillRepository skillRepository;
+    //private SkillRepository skillRepository;
+    private SkillTopicRepository skillTopicRepository;
 
     @Override
     public void run(String... args) {
@@ -55,7 +56,8 @@ public class Startup implements CommandLineRunner {
         // interestRepository.deleteById(String.valueOf(interestTopic.getId()));
 
         // use with care
-        // insertInterestTopics();
+        insertInterestTopics();
+        insertSkillTopics();
 
     }
 
@@ -71,18 +73,35 @@ public class Startup implements CommandLineRunner {
             interestRepository.insert(interestTopic);
         }
     }
-
     private void insertSkillTopics() {
-        // remove all skills
-        skillRepository.deleteAll();
+        // Clears out any existing skill docs
+        skillTopicRepository.deleteAll();
 
-        List<String> skills = Skill.skillList;
+        // Take the big static skillList from SkillTopic.java
+        List<String> skills = SkillTopic.skillList;
+    
+        // Insert them all with incremental IDs
         for (int i = 0; i < skills.size(); i++) {
-            Skill skill = new Skill();
-            skill.setId(i);
-            skill.setName(skills.get(i));
-            skillRepository.insert(skill);
+            SkillTopic skillTopic = new SkillTopic();
+            skillTopic.setId(i);
+            skillTopic.setName(skills.get(i));
+            // Insert into the "skills" collection
+            skillTopicRepository.insert(skillTopic);
         }
     }
+
+
+//     private void insertSkillTopics() {
+//         // remove all skills
+//         skillRepository.deleteAll();
+
+//         List<String> skills = Skill.skillList;
+//         for (int i = 0; i < skills.size(); i++) {
+//             Skill skill = new Skill();
+//             skill.setId(i);
+//             skill.setName(skills.get(i));
+//             skillRepository.insert(skill);
+//         }
+//     }
 
 }
