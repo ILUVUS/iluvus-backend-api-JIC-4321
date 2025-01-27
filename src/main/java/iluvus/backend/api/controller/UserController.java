@@ -141,6 +141,9 @@ public class UserController {
         }
     }
 
+    //Will need to add editInterest and interestList later tomorrow potentially
+    //Also add method descriptions
+
     @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
         boolean isSet = userService.editProfileImage(data);
@@ -161,5 +164,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    
 
 }
