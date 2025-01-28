@@ -314,7 +314,6 @@ public class UserService {
     public boolean editProfileImage(Map<String, String> data) {
         try {
             User user = userRepository.findById(data.get("userId")).orElse(null);
-            user.setImage(""); // first, clear the profile image.
             String pic = data.get("image");
             if (pic == null) {
                 throw new IllegalArgumentException("Invalid image: cannot be null");
@@ -327,6 +326,8 @@ public class UserService {
             return false;
         }
     }
+    
+    
 
     public Map<String, String> getUserFollowingGroups(String userId) {
         try {

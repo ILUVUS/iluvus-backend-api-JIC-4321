@@ -153,6 +153,8 @@ public class UserController {
             return ResponseEntity.badRequest().body("Profile Image Set Failed");
         }
     }
+    
+   
     @GetMapping(value = "/getMyFollowingGroups", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> getMyFollowingGroups(@RequestParam String userId) {
         Map<String, String> followingGroups = userService.getUserFollowingGroups(userId);
