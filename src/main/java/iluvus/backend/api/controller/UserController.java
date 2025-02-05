@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import iluvus.backend.api.model.InterestTopic;
+import iluvus.backend.api.model.SkillTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -121,6 +122,13 @@ public class UserController {
         return ResponseEntity.ok().body(interestTopic);
     }
 
+    @GetMapping(value = "/skillList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getSkillTopic() {
+        List<String> skillTopic = SkillTopic.skillList;
+        return ResponseEntity.ok().body(skillTopic);
+
+    }
+
     @PostMapping(value = "/editBio", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editBio(@RequestBody Map<String, String> data) {
         boolean isSet = userService.editBio(data);
@@ -141,8 +149,15 @@ public class UserController {
         }
     }
 
-    //Will need to add editInterest and interestList later tomorrow potentially
-    //Also add method descriptions
+    @PostMapping(value = "/editSkills", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
+        boolean isSet = userService.editSkills(data);
+        if (isSet) {
+            return ResponseEntity.ok().body("Skill Set Successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Skill Set Failed");
+        }
+    }
 
     @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
