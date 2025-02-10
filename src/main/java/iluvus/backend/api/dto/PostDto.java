@@ -17,6 +17,8 @@ public class PostDto {
 
     private Integer topicId;
 
+    private String sourceLink;  
+
     public PostDto() {
     }
 
@@ -98,6 +100,14 @@ public class PostDto {
 
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
+    }
+
+    public String getSourceLink() {
+        return sourceLink;
+    }
+
+    public void setSourceLink(String sourceLink) {
+        this.sourceLink = sourceLink;
     }
 
 }

@@ -45,6 +45,7 @@ public class PostService {
             String tagged = data.get("tagged");
 
             String raw_topicId = data.get("topicId");
+            String sourceLink = data.get("sourceLink");
 
             List<String> taggedList = new ArrayList<>();
             if (tagged != null && !tagged.isBlank()) {
@@ -93,6 +94,7 @@ public class PostService {
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
             postDto.setTopicId(topicId);
+            postDto.setSourceLink(sourceLink);
 
             Post post = new Post(postDto);
 
@@ -107,6 +109,9 @@ public class PostService {
 
             postRepository.insert(post);
 
+            System.out.println("DEBUG: Inserted post with ID=" + post.getId() 
+             + " and sourceLink=" + post.getSourceLink());
+
             return getPostsByCommunityId(community_id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,6 +124,12 @@ public class PostService {
             return null;
         }
         List<Post> posts = postRepository.findPostByCommunity_id(id);
+
+
+        for (Post p : posts) {
+        System.out.println("DEBUG: getPostsByCommunityId -> postId=" + p.getId() 
+            + ", sourceLink=" + p.getSourceLink());
+        }
         HashMap<String, String> authorIdName = new HashMap<>();
         for (Post post : posts) {
             String authorId = post.getAuthor_id();

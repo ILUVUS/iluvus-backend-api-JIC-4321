@@ -28,6 +28,7 @@ public class Post {
     private Integer topicId;
     @Field("medias")
     private List<String> medias;
+    private String sourceLink;
 
     public Post() {
     }
@@ -43,6 +44,7 @@ public class Post {
         this.tagged = postDto.getTagged();
         this.medias = postDto.getMedias();
         this.topicId = postDto.getTopicId();
+        this.sourceLink = postDto.getSourceLink();
     }
 
     public List<String> getReportedBy() {
@@ -166,6 +168,13 @@ public class Post {
 
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
+    }
+    public String getSourceLink() {
+        return sourceLink;
+    }
+
+    public void setSourceLink(String sourceLink) {
+        this.sourceLink = sourceLink;
     }
 
 }
