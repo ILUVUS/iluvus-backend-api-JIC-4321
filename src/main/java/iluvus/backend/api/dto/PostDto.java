@@ -14,6 +14,7 @@ public class PostDto {
     private List<String> reportedBy;
     private List<String> tagged;
     private List<String> medias;
+    private List<String> sharedBy;
 
     private Integer topicId;
 
@@ -99,5 +100,15 @@ public class PostDto {
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
     }
+
+    public List<String> getSharedBy() {
+        return sharedBy;
+    }
+
+    public void setSharedBy(List<String> sharedBy) {
+        this.sharedBy = sharedBy;
+    }
+
+    
 
 }

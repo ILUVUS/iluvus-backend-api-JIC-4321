@@ -5,6 +5,7 @@ public enum NotificationType {
     COMMENT,
     REPORT,
     TAG,
+    SHARE,
     MODERATOR_ADD,
     MODERATOR_KEEP_POST,
     MODERATOR_REMOVE_POST,

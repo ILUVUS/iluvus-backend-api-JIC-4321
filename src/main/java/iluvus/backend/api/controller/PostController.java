@@ -77,6 +77,17 @@ public class PostController {
 
     }
 
+    @PostMapping(value = "/share", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> sharePost(@RequestBody Map<String, String> data) {
+       int shareNumber = postService.sharePost(data);
+       if (shareNumber != -1) {
+           return ResponseEntity.ok().body(shareNumber);
+       } else {
+           return ResponseEntity.ok().body(0);
+       }
+    }
+
+
     @PostMapping(value = "/getAllComments", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, String>>> getAllComments(@RequestBody Map<String, String> data) {
         List<HashMap<String, String>> allComments = postService.getAllComments(data);

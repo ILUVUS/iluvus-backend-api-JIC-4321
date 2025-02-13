@@ -28,6 +28,7 @@ public class Post {
     private Integer topicId;
     @Field("medias")
     private List<String> medias;
+    private List<String> sharedBy;
 
     public Post() {
     }
@@ -68,6 +69,15 @@ public class Post {
     public void setTagged(List<String> tagged) {
         this.tagged = tagged;
     }
+
+    public List<String> getSharedBy() {
+        return sharedBy;
+    }
+
+    public void setSharedBy(List<String> sharedBy) {
+        this.sharedBy = sharedBy;
+    }
+
 
     public String getId() {
         return this.id;
