@@ -222,6 +222,63 @@ public class PostService {
         }
     }
 
+
+    //reposting method: display - @userId (hyperlink to the profile where shared posts displayed) shared
+   //other_userId's post (hyperlink to the post)
+    public int sharePost(Map<String, String> data) {
+        try {
+            boolean shareSignal = false;
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String userId = data.get("userId");
+            if (post == null) {
+                return 0;
+            }
+            List<String> sharedBy = post.getSharedBy();
+
+
+            if (sharedBy.size() == 0) {
+                sharedBy.add(userId);
+                post.setSharedBy(sharedBy);
+                shareSignal = true;
+            } else if (sharedBy.contains(userId)) {
+                sharedBy.remove(userId);
+                post.setSharedBy(sharedBy);
+            } else {
+                sharedBy.add(userId);
+                post.setSharedBy(sharedBy);
+                shareSignal = true;
+            }
+
+
+            if (shareSignal) {
+                User user = userRepository.findById(userId).orElse(null);
+                if (user == null) {
+                    return 0;
+                }
+           
+                Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+                if (community == null) {
+                    return 0;
+                }
+           
+            //sending the notification to the original user
+                String senderId = userId;
+                String receiverId = post.getAuthor_id();
+                String message = String.format("%s shared your post in %s", user.getFname(), community.getName());
+                String dateTime = java.time.OffsetDateTime.now().toString();
+                NotificationService.addNotification(senderId, receiverId, NotificationType.SHARE, message, dateTime);
+            }
+        
+            postRepository.save(post);
+
+
+            return post.getSharedBy().size();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     public int likePost(Map<String, String> data) {
         try {
             boolean upliftSignal = false;
