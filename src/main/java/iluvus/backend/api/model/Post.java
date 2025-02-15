@@ -30,6 +30,8 @@ public class Post {
     private List<String> medias;
     private List<String> sharedBy;
 
+    private String sourceLink;
+
     public Post() {
     }
 
@@ -44,6 +46,7 @@ public class Post {
         this.tagged = postDto.getTagged();
         this.medias = postDto.getMedias();
         this.topicId = postDto.getTopicId();
+        this.sourceLink = postDto.getSourceLink();
     }
 
     public List<String> getReportedBy() {
@@ -135,6 +138,7 @@ public class Post {
         return this.report_count;
     }
 
+
     /**
      * Comment hashmap inside a comment list
      * [
@@ -176,6 +180,14 @@ public class Post {
 
     public void setTopicId(Integer topicId) {
         this.topicId = topicId;
+    }
+
+    public String getSourceLink() {
+        return sourceLink;
+    }
+
+    public void setSourceLink(String sourceLink) {
+        this.sourceLink = sourceLink;
     }
 
 }

@@ -18,6 +18,8 @@ public class PostDto {
 
     private Integer topicId;
 
+    private String sourceLink;  
+
     public PostDto() {
     }
 
@@ -107,6 +109,14 @@ public class PostDto {
 
     public void setSharedBy(List<String> sharedBy) {
         this.sharedBy = sharedBy;
+    }
+
+    public String getSourceLink() {
+        return sourceLink;
+    }
+
+    public void setSourceLink(String sourceLink) {
+        this.sourceLink = sourceLink;
     }
 
     

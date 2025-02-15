@@ -46,6 +46,8 @@ public class PostService {
 
             String raw_topicId = data.get("topicId");
 
+            String sourceLink = data.get("sourceLink");
+
             List<String> taggedList = new ArrayList<>();
             if (tagged != null && !tagged.isBlank()) {
                 taggedList = List.of(tagged.split(","));
@@ -93,6 +95,7 @@ public class PostService {
             postDto.setMedias(medias);
             postDto.setTagged(taggedList);
             postDto.setTopicId(topicId);
+            postDto.setSourceLink(sourceLink);
 
             Post post = new Post(postDto);
 
