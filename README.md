@@ -124,21 +124,21 @@ After all, the Github Secrets should map with the above steps like below:
 
 ### Features
 
--  Users can now create community posts to share their achievements and interests
--  Users can now receive notifications for likes and comments on their posts
--  Users can now share posts they like within their respective communities' feed (sharable link or under someone's profile)
+-  Users can now create community posts to share their achievements and interests.
+-  Users can now receive notifications for likes and comments on their posts.
+-  Users can now share posts they like within their respective communities' feed (sharable link or under someone's profile).
 -  Users can now optionally include and/or view sources in a community.
   
 ### Bug Fixes
 
-- The "Forgot my password" link not working on the login screen
-- Community Posts were not showing up on the posts screen
+- The "Forgot my password" link not working on the login screen.
+- Community Posts were not showing up on the home-feed screen.
 - Announcement icon in communities was not working previously.
 
 ### Known Issues
 
--   Loading time is still too long across the app
--   Unable to post pictures/media with community posts
+-   Loading time is still too long across the app.
+-   Unable to post pictures/media with community posts.
 
 ## Version 0.7.0
 
