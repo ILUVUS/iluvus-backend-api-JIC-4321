@@ -485,13 +485,22 @@ public class PostService {
         }
         return reportedPosts;
     }
-    // method to get all shared posts in profile page
     public List<Post> getSharedPostsByUser(String userId) {
         if (userId == null || userId.isBlank()) {
             return Collections.emptyList();
         }
-        return postRepository.findPostsSharedByUser(userId);
+    
+        List<Post> sharedPosts = postRepository.findPostsSharedByUser(userId);
+    
+        // Debugging: Print out the fetched shared posts
+        System.out.println("Shared Posts Retrieved for user: " + userId);
+        for (Post post : sharedPosts) {
+            System.out.println("Post ID: " + post.getId() + " | Text: " + post.getText() + " | SharedBy: " + post.getSharedBy());
+        }
+    
+        return sharedPosts;
     }
+    
 
     public boolean deletePost(Map<String, String> data) {
         try {

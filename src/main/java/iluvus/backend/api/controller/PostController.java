@@ -74,7 +74,6 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().body(0);
         }
-
     }
 
     @PostMapping(value = "/share", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +86,6 @@ public class PostController {
        }
     }
 
-
     @PostMapping(value = "/getAllComments", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, String>>> getAllComments(@RequestBody Map<String, String> data) {
         List<HashMap<String, String>> allComments = postService.getAllComments(data);
@@ -98,7 +96,7 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
+    
     /**
      * /post/getPostsByCommunityID?id=
      * 
