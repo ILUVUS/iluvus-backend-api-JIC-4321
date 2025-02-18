@@ -34,7 +34,7 @@ public class Post {
 
     public Post() {
     }
-
+    
     public Post(PostDto postDto) {
         this.text = postDto.getText();
         this.dateTime = postDto.getDateTime();
@@ -47,6 +47,7 @@ public class Post {
         this.medias = postDto.getMedias();
         this.topicId = postDto.getTopicId();
         this.sourceLink = postDto.getSourceLink();
+        this.sharedBy = new ArrayList<String>();
     }
 
     public List<String> getReportedBy() {
