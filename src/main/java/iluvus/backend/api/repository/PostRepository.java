@@ -14,4 +14,7 @@ public interface PostRepository extends MongoRepository<Post, String> {
     @Query("{'community_id': ?0}")
     List<Post> findPostByCommunity_id(String community_id);
 
+    @Query("{ 'sharedBy': ?0 }")
+    List<Post> findPostsSharedByUser(String userId);
+
 }

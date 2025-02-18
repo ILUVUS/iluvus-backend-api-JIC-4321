@@ -485,6 +485,13 @@ public class PostService {
         }
         return reportedPosts;
     }
+    // method to get all shared posts in profile page
+    public List<Post> getSharedPostsByUser(String userId) {
+        if (userId == null || userId.isBlank()) {
+            return Collections.emptyList();
+        }
+        return postRepository.findPostsSharedByUser(userId);
+    }
 
     public boolean deletePost(Map<String, String> data) {
         try {

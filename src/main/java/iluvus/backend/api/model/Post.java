@@ -47,6 +47,8 @@ public class Post {
         this.medias = postDto.getMedias();
         this.topicId = postDto.getTopicId();
         this.sourceLink = postDto.getSourceLink();
+        this.sharedBy = new ArrayList<String>();
+
     }
 
     public List<String> getReportedBy() {
