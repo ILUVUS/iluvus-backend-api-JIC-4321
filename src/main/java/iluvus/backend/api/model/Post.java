@@ -34,7 +34,7 @@ public class Post {
 
     public Post() {
     }
-
+    
     public Post(PostDto postDto) {
         this.text = postDto.getText();
         this.dateTime = postDto.getDateTime();
