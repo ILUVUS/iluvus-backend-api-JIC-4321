@@ -74,7 +74,6 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().body(0);
         }
-
     }
 
     @PostMapping(value = "/share", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +86,6 @@ public class PostController {
        }
     }
 
-
     @PostMapping(value = "/getAllComments", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, String>>> getAllComments(@RequestBody Map<String, String> data) {
         List<HashMap<String, String>> allComments = postService.getAllComments(data);
@@ -98,7 +96,7 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
+    
     /**
      * /post/getPostsByCommunityID?id=
      * 
@@ -144,6 +142,17 @@ public class PostController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    // Get method to get shared posts on Profile Page
+    @GetMapping(value = "/getSharedPosts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> getSharedPosts(@RequestParam String userId) {
+        List<Post> posts = postService.getSharedPostsByUser(userId);
+        if (posts != null) {
+            return ResponseEntity.ok().body(posts);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 
     // moderator decides to delete the reported post
     @PostMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)

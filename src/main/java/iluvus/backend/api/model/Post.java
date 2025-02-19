@@ -48,6 +48,7 @@ public class Post {
         this.topicId = postDto.getTopicId();
         this.sourceLink = postDto.getSourceLink();
         this.sharedBy = new ArrayList<String>();
+
     }
 
     public List<String> getReportedBy() {
