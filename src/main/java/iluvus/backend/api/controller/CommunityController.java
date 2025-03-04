@@ -1,6 +1,7 @@
 package iluvus.backend.api.controller;
 
 import iluvus.backend.api.service.CommunityService;
+import iluvus.backend.api.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +24,9 @@ public class CommunityController {
 
     @Autowired
     private CommunityService communityService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createCommunity(@RequestBody Map<String, String> data) {
@@ -69,9 +73,15 @@ public class CommunityController {
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> searchCommunity(@RequestParam String filter) {
+    public ResponseEntity<Map<String, Object>> searchCommunitiesAndUsers(@RequestParam String filter) {
         Map<String, Object> filteredCommunityList = communityService.searchCommunity(filter);
-        return ResponseEntity.ok().body(filteredCommunityList);
+        Map<String, Object> filteredUserList = userService.searchUsers(filter);
+
+        Map<String, Object> completeUsersandCommunitiesList = new HashMap<>();
+        completeUsersandCommunitiesList.put("Communities", filteredCommunityList);
+        completeUsersandCommunitiesList.put("Users", filteredUserList);
+        
+        return ResponseEntity.ok().body(completeUsersandCommunitiesList);
     }
 
     @GetMapping(value = "/getInfo", produces = MediaType.APPLICATION_JSON_VALUE)

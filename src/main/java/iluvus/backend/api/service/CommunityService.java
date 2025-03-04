@@ -127,6 +127,8 @@ public class CommunityService {
         // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         List<Community> communities = communityRepository.findCommunitiesByName(filter);
+
+
         HashMap<String, Object> filteredCommunityList = new HashMap<>();
 
         for (Community community : communities) {

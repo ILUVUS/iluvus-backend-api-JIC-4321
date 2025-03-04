@@ -326,8 +326,35 @@ public class UserService {
             return false;
         }
     }
+
+    public Map<String, Object> searchUsers(String filter) {
+        //Map<String, String> userList = this.getUserInfo();
+        // Convert the filter to lowercase for case-insensitive comparison
+        //String lowercaseFilter = filter.toLowerCase();
+
+
+        List<User> users = userRepository.findUsersByString(filter);
+
+
+        HashMap<String, Object> filteredUserList = new HashMap<>();
+
+        for (User user: users) {
+            filteredUserList.put(user.getId(), user);
+        }
+
+        // for (Community community : communities) {
+        //     CommunityDto communityDto = new CommunityDto(community);
+        //     filteredCommunityList.put(community.getId(), communityDto.getCommunityPublicInfo());
+        // }
+
+        return filteredUserList;
+    }
     
     
+
+    // private Map<String, String> getUserInfo() {
+    //     return null;
+    // }
 
     public Map<String, String> getUserFollowingGroups(String userId) {
         try {
