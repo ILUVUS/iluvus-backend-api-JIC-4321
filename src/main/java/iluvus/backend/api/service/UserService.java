@@ -338,8 +338,11 @@ public class UserService {
 
         HashMap<String, Object> filteredUserList = new HashMap<>();
 
+        
+        //getting the public user info
         for (User user: users) {
-            filteredUserList.put(user.getId(), user);
+            UserDto userDto = new UserDto(user);
+            filteredUserList.put(user.getId(), userDto.getPublicUserInfo());
         }
 
         // for (Community community : communities) {

@@ -241,6 +241,12 @@ public class UserDto {
         publicInfo.put("gender", user.getGender());
         publicInfo.put("image", user.getImage());
         publicInfo.put("bio", user.getBio());
+        publicInfo.put("interests", user.getInterests());
+        publicInfo.put("skills", user.getSkills());
+        publicInfo.put("image", user.getImage()); //need to double check this
+        
+        //right now not sure what groups is being set to
+        //publicInfo.put("groups", user.getGroups());
         return publicInfo;
     }
 }
