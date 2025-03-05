@@ -579,6 +579,15 @@ public List<Post> searchPosts(String userId, String searchTerm) {
 
         return posts;
     }
+    public List<Post> searchPostsInCommunity(String communityId, String searchTerm) {
+        
+        List<Post> posts = postRepository.searchByTermInCommunity(searchTerm, communityId);
+        
+        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+
+    return posts;
+    }   
+
 
 
 }

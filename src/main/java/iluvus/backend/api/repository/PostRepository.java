@@ -26,6 +26,18 @@ public interface PostRepository extends MongoRepository<Post, String> {
             "}")
     List<Post> searchByTermAndCommunities(String searchTerm, List<String> communityIds);
 
-    
-    
+    @Query("{" +
+        "  $and: [" +
+        "    {'community_id': ?1}," +
+        "    {" +
+        "      $or: [" +
+        "        {'text': { $regex: ?0, $options: 'i' }}, " +
+        "        {'author_id': { $regex: ?0, $options: 'i' }}" +
+        "      ]" +
+        "    }" +
+        "  ]" +
+        "}")
+    List<Post> searchByTermInCommunity(String searchTerm, String communityId);
+
+
 }
