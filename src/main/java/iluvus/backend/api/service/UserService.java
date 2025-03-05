@@ -352,6 +352,9 @@ public class UserService {
 
         return filteredUserList;
     }
+
+
+    //add method for adding and removing friends
     
     
 

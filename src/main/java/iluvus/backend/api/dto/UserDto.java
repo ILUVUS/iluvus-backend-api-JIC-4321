@@ -251,9 +251,6 @@ public class UserDto {
         publicInfo.put("education", user.getEducation());
 
         publicInfo.put("image", user.getImage()); //need to double check this
-        
-        //right now not sure what groups is being set to
-        //publicInfo.put("groups", user.getGroups());
         return publicInfo;
     }
 }

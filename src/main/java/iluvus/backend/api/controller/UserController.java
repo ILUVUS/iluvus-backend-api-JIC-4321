@@ -149,6 +149,9 @@ public class UserController {
         }
     }
 
+    //addFriend, removeFriend, approve friend mappings
+
+
     @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
         boolean isSet = userService.editSkills(data);
