@@ -247,8 +247,10 @@ public class UserDto {
         publicInfo.put("bio", user.getBio());
         publicInfo.put("interests", user.getInterests());
         publicInfo.put("skills", user.getSkills());
-        publicInfo.put("job status", user.getWork());
-        publicInfo.put("education", user.getEducation());
+
+        
+        //publicInfo.put("job status", user.getWork()); removing this cuz already in bio
+        //publicInfo.put("education", user.getEducation()); //already in bio
 
         publicInfo.put("image", user.getImage()); //need to double check this
         return publicInfo;
