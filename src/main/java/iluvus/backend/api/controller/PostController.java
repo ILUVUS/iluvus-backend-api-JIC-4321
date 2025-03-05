@@ -175,4 +175,13 @@ public class PostController {
             return ResponseEntity.badRequest().body("Post keeping failed");
         }
     }
+
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> searchPosts(
+        @RequestParam String userId,
+        @RequestParam String searchTerm
+    ) {
+        List<Post> foundPosts = postService.searchPosts(userId, searchTerm);
+        return ResponseEntity.ok().body(foundPosts);
+    }
 }
