@@ -326,8 +326,41 @@ public class UserService {
             return false;
         }
     }
+
+    public Map<String, Object> searchUsers(String filter) {
+        //Map<String, String> userList = this.getUserInfo();
+        // Convert the filter to lowercase for case-insensitive comparison
+        //String lowercaseFilter = filter.toLowerCase();
+
+
+        List<User> users = userRepository.findUsersByString(filter);
+
+
+        HashMap<String, Object> filteredUserList = new HashMap<>();
+
+        
+        //getting the public user info
+        for (User user: users) {
+            UserDto userDto = new UserDto(user);
+            filteredUserList.put(user.getId(), userDto.getPublicUserInfo());
+        }
+
+        // for (Community community : communities) {
+        //     CommunityDto communityDto = new CommunityDto(community);
+        //     filteredCommunityList.put(community.getId(), communityDto.getCommunityPublicInfo());
+        // }
+
+        return filteredUserList;
+    }
+
+
+    //add method for adding and removing friends
     
     
+
+    // private Map<String, String> getUserInfo() {
+    //     return null;
+    // }
 
     public Map<String, String> getUserFollowingGroups(String userId) {
         try {

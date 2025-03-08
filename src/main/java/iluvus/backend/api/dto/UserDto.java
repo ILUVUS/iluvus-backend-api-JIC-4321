@@ -233,14 +233,26 @@ public class UserDto {
         HashMap<String, Object> publicInfo = new HashMap<>();
         publicInfo.put("id", user.getId());
         publicInfo.put("username", user.getUsername());
+
+
         publicInfo.put("email", user.getEmail());
         publicInfo.put("isVerified", user.isVerified());
         publicInfo.put("fname", user.getFname());
         publicInfo.put("lname", user.getLname());
+
         publicInfo.put("dob", user.getDob());
+
         publicInfo.put("gender", user.getGender());
         publicInfo.put("image", user.getImage());
         publicInfo.put("bio", user.getBio());
+        publicInfo.put("interests", user.getInterests());
+        publicInfo.put("skills", user.getSkills());
+
+        
+        //publicInfo.put("job status", user.getWork()); removing this cuz already in bio
+        //publicInfo.put("education", user.getEducation()); //already in bio
+
+        publicInfo.put("image", user.getImage()); //need to double check this
         return publicInfo;
     }
 }
