@@ -315,7 +315,7 @@ public class PostService {
                 }
                 String senderId = userId;
                 String receiverId = post.getAuthor_id();
-                String message = String.format("%s uplift your post in %s", user.getFname(), community.getName());
+                String message = String.format("%s uplifted your post in %s", user.getFname(), community.getName());
                 String dateTime = java.time.OffsetDateTime.now().toString();
                 NotificationService.addNotification(senderId, receiverId, NotificationType.UPLIFT, message, dateTime);
             }
