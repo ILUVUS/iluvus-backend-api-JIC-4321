@@ -19,9 +19,11 @@ public interface UserRepository extends MongoRepository<User, String> {
      * (case-insensitive).
      * Double check this and then make a pr tomorrow morning
      */
-    @Query("{ $or: [ { 'username': { $regex: ?0, $options: 'i' } }," + "{ 'id': { $regex: ?0, $options: 'i' } }," + 
+    @Query(value = "{ $or: [ { 'username': { $regex: ?0, $options: 'i' } }," + 
+    "{ 'id': { $regex: ?0, $options: 'i' } }," + 
     "{ 'fname': { $regex: ?0, $options: 'i' } }," + 
-    "{ 'lname': { $regex: ?0, $options: 'i' } } ] }")
-    List<User> findUsersByString(String string);
+    "{ 'lname': { $regex: ?0, $options: 'i' } } ] }",
+fields = "{ 'image': 1, 'username': 1, 'fname': 1, 'lname': 1 }")
+List<User> findUsersByString(String string);
 
 }

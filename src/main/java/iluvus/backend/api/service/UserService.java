@@ -150,6 +150,8 @@ public class UserService {
             // ADD this line to include skills in the returned userMap:
             // ----------------------------------------------------------
             userMap.put("skills", user.getSkills());
+            userMap.put("image", user.getImage() != null ? user.getImage() : "");
+
 
             return userMap;
         } catch (Exception e) {
@@ -243,6 +245,8 @@ public class UserService {
             for (User user : userList) {
                 UserDto userDto = new UserDto(user);
                 HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+                userMap.put("avatar", user.getImage() != null ? user.getImage() : "");
+
                 userMapList.add(userMap);
             }
             return userMapList;
