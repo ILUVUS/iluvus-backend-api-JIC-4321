@@ -100,6 +100,9 @@ public class UserController {
     public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter) {
         List<HashMap<String, Object>> userList = userService.getMatchedUser(filter);
         if (userList != null) {
+            for (HashMap<String, Object> user : userList) {
+                user.put("avatar", user.get("image") != null ? user.get("image") : "");
+            }
             return ResponseEntity.ok().body(userList);
         } else {
             return ResponseEntity.badRequest().body(null);
