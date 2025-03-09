@@ -117,6 +117,17 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/user/search", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam String filter) {
+    List<HashMap<String, Object>> userList = userService.getMatchedUser(filter);
+    if (userList != null) {
+        return ResponseEntity.ok().body(userList);
+    } else {
+        return ResponseEntity.badRequest().body(null);
+    }
+}
+
+
     @GetMapping(value = "/interestList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getInterestTopic() {
         List<String> interestTopic = InterestTopic.topicList;

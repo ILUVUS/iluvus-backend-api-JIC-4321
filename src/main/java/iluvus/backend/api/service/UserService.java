@@ -238,11 +238,16 @@ public class UserService {
 
     public List<HashMap<String, Object>> getMatchedUser(String filter) {
         try {
-            List<User> userList = userRepository.findUsersByUsernameStartingWith(filter);
+            List<User> users = userRepository.findUsersByString(filter);
             List<HashMap<String, Object>> userMapList = new ArrayList<>();
-            for (User user : userList) {
-                UserDto userDto = new UserDto(user);
-                HashMap<String, Object> userMap = userDto.getPublicUserInfo();
+    
+            for (User user : users) {
+                HashMap<String, Object> userMap = new HashMap<>();
+                userMap.put("id", user.getId());
+                userMap.put("username", user.getUsername());
+                userMap.put("fname", user.getFname());
+                userMap.put("lname", user.getLname());
+                userMap.put("image", user.getImage());
                 userMapList.add(userMap);
             }
             return userMapList;
