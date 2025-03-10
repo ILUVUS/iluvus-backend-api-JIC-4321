@@ -124,16 +124,16 @@ public class PostController {
         }
     }
 
-   @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
-public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
-    if (userId == null || userId.trim().isEmpty()) {
-        return ResponseEntity.badRequest().body(Collections.emptyList());
+    @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+    
+        List<Post> posts = postService.getPostForHomePage(userId);
+        return ResponseEntity.ok().body(posts != null ? posts : Collections.emptyList());
     }
-
-    List<Post> posts = postService.getPostForHomePage(userId);
-    return ResponseEntity.ok().body(posts != null ? posts : Collections.emptyList());
-}
-
+    
     // Get method to get all the posts with 5 or more reports
     @GetMapping(value = "/getReportedPosts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getReportedPosts(@RequestParam String communityId) {

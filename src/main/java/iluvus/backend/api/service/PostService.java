@@ -395,33 +395,39 @@ public class PostService {
         return medias;
     }
 
-        public List<Post> getPostForHomePage(String userId) {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                return null;
-            }
-        
-            List<String> groups = new ArrayList<>();
-            List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
-            for (CommunityUser communityUser : communityUsers) {
-                groups.add(communityUser.getCommunityId());
-            }
-        
-            List<Post> posts = new ArrayList<>();
-            for (String group : groups) {
-                List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
-                posts.addAll(groupPosts);
-            }
-        
-            // Debugging: Ensure posts are retrieved
-            System.out.println("Retrieved posts: " + posts.size());
-        
-            if (posts.isEmpty()) {
-                return Collections.emptyList(); // Return empty instead of null
-            }
-        
-            return posts;
+    public List<Post> getPostForHomePage(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            System.out.println("Error: userId is null or empty.");
+            return Collections.emptyList();
         }
+    
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            System.out.println("Error: User not found.");
+            return Collections.emptyList();
+        }
+    
+        List<String> groups = new ArrayList<>();
+        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+        for (CommunityUser communityUser : communityUsers) {
+            groups.add(communityUser.getCommunityId());
+        }
+    
+        List<Post> posts = new ArrayList<>();
+        for (String group : groups) {
+            List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
+            if (groupPosts == null) {
+                System.out.println("No posts found for communityId: " + group);
+                continue;
+            }
+            posts.addAll(groupPosts);
+        }
+        
+    
+        System.out.println("✅ Retrieved posts count: " + posts.size());
+        return posts.isEmpty() ? Collections.emptyList() : posts;
+    }
+    
         
     // method to get all posts with 5 or more reports
     public List<Post> getReportedPosts(String communityId) {
