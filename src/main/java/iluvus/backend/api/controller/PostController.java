@@ -126,12 +126,12 @@ public class PostController {
 
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList());
-        }
-    
         List<Post> posts = postService.getPostForHomePage(userId);
-        return ResponseEntity.ok().body(posts != null ? posts : Collections.emptyList());
+        if (posts != null && !posts.isEmpty()) {
+            return ResponseEntity.ok().body(posts);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
     
     // Get method to get all the posts with 5 or more reports

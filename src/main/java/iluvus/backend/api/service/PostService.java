@@ -13,6 +13,7 @@ import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -396,38 +397,71 @@ public class PostService {
     }
 
     public List<Post> getPostForHomePage(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            System.out.println("Error: userId is null or empty.");
-            return Collections.emptyList();
-        }
-    
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            System.out.println("Error: User not found.");
-            return Collections.emptyList();
+            return null;
         }
-    
+        // List<String> groups = user.getGroups();
+
         List<String> groups = new ArrayList<>();
         List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
         for (CommunityUser communityUser : communityUsers) {
             groups.add(communityUser.getCommunityId());
         }
-    
+
         List<Post> posts = new ArrayList<>();
+        // posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
         for (String group : groups) {
             List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
-            if (groupPosts == null) {
-                System.out.println("No posts found for communityId: " + group);
-                continue;
-            }
             posts.addAll(groupPosts);
         }
-        
-    
-        System.out.println("✅ Retrieved posts count: " + posts.size());
-        return posts.isEmpty() ? Collections.emptyList() : posts;
+        List<Post> returningPost = new ArrayList<>();
+
+        for (Post post : posts) {
+
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            if (community == null) {
+                postRepository.deleteById(post.getId());
+                continue;
+            }
+
+            List<Integer> userInterest = user.getInterests();
+
+            for (Integer interest : userInterest) {
+                // System.out.println(interest);
+                if (post.getTopicId() == interest) {
+                    returningPost.add(post);
+                    break;
+                }
+            }
+        }
+
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : returningPost) {
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                post.setAuthor_id(authorIdName.get(authorId));
+            } else {
+                User theuser = userRepository.findById(authorId).orElse(null);
+                String fname = theuser.getFname();
+                String lname = theuser.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
+
+        for (int i = 0; i < returningPost.size(); i++) {
+            for (int j = i + 1; j < returningPost.size(); j++) {
+                if (returningPost.get(i).getDateTime().compareTo(returningPost.get(j).getDateTime()) > 0) {
+                    Post temp = returningPost.get(i);
+                    returningPost.set(i, returningPost.get(j));
+                    returningPost.set(j, temp);
+                }
+            }
+        }
+
+        return returningPost;
     }
-    
         
     // method to get all posts with 5 or more reports
     public List<Post> getReportedPosts(String communityId) {
@@ -501,29 +535,27 @@ public class PostService {
         }
     }
 
-    public List<Post> searchPosts(String userId, String searchTerm) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return Collections.emptyList();
-        }
-    
-        // Get communities the user belongs to
-        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
-        List<String> communityIds = new ArrayList<>();
-        for (CommunityUser cu : communityUsers) {
-            communityIds.add(cu.getCommunityId());
-        }
-    
-        List<Post> posts = postRepository.searchByTerm(searchTerm);
-        
-        // Filter posts based on user's communities
-        posts.removeIf(post -> !communityIds.contains(post.getCommunity_id()));
-    
-        // Sort posts by date (newest first)
-        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
-    
-        return posts;
+   public List<Post> searchPosts(String userId, String searchTerm) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user == null) {
+        return Collections.emptyList();
     }
+
+    // Get communities the user belongs to
+    List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+    List<String> communityIds = communityUsers.stream()
+        .map(CommunityUser::getCommunityId)
+        .collect(Collectors.toList());
+
+    // Fetch posts using the optimized query
+    List<Post> posts = postRepository.searchByTerm(searchTerm, communityIds);
+
+    // Sort posts by date (newest first)
+    posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+
+    return posts;
+}
+
     
     public List<Post> searchPostsInCommunity(String communityId, String searchTerm) {
         List<Post> posts = postRepository.searchByTermInCommunity(searchTerm, communityId);
