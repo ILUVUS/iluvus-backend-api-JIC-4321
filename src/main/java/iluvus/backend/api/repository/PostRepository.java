@@ -16,6 +16,28 @@ public interface PostRepository extends MongoRepository<Post, String> {
 
     @Query("{ 'sharedBy': { $in: [?0] } }")
     List<Post> findPostsSharedByUser(String userId);
-    
-    
+
+   @Query("{" +
+            "  'community_id': { $in: ?1 }, " + 
+            "  $or: [ " +
+            "    { 'text': { $regex: ?0, $options: 'i' } }, " +
+            "    { 'author_id': { $regex: ?0, $options: 'i' } } " +
+            "  ] " +
+            "}")
+    List<Post> searchByTermAndCommunities(String searchTerm, List<String> communityIds);
+
+    @Query("{" +
+        "  $and: [" +
+        "    {'community_id': ?1}," +
+        "    {" +
+        "      $or: [" +
+        "        {'text': { $regex: ?0, $options: 'i' }}, " +
+        "        {'author_id': { $regex: ?0, $options: 'i' }}" +
+        "      ]" +
+        "    }" +
+        "  ]" +
+        "}")
+    List<Post> searchByTermInCommunity(String searchTerm, String communityId);
+
+
 }
