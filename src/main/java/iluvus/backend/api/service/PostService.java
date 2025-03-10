@@ -534,6 +534,40 @@ public class PostService {
         }
     }
 
+    public List<Post> searchPosts(String userId, String searchTerm) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return Collections.emptyList();
+        }
+    
+        // Get communities the user belongs to
+        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+        List<String> communityIds = new ArrayList<>();
+        for (CommunityUser cu : communityUsers) {
+            communityIds.add(cu.getCommunityId());
+        }
+    
+        List<Post> posts = postRepository.searchByTerm(searchTerm);
+        
+        // Filter posts based on user's communities
+        posts.removeIf(post -> !communityIds.contains(post.getCommunity_id()));
+    
+        // Sort posts by date (newest first)
+        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+    
+        return posts;
+    }
+    
+    public List<Post> searchPostsInCommunity(String communityId, String searchTerm) {
+        List<Post> posts = postRepository.searchByTermInCommunity(searchTerm, communityId);
+        
+        // Sort by date (newest first)
+        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+    
+        return posts;
+    }
+    
+
     public boolean keepPost(Map<String, String> data) {
         try {
             String postId = data.get("postId");
