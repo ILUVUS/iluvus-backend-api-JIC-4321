@@ -567,6 +567,8 @@ public List<Post> searchPosts(String userId, String searchTerm) {
             return Collections.emptyList();
         }
 
+        //System.out.println("checkpoint 2");
+
         List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
         List<String> communityIds = new ArrayList<>();
         for (CommunityUser cu : communityUsers) {
@@ -574,6 +576,7 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         }
 
         List<Post> posts = postRepository.searchByTermAndCommunities(searchTerm, communityIds);
+        System.out.println("posts size: " + posts.size() + ", search: " + searchTerm); // size 0 indicates problem w/ searchByTermAndCommunities...
 
         posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
