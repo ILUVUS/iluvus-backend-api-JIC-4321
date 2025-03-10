@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,15 +124,15 @@ public class PostController {
         }
     }
 
-    @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
-        List<Post> posts = postService.getPostForHomePage(userId);
-        if (posts != null && !posts.isEmpty()) {
-            return ResponseEntity.ok().body(posts);
-        } else {
-            return ResponseEntity.badRequest().body(null);
-        }
+   @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
+    if (userId == null || userId.trim().isEmpty()) {
+        return ResponseEntity.badRequest().body(Collections.emptyList());
     }
+
+    List<Post> posts = postService.getPostForHomePage(userId);
+    return ResponseEntity.ok().body(posts != null ? posts : Collections.emptyList());
+}
 
     // Get method to get all the posts with 5 or more reports
     @GetMapping(value = "/getReportedPosts", produces = MediaType.APPLICATION_JSON_VALUE)

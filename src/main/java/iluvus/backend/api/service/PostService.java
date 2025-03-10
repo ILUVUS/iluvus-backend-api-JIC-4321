@@ -395,73 +395,34 @@ public class PostService {
         return medias;
     }
 
-    public List<Post> getPostForHomePage(String userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        // List<String> groups = user.getGroups();
-
-        List<String> groups = new ArrayList<>();
-        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
-        for (CommunityUser communityUser : communityUsers) {
-            groups.add(communityUser.getCommunityId());
-        }
-
-        List<Post> posts = new ArrayList<>();
-        // posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
-        for (String group : groups) {
-            List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
-            posts.addAll(groupPosts);
-        }
-        List<Post> returningPost = new ArrayList<>();
-
-        for (Post post : posts) {
-
-            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
-            if (community == null) {
-                postRepository.deleteById(post.getId());
-                continue;
+        public List<Post> getPostForHomePage(String userId) {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                return null;
             }
-
-            List<Integer> userInterest = user.getInterests();
-
-            for (Integer interest : userInterest) {
-                // System.out.println(interest);
-                if (post.getTopicId() == interest) {
-                    returningPost.add(post);
-                    break;
-                }
+        
+            List<String> groups = new ArrayList<>();
+            List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+            for (CommunityUser communityUser : communityUsers) {
+                groups.add(communityUser.getCommunityId());
             }
-        }
-
-        HashMap<String, String> authorIdName = new HashMap<>();
-        for (Post post : returningPost) {
-            String authorId = post.getAuthor_id();
-            if (authorIdName.containsKey(authorId)) {
-                post.setAuthor_id(authorIdName.get(authorId));
-            } else {
-                User theuser = userRepository.findById(authorId).orElse(null);
-                String fname = theuser.getFname();
-                String lname = theuser.getLname();
-                post.setAuthor_id(fname, lname);
-                authorIdName.put(authorId, post.getAuthor_id());
+        
+            List<Post> posts = new ArrayList<>();
+            for (String group : groups) {
+                List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
+                posts.addAll(groupPosts);
             }
-        }
-
-        for (int i = 0; i < returningPost.size(); i++) {
-            for (int j = i + 1; j < returningPost.size(); j++) {
-                if (returningPost.get(i).getDateTime().compareTo(returningPost.get(j).getDateTime()) > 0) {
-                    Post temp = returningPost.get(i);
-                    returningPost.set(i, returningPost.get(j));
-                    returningPost.set(j, temp);
-                }
+        
+            // Debugging: Ensure posts are retrieved
+            System.out.println("Retrieved posts: " + posts.size());
+        
+            if (posts.isEmpty()) {
+                return Collections.emptyList(); // Return empty instead of null
             }
+        
+            return posts;
         }
-
-        return returningPost;
-    }
-
+        
     // method to get all posts with 5 or more reports
     public List<Post> getReportedPosts(String communityId) {
         List<Post> posts = postRepository.findPostByCommunity_id(communityId);
