@@ -26,6 +26,8 @@ public interface PostRepository extends MongoRepository<Post, String> {
             "}")
 
     */
+
+    // SELECT * FROM posts where id = ?
     @Query("SELECT * FROM posts")
     List<Post> searchByTermAndCommunities(String searchTerm, List<String> communityIds);
 
