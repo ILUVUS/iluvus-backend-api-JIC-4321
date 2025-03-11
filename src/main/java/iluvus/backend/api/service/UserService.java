@@ -150,6 +150,8 @@ public class UserService {
             // ADD this line to include skills in the returned userMap:
             // ----------------------------------------------------------
             userMap.put("skills", user.getSkills());
+            userMap.put("image", user.getImage() != null ? user.getImage() : "");
+
 
             return userMap;
         } catch (Exception e) {

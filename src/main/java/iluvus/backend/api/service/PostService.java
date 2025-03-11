@@ -542,11 +542,10 @@ public class PostService {
                 return false;
             }
             List<String> reportedBy = post.getReportedBy();
-            // empty reported by
+       
             reportedBy.clear();
             post.setReportedBy(reportedBy);
 
-            // add notification
             Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
             String dateTime = java.time.OffsetDateTime.now().toString();
             String receiverId = post.getAuthor_id();
@@ -561,5 +560,37 @@ public class PostService {
             return false;
         }
     }
+public List<Post> searchPosts(String userId, String searchTerm) {
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return Collections.emptyList();
+        }
+
+        //System.out.println("checkpoint 2");
+
+        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
+        List<String> communityIds = new ArrayList<>();
+        for (CommunityUser cu : communityUsers) {
+            communityIds.add(cu.getCommunityId());
+        }
+
+        List<Post> posts = postRepository.searchByTermAndCommunities(searchTerm, communityIds);
+        System.out.println("posts size: " + posts.size() + ", search: " + searchTerm); // size 0 indicates problem w/ searchByTermAndCommunities...
+
+        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+
+        return posts;
+    }
+    public List<Post> searchPostsInCommunity(String communityId, String searchTerm) {
+        
+        List<Post> posts = postRepository.searchByTermInCommunity(searchTerm, communityId);
+        
+        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+
+    return posts;
+    }   
+
+
 
 }
