@@ -120,13 +120,32 @@ After all, the Github Secrets should map with the above steps like below:
 <img src='./img/gcp/githubsecrets.png' width=700 />
 
 # Release Notes
+## Version 0.9.0
+
+### Features
+
+-  Users can now look up BOTH communities and other users and click on their icons to view their respective pages.
+-  Users can now search for specific posts using keywords.
+-  Users can now add filters to their search to narrow down content by specific criteria.
+  
+### Bug Fixes
+
+- After sharing posts, other icons were being pushed off to the side.
+- Publish post button was not working for posts with media in it.
+- Clicking on a picture that has already been added while creating a post was causing the application to crash.
+
+### Known Issues
+
+-   When searching for users to tag in a post, no users are showing up.
+-   Loading time across the application is still too long.
+
 ## Version 0.8.0
 
 ### Features
 
 -  Users can now create community posts to share their achievements and interests.
 -  Users can now receive notifications for likes and comments on their posts.
--  Users can now share posts they like within their respective communities' feed (sharable link or under someone's profile).
+-  Users can now share posts they like within their respective communities' feeds (under someone's profile).
 -  Users can now optionally include and/or view sources in a community.
   
 ### Bug Fixes
