@@ -3,6 +3,7 @@ package iluvus.backend.api.controller;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -125,8 +126,8 @@ public class PostController {
     
     //need to look at this
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
-        List<Post> posts = postService.getPostForHomePage(userId);
+    public ResponseEntity<Page<Post>> getPostForHomePage(@RequestParam String userId) {
+        Page<Post> posts = postService.getPostForHomePage(userId, 3, 5);
         if (posts != null && !posts.isEmpty()) {
             return ResponseEntity.ok().body(posts);
         } else {

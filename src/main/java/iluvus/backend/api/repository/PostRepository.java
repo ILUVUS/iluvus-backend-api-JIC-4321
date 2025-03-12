@@ -1,6 +1,10 @@
 package iluvus.backend.api.repository;
 
+import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.Post;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,6 +19,10 @@ public interface PostRepository extends MongoRepository<Post, String> {
 
     @Query("{'community_id': ?0}")
     List<Post> findPostByCommunity_id(String community_id);
+
+    @Query("{ 'community_id': { $in: ?0 } }")
+    Page<Post> findPostsByCommunityandTopicIds(List<String> communityIds, List<Integer> topicIds, Pageable pageable);
+    //added new import pageable to return page of posts instead of full list
 
     @Query("{ 'sharedBy': { $in: [?0] } }")
     List<Post> findPostsSharedByUser(String userId);

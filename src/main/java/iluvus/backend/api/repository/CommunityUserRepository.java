@@ -18,4 +18,8 @@ public interface CommunityUserRepository extends MongoRepository<CommunityUser, 
 
     @Query("{ 'communityId' : ?0, 'status' : ?1 }")
     List<CommunityUser> findByCommunityIdAndStatus(String communityId, CommunityUserStatus status);
+
+    @Query(value = "{ 'memberId': ?0 }", fields = "{ 'communityId': 1, '_id': 0 }")
+    List<String> findCommunityIdsByMemberId(String memberId);
+
 }

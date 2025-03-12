@@ -14,7 +14,13 @@ import iluvus.backend.api.repository.UserRepository;
 
 import java.util.*;
 
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -397,71 +403,48 @@ public class PostService {
 
     
     //need to double check this cuz its too expensive
-    public List<Post> getPostForHomePage(String userId) {
+    public Page<Post> getPostForHomePage(String userId, int page, int size) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            return null;
+            return Page.empty(); //what if we return empty list instead of null
         }
         // List<String> groups = user.getGroups();
 
-        List<String> groups = new ArrayList<>();
-        List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
-        for (CommunityUser communityUser : communityUsers) {
-            groups.add(communityUser.getCommunityId());
+        
+        List<String> communityIds = communityUserRepository.findCommunityIdsByMemberId(userId);
+        if (communityIds.isEmpty()) {
+            //if user is not part of communities we return an empty list
+            return Page.empty();
+        }
+        
+        Pageable pageable  = PageRequest.of(page, size, Sort.by("dateTime").descending());
+
+
+        // Fetch posts from communities the user is a part of, filtered by user interests
+        Page<Post> postsPage = postRepository.findPostsByCommunityandTopicIds(communityIds, user.getInterests(), pageable);
+       
+        List<Post> filteredPosts = postsPage.getContent();
+        if (filteredPosts.isEmpty()) {
+            return Page.empty();
         }
 
-        List<Post> posts = new ArrayList<>();
-        // posts.add(postRepository.findById("65ef8ebb476b065552d2c618").orElse(null));
-        for (String group : groups) {
-            List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
-            posts.addAll(groupPosts);
-        }
-        List<Post> returningPost = new ArrayList<>();
+        List<User> users = userRepository.findAllByIdIn(filteredPosts.stream().map(Post::getAuthor_id).toList());
+        Map<String, User> authorMap = users.stream().collect(Collectors.toMap(User::getId, someUser -> someUser));
 
-        for (Post post : posts) {
+        
+        Map<String, String> postAuthorNames = new HashMap<>(); // Map to store postId -> authorName
 
-            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
-            if (community == null) {
-                postRepository.deleteById(post.getId());
-                continue;
-            }
-
-            List<Integer> userInterest = user.getInterests();
-
-            for (Integer interest : userInterest) {
-                // System.out.println(interest);
-                if (post.getTopicId() == interest) {
-                    returningPost.add(post);
-                    break;
-                }
-            }
-        }
-
-        HashMap<String, String> authorIdName = new HashMap<>();
-        for (Post post : returningPost) {
-            String authorId = post.getAuthor_id();
-            if (authorIdName.containsKey(authorId)) {
-                post.setAuthor_id(authorIdName.get(authorId));
-            } else {
-                User theuser = userRepository.findById(authorId).orElse(null);
-                String fname = theuser.getFname();
-                String lname = theuser.getLname();
-                post.setAuthor_id(fname, lname);
-                authorIdName.put(authorId, post.getAuthor_id());
+        //making sure the authorNames is displayed with the psots
+        
+        for (Post post : filteredPosts) {
+             User author = authorMap.get(post.getAuthor_id());
+            if (author != null) {
+                String authorName = author.getFname() + " " + author.getLname();
+                postAuthorNames.put(post.getId(), authorName); // Store author name temporarily
             }
         }
 
-        for (int i = 0; i < returningPost.size(); i++) {
-            for (int j = i + 1; j < returningPost.size(); j++) {
-                if (returningPost.get(i).getDateTime().compareTo(returningPost.get(j).getDateTime()) > 0) {
-                    Post temp = returningPost.get(i);
-                    returningPost.set(i, returningPost.get(j));
-                    returningPost.set(j, temp);
-                }
-            }
-        }
-
-        return returningPost;
+        return new PageImpl<>(filteredPosts, pageable, postsPage.getTotalElements());
     }
 
     // method to get all posts with 5 or more reports
