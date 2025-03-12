@@ -176,22 +176,22 @@ public class PostController {
         }
     }
 
-    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Post>> searchPosts(
-        @RequestParam String userId,
-        @RequestParam String searchTerm
-    ) {
-        //System.out.println("checkpoint 1");
-        List<Post> foundPosts = postService.searchPosts(userId, searchTerm);
-        return ResponseEntity.ok().body(foundPosts);
-    }
+    // @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    // public ResponseEntity<List<Post>> searchPosts(
+    //     @RequestParam String userId,
+    //     @RequestParam String searchTerm
+    // ) {
+    //     //System.out.println("checkpoint 1");
+    //     List<Post> foundPosts = postService.searchPosts(userId, searchTerm);
+    //     return ResponseEntity.ok().body(foundPosts);
+    // }
 
-    @GetMapping(value = "/searchInCommunity", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Post>> searchPostsInCommunity(
-            @RequestParam String communityId,
-            @RequestParam String searchTerm
-    ) {
-        List<Post> foundPosts = postService.searchPostsInCommunity(communityId, searchTerm);
-        return ResponseEntity.ok().body(foundPosts);
-    }
+    // @GetMapping(value = "/searchInCommunity", produces = MediaType.APPLICATION_JSON_VALUE)
+    // public ResponseEntity<List<Post>> searchPostsInCommunity(
+    //         @RequestParam String communityId,
+    //         @RequestParam String searchTerm
+    // ) {
+    //     List<Post> foundPosts = postService.searchPostsInCommunity(communityId, searchTerm);
+    //     return ResponseEntity.ok().body(foundPosts);
+    // }
 }

@@ -27,22 +27,22 @@ public interface PostRepository extends MongoRepository<Post, String> {
 
     */
 
-    // SELECT * FROM posts where id = ?
-    @Query("SELECT * FROM posts")
-    List<Post> searchByTermAndCommunities(String searchTerm, List<String> communityIds);
+    // // SELECT * FROM posts where id = ?
+    // @Query("SELECT * FROM posts")
+    // List<Post> searchByTermAndCommunities(String searchTerm, List<String> communityIds);
 
-    @Query("{" +
-        "  $and: [" +
-        "    {'community_id': ?1}," +
-        "    {" +
-        "      $or: [" +
-        "        {'text': { $regex: ?0, $options: 'i' }}, " +
-        "        {'author_id': { $regex: ?0, $options: 'i' }}" +
-        "      ]" +
-        "    }" +
-        "  ]" +
-        "}")
-    List<Post> searchByTermInCommunity(String searchTerm, String communityId);
+    // @Query("{" +
+    //     "  $and: [" +
+    //     "    {'community_id': ?1}," +
+    //     "    {" +
+    //     "      $or: [" +
+    //     "        {'text': { $regex: ?0, $options: 'i' }}, " +
+    //     "        {'author_id': { $regex: ?0, $options: 'i' }}" +
+    //     "      ]" +
+    //     "    }" +
+    //     "  ]" +
+    //     "}")
+    // List<Post> searchByTermInCommunity(String searchTerm, String communityId);
 
 
 }
