@@ -8,6 +8,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends MongoRepository<Post, String> {
+
+    //make sure these queries are not too expensive
     @Query("{'author_id': ?0}")
     List<Post> findPostByAuthor_id(String author_id);
 

@@ -395,6 +395,8 @@ public class PostService {
         return medias;
     }
 
+    
+    //need to double check this cuz its too expensive
     public List<Post> getPostForHomePage(String userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {

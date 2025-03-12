@@ -122,6 +122,8 @@ public class PostController {
         }
     }
 
+    
+    //need to look at this
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
         List<Post> posts = postService.getPostForHomePage(userId);
