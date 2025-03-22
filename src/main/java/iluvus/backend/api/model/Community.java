@@ -23,6 +23,8 @@ public class Community {
     // moderators
     private List<String> moderators;
 
+    private String tag;
+
     public Community() {
     }
 
@@ -34,6 +36,7 @@ public class Community {
         this.owner = communityDto.getOwner();
         this.image = communityDto.getImage();
         this.moderators = communityDto.getModerators();
+        this.tag = communityDto.getTag();
     }
 
     // get id
@@ -98,7 +101,6 @@ public class Community {
         this.moderators = moderators;
     }
 
-    private String tag;
     public String getTag() {
         return tag;
     }

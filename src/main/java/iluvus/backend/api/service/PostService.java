@@ -414,29 +414,30 @@ public class PostService {
             List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
             posts.addAll(groupPosts);
         }
-        List<Post> returningPost = new ArrayList<>();
 
-        for (Post post : posts) {
+        List<Post> returningPost = posts;
 
-            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
-            if (community == null) {
-                postRepository.deleteById(post.getId());
-                continue;
-            }
+        // for (Post post : posts) {
 
-            List<Integer> userInterest = user.getInterests();
+        //     Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+        //     if (community == null) {
+        //         postRepository.deleteById(post.getId());
+        //         continue;
+        //     }
 
-            for (Integer interest : userInterest) {
-                // System.out.println(interest);
-                if (post.getTopicId() == interest) {
-                    returningPost.add(post);
-                    break;
-                }
-            }
-        }
+        //     List<Integer> userInterest = user.getInterests();
+            
+        //     for (Integer interest : userInterest) {
+        //         // System.out.println(interest);
+        //         if (post.getTopicId() == interest) {
+        //             returningPost.add(post);
+        //             break;
+        //         }
+        //     }
+        // }
 
         HashMap<String, String> authorIdName = new HashMap<>();
-        for (Post post : returningPost) {
+        for (Post post : posts) {
             String authorId = post.getAuthor_id();
             if (authorIdName.containsKey(authorId)) {
                 post.setAuthor_id(authorIdName.get(authorId));

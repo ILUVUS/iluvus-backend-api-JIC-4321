@@ -23,7 +23,13 @@ public interface UserRepository extends MongoRepository<User, String> {
     "{ 'id': { $regex: ?0, $options: 'i' } }," + 
     "{ 'fname': { $regex: ?0, $options: 'i' } }," + 
     "{ 'lname': { $regex: ?0, $options: 'i' } } ] }",
-fields = "{ 'image': 1, 'username': 1, 'fname': 1, 'lname': 1 }")
-List<User> findUsersByString(String string);
+    fields = "{ 'image': 1, 'username': 1, 'fname': 1, 'lname': 1 }")
+    List<User> findUsersByString(String string);
+
+    /**
+     * Finds all users by exact name (case-insensitive).
+     */
+    @Query("{ 'name' : { $regex: '^?0$', $options: 'i' } }")
+    List<User> findByNameIgnoreCase(String name);
 
 }
