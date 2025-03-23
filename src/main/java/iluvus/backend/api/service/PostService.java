@@ -414,8 +414,7 @@ public class PostService {
             List<Post> groupPosts = postRepository.findPostByCommunity_id(group);
             posts.addAll(groupPosts);
         }
-
-       List<Post> returningPost = new ArrayList<>();
+        List<Post> returningPost = new ArrayList<>();
 
         for (Post post : posts) {
 
