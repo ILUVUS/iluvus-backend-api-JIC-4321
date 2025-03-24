@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+// New Imports...
+import java.util.stream.Collectors;
+
 // create post service class
 @Service
 public class PostService {
@@ -561,13 +564,16 @@ public class PostService {
         }
     }
 public List<Post> searchPosts(String userId, String searchTerm) {
-
-        User user = userRepository.findById(userId).orElse(null);
+        System.out.println("Checkpoint 0");
+        /*
+        User user = userRepository.findById(userId).orElse(null); // NOTE: this line is the slowness bottleneck...
         if (user == null) {
+            System.out.println("checkpoint 0.5");
             return Collections.emptyList();
         }
+        */
 
-        //System.out.println("checkpoint 2");
+        System.out.println("checkpoint 1");
 
         List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
         List<String> communityIds = new ArrayList<>();
@@ -575,11 +581,62 @@ public List<Post> searchPosts(String userId, String searchTerm) {
             communityIds.add(cu.getCommunityId());
         }
 
+        System.out.println("Checkpoint 2");
         List<Post> posts = postRepository.searchByTermAndCommunities(searchTerm, communityIds);
+
+        // ADDED START.
+        /*
+        System.out.println("Checkpoint 3");
+        // Step 1: Collect unique author IDs from posts
+        Set<String> authorIds = posts.stream()
+                .map(Post::getAuthor_id)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        System.out.println("Checkpoint 4");
+        // Step 2: Fetch all users in one DB call
+        List<User> users = userRepository.findAllById(authorIds);
+        System.out.println("Checkpoint 5");
+        // Step 3: Create a map for quick lookup
+        Map<String, User> userMap = new HashMap<>();
+        for (User user : users) {
+            userMap.put(user.getId(), user);
+        }
+        System.out.println("Checkpoint 6");
+        // Step 4: Assign author name to each post
+        for (Post post : posts) {
+            User author = userMap.get(post.getAuthor_id());
+            if (author != null) {
+                post.setAuthor_id(author.getFname(), author.getLname());
+            }
+        }
+        System.out.println("Checkpoint 7");
+
+         */
+
+        HashMap<String, String> authorIdName = new HashMap<>();
+        for (Post post : posts) {
+            System.out.println("Checkpoint 3");
+            String authorId = post.getAuthor_id();
+            if (authorIdName.containsKey(authorId)) {
+                System.out.println("Checkpoint 4");
+                post.setAuthor_id(authorIdName.get(authorId));
+                System.out.println("Checkpoint 5");
+            } else {
+                User theuser = userRepository.findById(authorId).orElse(null); // NOTE: this line is the slowness bottleneck...
+                String fname = theuser.getFname();
+                String lname = theuser.getLname();
+                post.setAuthor_id(fname, lname);
+                authorIdName.put(authorId, post.getAuthor_id());
+            }
+        }
         System.out.println("posts size: " + posts.size() + ", search: " + searchTerm); // size 0 indicates problem w/ searchByTermAndCommunities...
+        // ADDED END.
 
-        posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
+        //System.out.println("Checkpoint 3");
+        //System.out.println("p1: " + p1.getDateTime());
+        //posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
+        //System.out.println("Checkpoint 4");
         return posts;
     }
     public List<Post> searchPostsInCommunity(String communityId, String searchTerm) {
