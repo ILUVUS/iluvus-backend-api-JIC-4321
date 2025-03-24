@@ -23,7 +23,6 @@ public class Community {
     // moderators
     private List<String> moderators;
 
-    //Tags
     private String tag;
 
     public Community() {

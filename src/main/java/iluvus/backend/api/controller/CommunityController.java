@@ -1,5 +1,6 @@
 package iluvus.backend.api.controller;
 
+import iluvus.backend.api.model.Community;
 import iluvus.backend.api.service.CommunityService;
 import iluvus.backend.api.service.UserService;
 
@@ -130,6 +131,15 @@ public class CommunityController {
     public ResponseEntity<Map<String, String>> myCreatedGroup(@RequestParam String userId) {
         Map<String, String> myCreatedGroup = communityService.getMyCreatedGroup(userId);
         return ResponseEntity.ok().body(myCreatedGroup);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Community>> filterCommunities(
+            @RequestParam(required = false, defaultValue = "all") String type,
+            @RequestParam(required = false, defaultValue = "all") String visibility,
+            @RequestParam(required = false) String owner) { 
+            List<Community> communities = communityService.filterCommunities(type, visibility, owner);
+            return ResponseEntity.ok(communities);
     }
 
 }

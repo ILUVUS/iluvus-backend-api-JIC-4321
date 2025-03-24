@@ -341,4 +341,35 @@ public class CommunityService {
         }
         return myCreatedGroup;
     }
+    
+    public List<Community> filterCommunities(String type, String visibility, String ownerName) {
+        List<Community> allCommunities = communityRepository.findAll();
+
+        return allCommunities.stream()
+                .filter(c -> {
+                    // Filter by type/tag
+                    if (!type.equalsIgnoreCase("all") && (c.getTag() == null || !type.equalsIgnoreCase(c.getTag()))) {
+                        return false;
+                    }
+
+                    // Filter by visibility
+                    if (!visibility.equalsIgnoreCase("all")) {
+                        boolean isPublic = visibility.equalsIgnoreCase("public");
+                        if (c.isPublic() != isPublic) {
+                            return false;
+                        }
+                    }
+
+                    // Filter by owner name
+                    if (ownerName != null && !ownerName.isEmpty()) {
+                        User owner = userRepository.findById(c.getOwner()).orElse(null);
+                        if (owner == null || !owner.getUsername().equalsIgnoreCase(ownerName)) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+                .collect(Collectors.toList());
+    }
 }

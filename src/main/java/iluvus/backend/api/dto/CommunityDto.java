@@ -18,6 +18,8 @@ public class CommunityDto {
     // moderators
     private List<String> moderators;
 
+    private String tag;
+
     public CommunityDto() {
     }
 
@@ -29,6 +31,7 @@ public class CommunityDto {
         this.owner = community.getOwner();
         this.image = community.getImage();
         this.moderators = community.getModerators();
+        this.tag = community.getTag();
     }
 
     // Getter and Setter methods for name
@@ -115,7 +118,6 @@ public class CommunityDto {
 
     }
 
-    private String tag;
     public String getTag() {
         return tag;
     }
