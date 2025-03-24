@@ -181,7 +181,7 @@ public class PostController {
         @RequestParam String userId,
         @RequestParam String searchTerm
     ) {
-        //System.out.println("checkpoint 1");
+        // System.out.println("Checkpoint 1");
         List<Post> foundPosts = postService.searchPosts(userId, searchTerm);
         return ResponseEntity.ok().body(foundPosts);
     }
