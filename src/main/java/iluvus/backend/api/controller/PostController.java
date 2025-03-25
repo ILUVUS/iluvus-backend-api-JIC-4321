@@ -126,7 +126,7 @@ public class PostController {
     //need to look at this
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Post>> getPostForHomePage(@RequestParam String userId) {
-        Page<Post> posts = postService.getPostForHomePage(userId, 3, 5);
+        Page<Post> posts = postService.getPostForHomePage(userId, 1, 5);
         if (posts != null && !posts.isEmpty()) {
             return ResponseEntity.ok().body(posts);
         } else {

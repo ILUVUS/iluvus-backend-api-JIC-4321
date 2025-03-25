@@ -14,6 +14,9 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{ 'username' : { $regex: '^?0', $options: 'i' } }")
     List<User> findUsersByUsernameStartingWith(String username);
 
+    // Fetch all users by their IDs (id is the primary key)
+    List<User> findAllByIdIn(List<String> ids);
+    
     /**
      * Finds all Users with userid or username containing a string or fname, or lname containing a string
      * (case-insensitive).

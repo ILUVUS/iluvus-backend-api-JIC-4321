@@ -402,49 +402,50 @@ public class PostService {
     }
 
     //need to double check this cuz its too expensive
-    public Page<Post> getPostForHomePage(String userId, int page, int size) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return Page.empty(); //what if we return empty list instead of null
-        }
-        // List<String> groups = user.getGroups();
-
-        
-        List<String> communityIds = communityUserRepository.findCommunityIdsByMemberId(userId);
-        if (communityIds.isEmpty()) {
-            //if user is not part of communities we return an empty list
-            return Page.empty();
-        }
-        
-        Pageable pageable  = PageRequest.of(page, size, Sort.by("dateTime").descending());
-
-
-        // Fetch posts from communities the user is a part of, filtered by user interests
-        Page<Post> postsPage = postRepository.findPostsByCommunityandTopicIds(communityIds, user.getInterests(), pageable);
-       
-        List<Post> filteredPosts = postsPage.getContent();
-        if (filteredPosts.isEmpty()) {
-            return Page.empty();
-        }
-
-        List<User> users = userRepository.findAllByIdIn(filteredPosts.stream().map(Post::getAuthor_id).toList());
-        Map<String, User> authorMap = users.stream().collect(Collectors.toMap(User::getId, someUser -> someUser));
-
-        
-        Map<String, String> postAuthorNames = new HashMap<>(); // Map to store postId -> authorName
-
-        //making sure the authorNames is displayed with the psots
-        
-        for (Post post : filteredPosts) {
-             User author = authorMap.get(post.getAuthor_id());
-            if (author != null) {
-                String authorName = author.getFname() + " " + author.getLname();
-                postAuthorNames.put(post.getId(), authorName); // Store author name temporarily
-            }
-        }
-
-        return new PageImpl<>(filteredPosts, pageable, postsPage.getTotalElements());
+   public Page<Post> getPostForHomePage(String userId, int page, int size) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user == null) {
+        return Page.empty(); //what if we return empty list instead of null
     }
+    // List<String> groups = user.getGroups();
+
+    
+    List<String> communityIds = communityUserRepository.findCommunityIdsByMemberId(userId);
+    if (communityIds.isEmpty()) {
+        //if user is not part of communities we return an empty list
+        return Page.empty();
+    }
+    
+    Pageable pageable  = PageRequest.of(page, size, Sort.by("dateTime").descending());
+
+
+    // Fetch posts from communities the user is a part of, filtered by user interests
+    Page<Post> postsPage = postRepository.findPostsByCommunityandTopicIds(communityIds, user.getInterests(), pageable);
+   
+    List<Post> filteredPosts = postsPage.getContent();
+    if (filteredPosts.isEmpty()) {
+        return Page.empty();
+    }
+
+    List<User> users = userRepository.findAllByIdIn(filteredPosts.stream().map(Post::getAuthor_id).toList());
+    Map<String, User> authorMap = users.stream().collect(Collectors.toMap(User::getId, someUser -> someUser));
+
+    
+    Map<String, String> postAuthorNames = new HashMap<>(); // Map to store postId -> authorName
+
+    //making sure the authorNames is displayed with the psots
+    
+    for (Post post : filteredPosts) {
+         User author = authorMap.get(post.getAuthor_id());
+        if (author != null) {
+            String authorName = author.getFname() + " " + author.getLname();
+            postAuthorNames.put(post.getId(), authorName); // Store author name temporarily
+        }
+    }
+
+    return new PageImpl<>(filteredPosts, pageable, postsPage.getTotalElements());
+}
+
 
     // method to get all posts with 5 or more reports
     public List<Post> getReportedPosts(String communityId) {
