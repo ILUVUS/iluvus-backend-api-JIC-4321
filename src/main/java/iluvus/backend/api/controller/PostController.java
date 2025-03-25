@@ -3,6 +3,7 @@ package iluvus.backend.api.controller;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
