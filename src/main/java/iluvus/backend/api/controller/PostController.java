@@ -194,4 +194,10 @@ public class PostController {
         List<Post> foundPosts = postService.searchPostsInCommunity(communityId, searchTerm);
         return ResponseEntity.ok().body(foundPosts);
     }
+
+    @GetMapping(value = "/topicsOfTheDay", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Map<String, Object>>> getTopicsOfTheDay() {
+        return ResponseEntity.ok().body(postService.getTopicsOfTheDay());
+    }
+
 }

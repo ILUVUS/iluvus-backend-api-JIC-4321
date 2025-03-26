@@ -11,7 +11,9 @@ import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.service.InterestTopicService;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class PostService {
     private InterestRepository interestRepository;
     @Autowired
     private CommunityUserRepository communityUserRepository;
+    @Autowired
+    private InterestTopicService interestTopicService;
+
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -646,7 +651,38 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
     return posts;
-    }   
+    }
+
+    public List<Map<String, Object>> getTopicsOfTheDay() {
+    List<Post> todayPosts = postRepository.findAll().stream()
+            .filter(post -> {
+                String date = post.getDateTime();
+                return date != null && date.startsWith(LocalDate.now().toString()); // e.g., "2025-03-26"
+            })
+            .collect(Collectors.toList());
+
+    // Count posts per topic
+    Map<Integer, Long> topicCountMap = todayPosts.stream()
+            .collect(Collectors.groupingBy(Post::getTopicId, Collectors.counting()));
+
+    // Get topic names
+    HashMap<Integer, String> topicNames = interestTopicService.getInterestTopic();
+
+    // Convert to response list
+    return topicCountMap.entrySet().stream()
+            .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())) // descending
+            .limit(5)
+            .map(entry -> {
+                Map<String, Object> result = new HashMap<>();
+                result.put("topicId", entry.getKey());
+                result.put("name", topicNames.getOrDefault(entry.getKey(), "Other"));
+                result.put("count", entry.getValue());
+                return result;
+            })
+            .collect(Collectors.toList());
+}
+    
+    
 
 
 
