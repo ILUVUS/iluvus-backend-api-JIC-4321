@@ -250,6 +250,7 @@ public class UserService {
                 userMap.put("fname", user.getFname());
                 userMap.put("lname", user.getLname());
                 userMap.put("image", user.getImage());
+                userMap.put("avatar", user.getImage() != null ? user.getImage() : "");
                 userMapList.add(userMap);
             }
             return userMapList;
