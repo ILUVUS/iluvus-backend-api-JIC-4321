@@ -646,7 +646,52 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
     return posts;
-    }   
+    }  
+
+    public List<Post> filterPosts(String sharedBy, String likedBy, String communityName) {
+        List<Post> allPosts = postRepository.findAll();
+
+        return allPosts.stream()
+                .filter(p -> {
+                    // 1. Filter by sharedBy userId
+                    if (sharedBy != null && !sharedBy.isEmpty()) {
+                        List<String> sharedByList = p.getSharedBy();
+                        if (sharedByList == null || !sharedByList.contains(sharedBy)) {
+                            return false;
+                        }
+                    }
+
+                    // 2. Filter by likedBy userId
+                    if (likedBy != null && !likedBy.isEmpty()) {
+                        List<String> likedByList = p.getLikedBy();
+                        if (likedByList == null || !likedByList.contains(likedBy)) {
+                            return false;
+                        }
+                    }
+
+                    // 3. Filter by community name
+                    if (communityName != null && !communityName.isEmpty()) {
+                        List<Community> matchedCommunities = communityRepository.findCommunitiesByName(communityName);
+
+                        if (matchedCommunities.isEmpty()) {
+                            return false;
+                        }
+
+                        List<String> matchedCommunityIds = matchedCommunities.stream()
+                                .map(Community::getId)
+                                .collect(Collectors.toList());
+
+                        if (p.getCommunity_id() == null || !matchedCommunityIds.contains(p.getCommunity_id())) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+                .collect(Collectors.toList());
+    }
+    
+    
 
 
 
