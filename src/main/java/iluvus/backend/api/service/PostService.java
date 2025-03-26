@@ -646,8 +646,73 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
     return posts;
-    }   
+    }  
 
-
+    public List<Post> filterPosts(String sharedBy, String likedBy, String communityName) {
+        List<Post> allPosts = postRepository.findAll();
+    
+        List<Post> filtered = allPosts.stream()
+            .filter(p -> {
+                boolean matchesAny = false;
+    
+                // If no filters applied, include all posts
+                boolean anyFilterApplied = (sharedBy != null && !sharedBy.isEmpty())
+                    || (likedBy != null && !likedBy.isEmpty())
+                    || (communityName != null && !communityName.isEmpty());
+    
+                if (!anyFilterApplied) return true;
+    
+                // 1. Match shared posts
+                if (sharedBy != null && !sharedBy.isEmpty()) {
+                    List<String> sharedByList = p.getSharedBy();
+                    if (sharedByList != null && sharedByList.contains(sharedBy)) {
+                        matchesAny = true;
+                    }
+                }
+    
+                // 2. Match liked posts
+                if (likedBy != null && !likedBy.isEmpty()) {
+                    List<String> likedByList = p.getLikedBy();
+                    if (likedByList != null && likedByList.contains(likedBy)) {
+                        matchesAny = true;
+                    }
+                }
+    
+                // 3. Match community name
+                if (communityName != null && !communityName.isEmpty()) {
+                    List<Community> matchedCommunities = communityRepository.findCommunitiesByName(communityName);
+    
+                    if (!matchedCommunities.isEmpty()) {
+                        List<String> matchedCommunityIds = matchedCommunities.stream()
+                                .map(Community::getId)
+                                .collect(Collectors.toList());
+    
+                        if (p.getCommunity_id() != null && matchedCommunityIds.contains(p.getCommunity_id())) {
+                            matchesAny = true;
+                        }
+                    }
+                }
+    
+                return matchesAny;
+                })
+                .collect(Collectors.toList());
+    
+            Map<String, String> authorIdName = new HashMap<>();
+            for (Post post : filtered) {
+                String authorId = post.getAuthor_id();
+                if (authorIdName.containsKey(authorId)) {
+                    post.setAuthor_id(authorIdName.get(authorId));
+                } else {
+                    User user = userRepository.findById(authorId).orElse(null);
+                    if (user != null) {
+                        String formattedName = user.getLname() + ", " + user.getFname();
+                        post.setAuthor_id(formattedName);
+                        authorIdName.put(authorId, formattedName);
+                    }
+                }
+            }   
+        return filtered;
+    }
+    
 
 }
