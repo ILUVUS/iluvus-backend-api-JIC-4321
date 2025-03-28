@@ -11,7 +11,7 @@ import java.util.List;
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
     // Find chatrooms by member and group type (for pagination)
     //no query needed cuz underlying query already used
-    Page<ChatRoom> findByMembersContainsAndIsGroup(String memberId, boolean isGroup, Pageable pageable);
+    Page<ChatRoom> findByParticipantContainsAndIsGroup(String participant, boolean isGroup, Pageable pageable);
 
     List<ChatRoom> findByGroupName(String groupName);
 

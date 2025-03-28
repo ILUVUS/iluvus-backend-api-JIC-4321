@@ -11,7 +11,7 @@ import java.util.List;
 
 @Document(collection = "chat_room")
 @CompoundIndex(name = "groupName_index", def = "{groupName': 1} 1}")
-@CompoundIndex(name = "userIndex", def = "{'members': 1, 'isGroup': 1}")
+@CompoundIndex(name = "userIndex", def = "{'participants': 1, 'isGroup': 1}")
 public class ChatRoom {
     @Id
     private String id;

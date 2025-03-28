@@ -61,9 +61,13 @@ public class ChatMessageService {
                 return null;
             }
 
+            User sender = userRepository.findById(senderId).orElse(null);
+
             if (!chatRoomRepository.existsById(roomId)) {
                 return null;
             } 
+
+            ChatRoom chatroom = chatRoomRepository.findById(roomId).orElse(null);
 
             //creating new chatmessage with isdeleted flag = false
             ChatMessageDto chatMessageDto = new ChatMessageDto();
@@ -76,10 +80,15 @@ public class ChatMessageService {
 
             ChatMessage chatMessage = new ChatMessage(chatMessageDto);
 
-            chatMessageRepository.save(chatMessage);
+            chatMessageRepository.insert(chatMessage);
+
+            if (receiverId != null && !receiverId.isEmpty()) {
+                String message = String.format("%s just messaged you.", sender.getFname());
+                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_MESSAGE, message, timestamp);
+            }
 
 
-            //maybe modify this to return a list of messages instead
+            //maybe modify this to return a list of messages instead based on need of frontend
             return chatMessage;
 
 
@@ -88,7 +97,4 @@ public class ChatMessageService {
             return null;
         }
     }
-
-
-    
 }
