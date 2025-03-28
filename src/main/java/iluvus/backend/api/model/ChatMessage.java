@@ -1,5 +1,5 @@
 package iluvus.backend.api.model;
-import iluvus.backend.api.dto.ChatMessage.Dto;
+import iluvus.backend.api.dto.ChatMessageDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -23,7 +23,8 @@ public class ChatMessage {
         this.roomId = roomId;
         this.senderId = senderId;
         this.message = message;
-        this.time = time;
+        //this isn't in the model
+        this.timestamp = time;
     }
 
     public String getId() {
@@ -62,7 +63,8 @@ public class ChatMessage {
         return timestamp;
     }
 
+    //this isn't in the model
     public void setTime(String time) {
-        this.time = time;
+        this.timestamp = time;
     }
 }

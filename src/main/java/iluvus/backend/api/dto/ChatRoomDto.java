@@ -4,33 +4,48 @@ import java.util.List;
 
 public class ChatRoomDto { 
     private String id;
-    private String type; 
+    private String groupName;
+    private boolean isGroup;
     private List<String> participants;
+    private String createdBy;
         
     public ChatRoomDto() {
     }
 
-    public ChatRoomDto(String type, List<String> participants, String lastMessage) {
-        this.type = type;
-        this.participants = participants;
-        //this isn't correct but will correct it later
-        this.lastMessage = lastMessage;
+    public ChatRoomDto(ChatRoom chatRoom) {
+        this.groupName = chatRoom.getGroupName();
+        this.isGroup = chatRoom.getisGroup();
+        this.participants = chatRoom.getParticipants();
+        this.createdBy = chatRoom.getCreatedBy();
+
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public String getType() {
-        return type;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setisGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
+    public boolean getIsGroup() {
+        return isGroup;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public List<String> getParticipants() {
