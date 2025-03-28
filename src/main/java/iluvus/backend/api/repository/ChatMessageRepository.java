@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ChatMessageRepository extends MongoRepository<ChatMessage, String> {
 
-    @Query(value = "{ 'roomId': ?0 }", sort = "{ 'time': 1 }")
-    List<ChatMessage> findChatMessagesByRoomId(String roomId);
+    //no query needed because there should be an underlying query already
+    List<ChatMessage> findByRoomId(String roomId);
+
+    List<ChatMessage> findByRoomIdAndSenderId(String chatroomId, String senderId);
 
 }
