@@ -41,23 +41,7 @@ public class ChatMessageService {
             String timestamp = data.get("timestamp");
             String receiverId = data.get("receiverId");
 
-            if (message == null) {
-                return null;
-            }
-
-            if (roomId == null) {
-                return null;
-            }
-
-            if (senderId == null) {
-                return null;
-            }
-
-            if (timestamp == null) {
-                return null;
-            }
-
-            if (receiverId == null) {
+            if (message == null || roomId == null || senderId == null || timestamp == null || receiverId == null) {
                 return null;
             }
 
@@ -124,11 +108,6 @@ public class ChatMessageService {
                 return null;
             }
 
-            //for group chats, receiver should be null
-            if (!(receiverId == null)) {
-                return null;
-            }
-
             //this will most likely be a bottleneck need to restructure later
             if (!userRepository.existsById(senderId)) {
                 return null;
@@ -142,11 +121,7 @@ public class ChatMessageService {
 
             //if this isn't a group, don't send a group message
             ChatRoom chatroom = chatRoomRepository.findById(roomId).orElse(null);
-            if (!chatroom.getIsGroup()) {
-                return null;
-            }
-            //making sure group is nonEmpty & is > 3
-            if (chatroom.getParticipants().isEmpty() || chatroom.getParticipants().size() < 3 || !chatroom.getParticipants().contains(senderId)) {
+            if (receiverId != null || !chatroom.getIsGroup() || chatroom.getParticipants().isEmpty() || !chatroom.getParticipants().contains(senderId)) {
                 return null;
             }
 
@@ -166,13 +141,12 @@ public class ChatMessageService {
             String notification = String.format("%s just messaged you in %s.", sender.getFname(), chatroom.getGroupName());
 
             for (String participantId : participants) {
-                if (participantId != senderId) {
+                if (participantId.equals(senderId)) {
                     NotificationService.addNotification(senderId, participantId, NotificationType.NEW_GROUP_MESSAGE, notification, timestamp);
                 }
             }
 
             chatMessageRepository.insert(chatmessage);
-
             return chatmessage;
 
         } catch (Exception e) {
