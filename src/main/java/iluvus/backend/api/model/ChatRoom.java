@@ -4,6 +4,7 @@ package iluvus.backend.api.model;
 import iluvus.backend.api.dto.ChatRoomDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class ChatRoom {
     private List<String> participants;
     private String createdBy;
 
-    private long updatedAt;
-    private long createdAt;
+    @Field("updatedAt")
+    private String updatedAt;
 
 
     public ChatRoom() {
@@ -36,7 +37,6 @@ public class ChatRoom {
         this.isGroup = chatRoomDto.getIsGroup();
         this.participants = chatRoomDto.getParticipants();
         this.createdBy = chatRoomDto.getCreatedBy();
-        this.createdAt = System.currentTimeMillis();
     }
 
     public String getId() {
@@ -76,20 +76,11 @@ public class ChatRoom {
         this.createdBy = createdBy;
     }
 
-
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(long updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
