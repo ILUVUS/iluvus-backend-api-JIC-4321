@@ -31,6 +31,7 @@ public class ChatMessageService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    //------------Direct One On One Message Method --------------------
     public ChatMessage sendDirectMessage(Map<String, String> data) {
         try {
             //extracting and verifying data
@@ -109,6 +110,7 @@ public class ChatMessageService {
     }
 
 
+    //---------------New Send Group message Method-----------------
     public ChatMessage sendGroupMessage(Map<String, String> data) {
         try {
             //extracting and verifying data
@@ -144,7 +146,7 @@ public class ChatMessageService {
                 return null;
             }
             //making sure group is nonEmpty & is > 3
-            if (chatroom.getParticipants().isEmpty() || chatroom.getParticipants().size() < 3) {
+            if (chatroom.getParticipants().isEmpty() || chatroom.getParticipants().size() < 3 || !chatroom.getParticipants().contains(senderId)) {
                 return null;
             }
 
@@ -161,7 +163,7 @@ public class ChatMessageService {
             ChatMessage chatmessage = new ChatMessage(chatMessageDto);
 
 
-            String notification = String.format("%s just messaged you.", sender.getFname());
+            String notification = String.format("%s just messaged you in %s.", sender.getFname(), chatroom.getGroupName());
 
             for (String participantId : participants) {
                 if (participantId != senderId) {
@@ -177,6 +179,5 @@ public class ChatMessageService {
             e.printStackTrace();
             return null;
         }
-
     }
 }
