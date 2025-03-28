@@ -9,11 +9,11 @@ import iluvus.backend.api.model.ChatMessage;
 
 //this whole thing is breaking - not sure how to handle websocket here
 @Component
-public class MyWebSocketHandler extends TextWebSocketHandler {
+public class WebSocketHandler extends TextWebSocketHandler {
 
     private final MongoTemplate mongoTemplate;
 
-    public MyWebSocketHandler(MongoTemplate mongoTemplate) {
+    public WebSocketHandler(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
