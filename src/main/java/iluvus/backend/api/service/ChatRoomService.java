@@ -53,7 +53,7 @@ public class ChatRoomService {
 
         boolean isGroup = participantList.size() > 2;
         if (isGroup) {
-            if (groupName == null || groupName.trim().isEmpty()) {
+            if (groupName == null || groupName.trim().isEmpty() || participantList.size() > 5) {
                 //need to prompt user to enter group name
                 return false;
             }
