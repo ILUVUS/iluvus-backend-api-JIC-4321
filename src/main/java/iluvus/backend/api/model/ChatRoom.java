@@ -20,6 +20,7 @@ public class ChatRoom {
     
     private boolean isGroup;
 
+    //participantIds
     private List<String> participants;
     private String createdBy;
 

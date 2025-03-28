@@ -31,7 +31,7 @@ public class ChatMessageService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public ChatMessage sendMessage(Map<String, String> data) {
+    public ChatMessage sendDirectMessage(Map<String, String> data) {
         try {
             //extracting and verifying data
             String roomId = data.get("roomId");
@@ -67,7 +67,11 @@ public class ChatMessageService {
                 return null;
             } 
 
+            //if either one is not in the chat, should return null for the controller
             ChatRoom chatroom = chatRoomRepository.findById(roomId).orElse(null);
+            if (!chatroom.getParticipants().contains(senderId) || !chatroom.getParticipants().contains(receiverId)) {
+                return null;
+            }
 
             //creating new chatmessage with isdeleted flag = false
             ChatMessageDto chatMessageDto = new ChatMessageDto();
@@ -83,8 +87,8 @@ public class ChatMessageService {
             chatMessageRepository.insert(chatMessage);
 
             if (receiverId != null && !receiverId.isEmpty()) {
-                String message = String.format("%s just messaged you.", sender.getFname());
-                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_MESSAGE, message, timestamp);
+                String notification = String.format("%s just messaged you.", sender.getFname());
+                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_MESSAGE, notification, timestamp);
             }
 
 
