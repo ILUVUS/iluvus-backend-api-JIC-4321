@@ -44,7 +44,7 @@ public class ChatRoom {
         return id;
     }
 
-    public boolean getisGroup() {
+    public boolean getIsGroup() {
         return this.isGroup;
     }
 

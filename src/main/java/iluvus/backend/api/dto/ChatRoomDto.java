@@ -14,7 +14,7 @@ public class ChatRoomDto {
 
     public ChatRoomDto(ChatRoom chatRoom) {
         this.groupName = chatRoom.getGroupName();
-        this.isGroup = chatRoom.getisGroup();
+        this.isGroup = chatRoom.getIsGroup();
         this.participants = chatRoom.getParticipants();
         this.createdBy = chatRoom.getCreatedBy();
 
@@ -32,7 +32,7 @@ public class ChatRoomDto {
         this.groupName = groupName;
     }
 
-    public void setisGroup(boolean isGroup) {
+    public void setIsGroup(boolean isGroup) {
         this.isGroup = isGroup;
     }
 
