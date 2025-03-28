@@ -161,14 +161,11 @@ public class ChatMessageService {
             ChatMessage chatmessage = new ChatMessage(chatMessageDto);
 
 
-            if () {
-                String notification = String.format("%s just messaged you.", sender.getFname());
+            String notification = String.format("%s just messaged you.", sender.getFname());
 
-                for (String participantId : participants) {
-                    if (participantId != senderId) {
-                        User participant = userRepository.findById(participantId).orElse(null);
-                        NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_GROUP_MESSAGE, notification, timestamp);
-                    }
+            for (String participantId : participants) {
+                if (participantId != senderId) {
+                    NotificationService.addNotification(senderId, participantId, NotificationType.NEW_GROUP_MESSAGE, notification, timestamp);
                 }
             }
 
