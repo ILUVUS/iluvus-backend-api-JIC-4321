@@ -8,8 +8,8 @@ import iluvus.backend.api.repository.ChatRoomRepository;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.resources.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,6 +103,25 @@ public class ChatRoomService {
     }
 
 
+    public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
+        try {
+            if (page < 0 || size <= 0) {
+                throw new IllegalArgumentException("Page index must be non-negative and size must be positive");
+            }
+    
+            //check if the chat room exists
+            if (!chatRoomRepository.existsById(roomId)) {
+                throw new IllegalArgumentException("Chat room not found");
+            }
 
+            //fetch recent messages ordered by timestamp descending
+            PageRequest pageRequest = PageRequest.of(page, size);
+            return chatMessageRepository.findByRoomIdOrderByTimestampDesc(roomId, pageRequest);
+        
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
