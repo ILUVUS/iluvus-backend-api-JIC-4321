@@ -31,13 +31,14 @@ public class ChatMessageService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public List<ChatMessage> sendMessage(Map<String, String> data) {
+    public ChatMessage sendMessage(Map<String, String> data) {
         try {
             //extracting and verifying data
             String roomId = data.get("roomId");
             String senderId = data.get("senderId");
             String message = data.get("message");
             String timestamp = data.get("timestamp");
+            String receiverId = data.get("receiverId");
 
             if (message == null) {
                 return null;
@@ -56,7 +57,7 @@ public class ChatMessageService {
             }
 
             //this will most likely be a bottleneck need to restructure later
-            if (!userRepository.existsById(senderId)) {
+            if (!userRepository.existsById(senderId) || !userRepository.existsById(receiverId)) {
                 return null;
             }
 
@@ -68,15 +69,23 @@ public class ChatMessageService {
             ChatMessageDto chatMessageDto = new ChatMessageDto();
             chatMessageDto.setRoomId(roomId);
             chatMessageDto.setSenderId(senderId);
+            chatMessageDto.setReceiverId(receiverId);
             chatMessageDto.setMessage(message);
             chatMessageDto.setTime(timestamp);
             chatMessageDto.setIsDeleted(false);
 
             ChatMessage chatMessage = new ChatMessage(chatMessageDto);
 
+            chatMessageRepository.save(chatMessage);
 
-        } catch (Exeception e) {
 
+            //maybe modify this to return a list of messages instead
+            return chatMessage;
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
