@@ -79,7 +79,7 @@ public class ChatMessageService {
 
             if (receiverId != null && !receiverId.isEmpty()) {
                 String notification = String.format("%s just messaged you.", sender.getFname());
-                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_MESSAGE, notification, timestamp);
+                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_DIRECT_MESSAGE, notification, timestamp);
             }
 
             chatMessageRepository.insert(chatMessage);
@@ -142,7 +142,7 @@ public class ChatMessageService {
 
             for (String participantId : participants) {
                 if (participantId.equals(senderId)) {
-                    NotificationService.addNotification(senderId, participantId, NotificationType.NEW_GROUP_MESSAGE, notification, timestamp);
+                    NotificationService.addNotification(senderId, participantId, NotificationType.NEW_DIRECT_MESSAGE, notification, timestamp);
                 }
             }
 

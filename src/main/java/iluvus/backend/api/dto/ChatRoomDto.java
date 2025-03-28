@@ -17,7 +17,6 @@ public class ChatRoomDto {
         this.isGroup = chatRoom.getIsGroup();
         this.participants = chatRoom.getParticipants();
         this.createdBy = chatRoom.getCreatedBy();
-
     }
 
     public String getId() {

@@ -35,7 +35,7 @@ public class ChatMessageController {
      * @return
      */
     @PostMapping(value = "/direct", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChatMessage> createPost(@RequestBody Map<String, String> data) {
+    public ResponseEntity<ChatMessage> sendDirectMessage(@RequestBody Map<String, String> data) {
         ChatMessage chatMessage = chatMessageService.sendDirectMessage(data);
         if (chatMessage != null) {
             return ResponseEntity.ok().body(chatMessage);
@@ -44,6 +44,26 @@ public class ChatMessageController {
         }
     }
 
-
+    /**
+     * 
+     * @param data JSON object with the following keys:
+     *             roomId: String
+     *             senderId: String
+                   message: String
+                   timestamp: String
+                   receiverId: String
+     *             
+     * 
+     * @return
+     */
+    @PostMapping(value = "/group", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ChatMessage> sendGroupMessage(@RequestBody Map<String, String> data) {
+        ChatMessage chatMessage = chatMessageService.sendGroupMessage(data);
+        if (chatMessage != null) {
+            return ResponseEntity.ok().body(chatMessage);
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
 }

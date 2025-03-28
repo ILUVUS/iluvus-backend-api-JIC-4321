@@ -37,7 +37,6 @@ public class ChatRoom {
         this.participants = chatRoomDto.getParticipants();
         this.createdBy = chatRoomDto.getCreatedBy();
         this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
     }
 
     public String getId() {
