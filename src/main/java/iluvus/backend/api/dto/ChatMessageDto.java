@@ -7,17 +7,19 @@ public class ChatMessageDto {
     private String roomId; 
     private String senderId; 
     private String message; 
-    private String time;
+    private String timestamp;
+    private boolean isDeleted;
 
 
     public ChatMessageDto() {
     }
 
-    public ChatMessageDto(String roomId, String senderId, String message, String time) {
-        this.roomId = roomId;
-        this.senderId = senderId;
-        this.message = message;
-        this.time = time;
+    public ChatMessageDto(ChatMessage chatMessage) {
+        this.roomId = chatMessage.getRoomId();
+        this.senderId = chatMessage.getSenderId();
+        this.message = chatMessage.getMessage();
+        this.timestamp = chatMessage.getTimestamp();
+        this.isDeleted = chatMessage.getisDeleted();
     }
 
     public String getId() {
@@ -52,11 +54,19 @@ public class ChatMessageDto {
         this.message = message;
     }
 
-    public String getTime() {
-        return time;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTime(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
