@@ -13,6 +13,7 @@ public class ChatRoomDto {
     public ChatRoomDto(String type, List<String> participants, String lastMessage) {
         this.type = type;
         this.participants = participants;
+        //this isn't correct but will correct it later
         this.lastMessage = lastMessage;
     }
 
