@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class ChatRoomService {
     private UserRepository userRepository;
 
 
+    //-----------------CHAT CREATION--------------------------
     public boolean createChatRoom(Map<String, String> data) {
 
         try {
@@ -37,13 +39,11 @@ public class ChatRoomService {
         String participants = data.get("participants");
         String createdBy = data.get("creator");
 
-        ArrayList<String> participantList = new ArrayList<>();
-        if (participants != null && !participants.isBlank()) {
-            String[] participantsArray = participants.split(",");
-            for (String participant : participantsArray) {
-                participantList.add(participant);
-            }
-        }
+        
+        //double check if this works
+        List<String> participantList = Arrays.stream(participants.split(","))
+        .map(String::trim)
+        .collect(Collectors.toList());
         
         
         if (participantList.isEmpty() || participantList.size() <= 1 || createdBy == null) {
@@ -103,6 +103,7 @@ public class ChatRoomService {
     }
 
 
+    //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
         try {
             if (page < 0 || size <= 0) {
