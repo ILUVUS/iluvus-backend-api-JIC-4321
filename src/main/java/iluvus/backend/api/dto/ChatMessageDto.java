@@ -5,6 +5,7 @@ import iluvus.backend.api.model.ChatMessage;
 public class ChatMessageDto { 
     private String id; 
     private String roomId; 
+    private String receiverId;
     private String senderId; 
     private String message; 
     private String timestamp;
@@ -20,6 +21,7 @@ public class ChatMessageDto {
         this.message = chatMessage.getMessage();
         this.timestamp = chatMessage.getTimestamp();
         this.isDeleted = chatMessage.getisDeleted();
+        this.receiverId = chatMessage.getReceiverId();
     }
 
     public String getId() {
@@ -68,5 +70,13 @@ public class ChatMessageDto {
 
     public void setIsDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 }

@@ -16,6 +16,7 @@ public class ChatMessage {
 
     private String roomId;
     private String senderId;
+    private String receiverId;
     private String message;
 
     @Field("timestamp")
@@ -29,6 +30,7 @@ public class ChatMessage {
     public ChatMessage(ChatMessageDto chatMessageDto) {
         this.roomId = chatMessageDto.getRoomId();
         this.senderId = chatMessageDto.getSenderId();
+        this.receiverId = chatMessageDto.getReceiverId();
         this.message = chatMessageDto.getMessage();
         this.timestamp = chatMessageDto.getTimestamp();
         this.isDeleted = chatMessageDto.getIsDeleted();
@@ -52,6 +54,14 @@ public class ChatMessage {
 
     public void setSenderId(String senderId) {
         this.senderId = senderId;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getMessage() {
