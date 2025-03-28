@@ -33,6 +33,7 @@ public class ChatMessageService {
 
     public List<ChatMessage> sendMessage(Map<String, String> data) {
         try {
+            //extracting and verifying data
             String roomId = data.get("roomId");
             String senderId = data.get("senderId");
             String message = data.get("message");
@@ -63,11 +64,15 @@ public class ChatMessageService {
                 return null;
             } 
 
+            //creating new chatmessage with isdeleted flag = false
+            ChatMessageDto chatMessageDto = new ChatMessageDto();
+            chatMessageDto.setRoomId(roomId);
+            chatMessageDto.setSenderId(senderId);
+            chatMessageDto.setMessage(message);
+            chatMessageDto.setTime(timestamp);
+            chatMessageDto.setIsDeleted(false);
 
-
-
-
-
+            ChatMessage chatMessage = new ChatMessage(chatMessageDto);
 
 
         } catch (Exeception e) {
