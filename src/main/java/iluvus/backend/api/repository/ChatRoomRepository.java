@@ -1,16 +1,20 @@
 package iluvus.backend.api.repository;
 
-import iluvus.backend.api.model.ChatRoom; 
+import iluvus.backend.api.model.ChatRoom;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository; 
 import org.springframework.data.mongodb.repository.Query; 
 import java.util.List;
 
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
-    
-    @Query("{ 'participants': ?0 }")
-    List<ChatRoom> findChatRoomsByParticipant(String userId);
+    // Find chatrooms by member and group type (for pagination)
+    //no query needed cuz underlying query already used
+    Page<ChatRoom> findByMembersContainsAndIsGroup(String memberId, boolean isGroup, Pageable pageable);
 
-    @Query("{ 'type': ?0 }")
-    List<ChatRoom> findChatRoomsByType(String type);
+    List<ChatRoom> findByGroupName(String groupName);
 
+    @Query("{'participants': ?0 }")
+    Page<ChatRoom> findByMember(String memberId, Pageable pageable);
 }
