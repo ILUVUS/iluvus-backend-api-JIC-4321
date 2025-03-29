@@ -188,7 +188,6 @@ public class UserDto {
     public void setWork(List<String> work) {
         this.work = work;
     }
-
     public List<String> getSkills() {
         return skills;
     }
@@ -230,18 +229,15 @@ public class UserDto {
     }
 
     public HashMap<String, Object> getPublicUserInfo() {
+        
         HashMap<String, Object> publicInfo = new HashMap<>();
         publicInfo.put("id", user.getId());
         publicInfo.put("username", user.getUsername());
-
-
         publicInfo.put("email", user.getEmail());
         publicInfo.put("isVerified", user.isVerified());
         publicInfo.put("fname", user.getFname());
         publicInfo.put("lname", user.getLname());
-
         publicInfo.put("dob", user.getDob());
-
         publicInfo.put("gender", user.getGender());
         publicInfo.put("image", user.getImage());
         publicInfo.put("bio", user.getBio());

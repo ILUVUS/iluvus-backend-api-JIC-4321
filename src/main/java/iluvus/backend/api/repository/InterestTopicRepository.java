@@ -12,4 +12,5 @@ public interface InterestTopicRepository extends MongoRepository<InterestTopic, 
 
     @Query("{ 'id' : ?0 }")
     InterestTopic findInterestTopicById(int id);
+    
 }

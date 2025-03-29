@@ -43,6 +43,7 @@ public class CommentDto {
     public String getText() {
         return this.text;
     }
+    
 
     public boolean setDateTime(String dateTime) {
         if (dateTime.strip().length() == 0) {
@@ -51,7 +52,6 @@ public class CommentDto {
         this.dateTime = dateTime;
         return true;
     }
-
     public String getDateTime() {
         return this.dateTime;
     }
