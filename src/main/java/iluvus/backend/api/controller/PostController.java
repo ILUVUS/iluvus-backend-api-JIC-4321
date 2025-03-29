@@ -194,10 +194,18 @@ public class PostController {
         List<Post> foundPosts = postService.searchPostsInCommunity(communityId, searchTerm);
         return ResponseEntity.ok().body(foundPosts);
     }
-
     @GetMapping(value = "/topicsOfTheDay", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Map<String, Object>>> getTopicsOfTheDay() {
         return ResponseEntity.ok().body(postService.getTopicsOfTheDay());
+    }
+    @GetMapping("/filter")
+    public ResponseEntity<List<Post>> filterPosts(
+            @RequestParam(required = false) String sharedBy,
+            @RequestParam(required = false) String likedBy,
+            @RequestParam(required = false) String communityName) {
+        
+        List<Post> posts = postService.filterPosts(sharedBy, likedBy, communityName);
+        return ResponseEntity.ok(posts);
     }
 
 }
