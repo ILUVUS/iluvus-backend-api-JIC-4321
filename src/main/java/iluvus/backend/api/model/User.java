@@ -15,7 +15,16 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private List<HashMap<String, Object>> chats = new ArrayList<>();
 
+    public List<HashMap<String, Object>> getChats() {
+        return chats;
+    }
+    
+    public void setChats(List<HashMap<String, Object>> chats) {
+        this.chats = chats;
+    }
+    
     private boolean isVerified;
 
     private String fname;

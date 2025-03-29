@@ -13,6 +13,8 @@ import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
+
+import java.time.OffsetDateTime;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 import javax.mail.*;
@@ -335,6 +337,8 @@ public class UserService {
         }
     }
 
+    
+
     public Map<String, Object> searchUsers(String filter) {
         //Map<String, String> userList = this.getUserInfo();
         // Convert the filter to lowercase for case-insensitive comparison
@@ -396,6 +400,53 @@ public class UserService {
             return null;
         }
     }
+
+    public boolean sendMessage(String senderId, String receiverId, String messageText) {
+    User sender = userRepository.findById(senderId).orElse(null);
+    User receiver = userRepository.findById(receiverId).orElse(null);
+    if (sender == null || receiver == null) return false;
+
+    String chatId = generateChatId(senderId, receiverId);
+
+    HashMap<String, Object> message = new HashMap<>();
+    message.put("senderId", senderId);
+    message.put("content", messageText);
+    message.put("timestamp", OffsetDateTime.now().toString());
+
+    // Look for existing chat or create a new one
+    addMessageToUser(sender, chatId, receiverId, message);
+    addMessageToUser(receiver, chatId, senderId, message);
+
+    userRepository.save(sender);
+    userRepository.save(receiver);
+
+    return true;
+}
+
+private void addMessageToUser(User user, String chatId, String otherUserId, HashMap<String, Object> message) {
+    List<HashMap<String, Object>> chats = user.getChats();
+    Optional<HashMap<String, Object>> chatOpt = chats.stream()
+        .filter(chat -> chat.get("chatId").equals(chatId))
+        .findFirst();
+
+    if (chatOpt.isPresent()) {
+        List<HashMap<String, Object>> messages = (List<HashMap<String, Object>>) chatOpt.get().get("messages");
+        messages.add(message);
+    } else {
+        HashMap<String, Object> newChat = new HashMap<>();
+        newChat.put("chatId", chatId);
+        newChat.put("participants", List.of(user.getId(), otherUserId));
+        newChat.put("messages", new ArrayList<>(List.of(message)));
+        chats.add(newChat);
+    }
+
+    user.setChats(chats);
+}
+
+private String generateChatId(String id1, String id2) {
+    return id1.compareTo(id2) < 0 ? id1 + "_" + id2 : id2 + "_" + id1;
+}
+
 
     // --------------------------------------------------
     // NEW Method: editSkills

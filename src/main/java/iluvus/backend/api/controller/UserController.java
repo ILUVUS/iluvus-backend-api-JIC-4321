@@ -1,5 +1,6 @@
 package iluvus.backend.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import iluvus.backend.api.model.User;
+import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.service.UserService;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Autowired
     private UserService userService;
@@ -108,6 +114,21 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+    @PostMapping("/sendMessage")
+public ResponseEntity<String> sendMessage(@RequestBody Map<String, String> data) {
+    boolean sent = userService.sendMessage(data.get("senderId"), data.get("receiverId"), data.get("content"));
+    if (sent) return ResponseEntity.ok("Message sent");
+    return ResponseEntity.badRequest().body("Failed to send message");
+}
+@GetMapping("/getChats")
+public ResponseEntity<List<HashMap<String, Object>>> getChats(@RequestParam String userId) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user == null || user.getChats() == null) {
+        return ResponseEntity.ok().body(new ArrayList<>());
+    }
+    return ResponseEntity.ok(user.getChats());
+}
+
 
     @GetMapping(value = "/searchUsersInCommunity", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, Object>>> searchUser(@RequestParam String filter,
