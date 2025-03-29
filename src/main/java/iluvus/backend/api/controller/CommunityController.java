@@ -73,17 +73,13 @@ public class CommunityController {
 
     }
 
+    //this wasn't working correctly so we had to change it
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> searchCommunitiesAndUsers(@RequestParam String filter) {
+    public ResponseEntity<Map<String, Object>> searchCommunities(@RequestParam String filter) {
         Map<String, Object> filteredCommunityList = communityService.searchCommunity(filter);
-        Map<String, Object> filteredUserList = userService.searchUsers(filter);
-
-        Map<String, Object> completeUsersandCommunitiesList = new HashMap<>();
-        completeUsersandCommunitiesList.put("Communities", filteredCommunityList);
-        completeUsersandCommunitiesList.put("Users", filteredUserList);
-        
-        return ResponseEntity.ok().body(completeUsersandCommunitiesList);
+        return ResponseEntity.ok().body(filteredCommunityList);
     }
+    
 
     @GetMapping(value = "/getInfo", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> setCommunityInformation(@RequestParam String id) {
