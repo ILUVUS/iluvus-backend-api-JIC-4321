@@ -62,7 +62,7 @@ public class ChatMessageController {
         if (chatMessage != null) {
             return ResponseEntity.ok().body(chatMessage);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(new ChatMessage());
         }
     }
 
