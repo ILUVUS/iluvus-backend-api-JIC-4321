@@ -38,13 +38,17 @@ public class ChatRoomController {
      * @return
      */
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createChatRoom(@RequestBody Map<String, String> data) {
-        boolean chatroomCreated = chatRoomService.createChatRoom(data);
-        if (!chatroomCreated) {
-            return ResponseEntity.badRequest().body("Failed to create ChatRoom");
+    public ResponseEntity<Map<String, String>> createChatRoom(@RequestBody Map<String, String> data) {
+        ChatRoom chatroom = chatRoomService.createChatRoom(data);
+    
+        if (chatroom == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Chat room creation failed"));
         }
-        return ResponseEntity.ok().body("Chat Successfully Created");
+    
+        return ResponseEntity.ok(Map.of("chatId", chatroom.getId()));
     }
+    
+    
 
      /**
      * Endpoint to retrieve recent messages from a chat room.

@@ -31,77 +31,69 @@ public class ChatRoomService {
 
 
     //-----------------CHAT CREATION--------------------------
-    public boolean createChatRoom(Map<String, String> data) {
-
+    public ChatRoom createChatRoom(Map<String, String> data) {
         try {
             String groupName = data.get("groupName");
-
-        String participants = data.get("participants");
-        String createdBy = data.get("creator");
-
-        
-        //double check if this works
-        List<String> participantList = Arrays.stream(participants.split(","))
-        .map(String::trim)
-        .collect(Collectors.toList());
-        
-        
-        if (participantList.isEmpty() || participantList.size() <= 1 || createdBy == null) {
-            return false;
-        }
-
-
-        boolean isGroup = participantList.size() > 2;
-        if (isGroup) {
-            if (groupName == null || groupName.trim().isEmpty() || participantList.size() > 5) {
-                //need to prompt user to enter group name
-                return false;
+            String participants = data.get("participants");
+            String createdBy = data.get("creator");
+    
+            List<String> participantList = Arrays.stream(participants.split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList());
+    
+            if (participantList.isEmpty() || participantList.size() <= 1 || createdBy == null) {
+                return null;
             }
-        }
-
-        if (!userRepository.existsById(createdBy)) {
-            return false;
-        }
-
-        for (String participant : participantList) {
-            if (!userRepository.existsById(participant)) {
-                return false;
+    
+            boolean isGroup = participantList.size() > 2;
+            if (isGroup) {
+                if (groupName == null || groupName.trim().isEmpty() || participantList.size() > 5) {
+                    return null;
+                }
             }
-        }
-
-        ChatRoomDto chatroomDto = new ChatRoomDto();
-        chatroomDto.setGroupName(isGroup ? groupName : null);
-        chatroomDto.setCreatedBy(createdBy);
-        chatroomDto.setParticipants(participantList);
-        chatroomDto.setIsGroup(isGroup);
-        ChatRoom chatroom = new ChatRoom(chatroomDto);
-
-        chatRoomRepository.save(chatroom);
-
-        // Send notifications to participants
-        String notificationMessage = isGroup
-            ? String.format("%s created a new group with you: %s", createdBy, groupName)
-            : String.format("%s sent you a direct message.", createdBy);
-
-        for (String participantId : participantList) {
-            if (!participantId.equals(createdBy)) {
-                NotificationService.addNotification(
-                    createdBy,
-                    participantId,
-                    NotificationType.NEW_DIRECT_MESSAGE,
-                    notificationMessage,
-                    String.valueOf(System.currentTimeMillis())
-                );
+    
+            if (!userRepository.existsById(createdBy)) {
+                return null;
             }
-        }
-
-            return true;
+    
+            for (String participant : participantList) {
+                if (!userRepository.existsById(participant)) {
+                    return null;
+                }
+            }
+    
+            ChatRoomDto chatroomDto = new ChatRoomDto();
+            chatroomDto.setGroupName(isGroup ? groupName : null);
+            chatroomDto.setCreatedBy(createdBy);
+            chatroomDto.setParticipants(participantList);
+            chatroomDto.setIsGroup(isGroup);
+    
+            ChatRoom chatroom = new ChatRoom(chatroomDto);
+            chatRoomRepository.save(chatroom); // This assigns the chatroom an ID
+    
+            String notificationMessage = isGroup
+                    ? String.format("%s created a new group with you: %s", createdBy, groupName)
+                    : String.format("%s sent you a direct message.", createdBy);
+    
+            for (String participantId : participantList) {
+                if (!participantId.equals(createdBy)) {
+                    NotificationService.addNotification(
+                            createdBy,
+                            participantId,
+                            NotificationType.NEW_DIRECT_MESSAGE,
+                            notificationMessage,
+                            String.valueOf(System.currentTimeMillis())
+                    );
+                }
+            }
+    
+            return chatroom;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
-
+    
 
     //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
