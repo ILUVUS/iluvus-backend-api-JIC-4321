@@ -48,7 +48,7 @@ public class ChatMessageController {
     /**
      * 
      * @param data JSON object with the following keys:
-     *             roomId: Stringc
+     *             roomId: String
      *             senderId: String
                    message: String
                    timestamp: String
