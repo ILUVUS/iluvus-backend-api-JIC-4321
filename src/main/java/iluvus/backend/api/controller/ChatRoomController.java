@@ -1,5 +1,6 @@
 package iluvus.backend.api.controller;
 
+import iluvus.backend.api.dto.ChatRoomDto;
 import iluvus.backend.api.model.ChatMessage;
 import iluvus.backend.api.service.ChatMessageService;
 import iluvus.backend.api.service.ChatRoomService;
@@ -54,11 +55,10 @@ public class ChatRoomController {
     }
     
     @GetMapping("/getChats")
-    public ResponseEntity<List<ChatRoom>> getChats(@RequestParam String userId) {
-        List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
+    public ResponseEntity<List<ChatRoomDto>> getChats(@RequestParam String userId) {
+        List<ChatRoomDto> chats = chatRoomService.getChatsWithUsernames(userId);
         return ResponseEntity.ok(chats);
     }
-
      /**
      * Endpoint to retrieve recent messages from a chat room.
      * @param roomId ID of the chat room.

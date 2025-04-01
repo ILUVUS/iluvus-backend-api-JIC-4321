@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,9 +93,28 @@ public class ChatRoomService {
             e.printStackTrace();
             return null;
         }
-    }
-    
 
+    }
+    public List<ChatRoomDto> getChatsWithUsernames(String userId) {
+        List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
+        
+        // Get all participant IDs
+        Set<String> allUserIds = chats.stream()
+            .flatMap(chat -> chat.getParticipants().stream())
+            .collect(Collectors.toSet());
+    
+        // Map of userId -> username
+        Map<String, String> idToUsername = new HashMap<>();
+        userRepository.findAllById(allUserIds).forEach(user -> {
+            idToUsername.put(user.getId(), user.getUsername());
+        });
+    
+        // Build DTOs with participant ID to username map
+        return chats.stream()
+            .map(chat -> new ChatRoomDto(chat, idToUsername))
+            .collect(Collectors.toList());
+    }    
+    
     //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
         try {
