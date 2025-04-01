@@ -35,66 +35,48 @@ public class ChatRoomService {
     public ChatRoom createChatRoom(Map<String, String> data) {
         try {
             String groupName = data.get("groupName");
-            String participants = data.get("participants");
-            String createdBy = data.get("creator");
+            String participantsStr = data.get("participants");
+            String creatorId = data.get("creator");
     
-            List<String> participantList = Arrays.stream(participants.split(","))
+            if (participantsStr == null || creatorId == null) {
+                System.out.println("Missing participants or creator in request");
+                return null;
+            }
+    
+            List<String> participantList = Arrays.stream(participantsStr.split(","))
                     .map(String::trim)
+                    .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
     
-            if (participantList.isEmpty() || participantList.size() <= 1 || createdBy == null) {
+            if (participantList.size() < 2) {
+                System.out.println("At least two participants are required");
                 return null;
             }
     
-            boolean isGroup = participantList.size() > 2;
-            if (isGroup) {
-                if (groupName == null || groupName.trim().isEmpty() || participantList.size() > 5) {
+            // Validate users exist
+            for (String userId : participantList) {
+                if (!userRepository.existsById(userId)) {
+                    System.out.println("User ID does not exist: " + userId);
                     return null;
                 }
             }
     
-            if (!userRepository.existsById(createdBy)) {
-                return null;
-            }
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setGroupName(groupName);
+            chatRoom.setIsGroup(participantList.size() > 2 || (groupName != null && !groupName.isBlank()));
+            chatRoom.setParticipants(participantList);
+            chatRoom.setCreatedBy(creatorId);
     
-            for (String participant : participantList) {
-                if (!userRepository.existsById(participant)) {
-                    return null;
-                }
-            }
+            ChatRoom saved = chatRoomRepository.save(chatRoom);
+            System.out.println("ChatRoom created with ID: " + saved.getId());
+            return saved;
     
-            ChatRoomDto chatroomDto = new ChatRoomDto();
-            chatroomDto.setGroupName(isGroup ? groupName : null);
-            chatroomDto.setCreatedBy(createdBy);
-            chatroomDto.setParticipants(participantList);
-            chatroomDto.setIsGroup(isGroup);
-    
-            ChatRoom chatroom = new ChatRoom(chatroomDto);
-            chatRoomRepository.save(chatroom); // This assigns the chatroom an ID
-    
-            String notificationMessage = isGroup
-                    ? String.format("%s created a new group with you: %s", createdBy, groupName)
-                    : String.format("%s sent you a direct message.", createdBy);
-    
-            for (String participantId : participantList) {
-                if (!participantId.equals(createdBy)) {
-                    NotificationService.addNotification(
-                            createdBy,
-                            participantId,
-                            NotificationType.NEW_DIRECT_MESSAGE,
-                            notificationMessage,
-                            String.valueOf(System.currentTimeMillis())
-                    );
-                }
-            }
-    
-            return chatroom;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
+    
     public List<ChatRoomDto> getChatsWithUsernames(String userId) {
         List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
         

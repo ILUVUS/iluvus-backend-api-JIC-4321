@@ -65,7 +65,8 @@ private UserRepository userRepository;
     
       
         ChatRoomDto dto = new ChatRoomDto(chatroom, idToUsername);
-        return ResponseEntity.ok().body(dto); 
+        return ResponseEntity.ok(Map.of("chatId", chatroom.getId())); // ✅ Make sure this is set
+
     }
     
     
