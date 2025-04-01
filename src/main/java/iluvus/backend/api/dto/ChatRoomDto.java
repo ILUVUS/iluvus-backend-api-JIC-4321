@@ -19,6 +19,7 @@ public class ChatRoomDto {
 
     public ChatRoomDto(ChatRoom chatRoom, Map<String, String> userMap) {
         this.groupName = chatRoom.getGroupName();
+        this.id = chatRoom.getId();
         this.isGroup = chatRoom.getIsGroup();
         this.participants = chatRoom.getParticipants();
         this.participantIdToUsername = userMap;

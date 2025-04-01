@@ -6,6 +6,7 @@ import iluvus.backend.api.service.ChatMessageService;
 import iluvus.backend.api.service.ChatRoomService;
 import iluvus.backend.api.model.ChatRoom;
 import iluvus.backend.api.repository.ChatRoomRepository;
+import iluvus.backend.api.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,10 @@ public class ChatRoomController {
      @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+@Autowired
+private UserRepository userRepository;
+
+
     /**
      * 
      * @param data JSON object with the following keys:
@@ -44,15 +49,25 @@ public class ChatRoomController {
      * @return
      */
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> createChatRoom(@RequestBody Map<String, String> data) {
+    public ResponseEntity<?> createChatRoom(@RequestBody Map<String, String> data) {
         ChatRoom chatroom = chatRoomService.createChatRoom(data);
     
         if (chatroom == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "Chat room creation failed"));
         }
     
-        return ResponseEntity.ok(Map.of("chatId", chatroom.getId()));
+     
+        List<String> participantIds = chatroom.getParticipants();
+        Map<String, String> idToUsername = new HashMap<>();
+        userRepository.findAllById(participantIds).forEach(user ->
+            idToUsername.put(user.getId(), user.getUsername())
+        );
+    
+      
+        ChatRoomDto dto = new ChatRoomDto(chatroom, idToUsername);
+        return ResponseEntity.ok().body(dto); 
     }
+    
     
     @GetMapping("/getChats")
     public ResponseEntity<List<ChatRoomDto>> getChats(@RequestParam String userId) {

@@ -141,11 +141,11 @@ public class ChatMessageService {
             String notification = String.format("%s just messaged you in %s.", sender.getFname(), chatroom.getGroupName());
 
             for (String participantId : participants) {
-                if (participantId.equals(senderId)) {
+                if (!participantId.equals(senderId)) {
                     NotificationService.addNotification(senderId, participantId, NotificationType.NEW_DIRECT_MESSAGE, notification, timestamp);
                 }
             }
-
+            
             chatMessageRepository.insert(chatmessage);
             return chatmessage;
 

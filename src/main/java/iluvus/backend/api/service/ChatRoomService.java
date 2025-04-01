@@ -124,8 +124,10 @@ public class ChatRoomService {
     
             //check if the chat room exists
             if (!chatRoomRepository.existsById(roomId)) {
+                System.err.println("Chat room not found for ID: " + roomId);
                 throw new IllegalArgumentException("Chat room not found");
             }
+            
 
             //fetch recent messages ordered by timestamp descending
             PageRequest pageRequest = PageRequest.of(page, size);
