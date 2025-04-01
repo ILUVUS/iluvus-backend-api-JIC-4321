@@ -4,6 +4,8 @@ import iluvus.backend.api.model.ChatMessage;
 import iluvus.backend.api.service.ChatMessageService;
 import iluvus.backend.api.service.ChatRoomService;
 import iluvus.backend.api.model.ChatRoom;
+import iluvus.backend.api.repository.ChatRoomRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -25,6 +27,9 @@ public class ChatRoomController {
 
     @Autowired
     private ChatRoomService chatRoomService;
+
+     @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
     /**
      * 
@@ -48,7 +53,11 @@ public class ChatRoomController {
         return ResponseEntity.ok(Map.of("chatId", chatroom.getId()));
     }
     
-    
+    @GetMapping("/getChats")
+    public ResponseEntity<List<ChatRoom>> getChats(@RequestParam String userId) {
+        List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
+        return ResponseEntity.ok(chats);
+    }
 
      /**
      * Endpoint to retrieve recent messages from a chat room.

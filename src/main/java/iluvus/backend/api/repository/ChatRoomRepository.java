@@ -16,4 +16,7 @@ public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
 
     @Query("{'participants': ?0 }")
     Page<ChatRoom> findByMember(String memberId, Pageable pageable);
+
+    List<ChatRoom> findByParticipantsContaining(String userId);
+
 }

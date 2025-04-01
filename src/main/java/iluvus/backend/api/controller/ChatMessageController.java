@@ -35,15 +35,16 @@ public class ChatMessageController {
      * @return
      */
     @PostMapping(value = "/direct", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChatMessage> sendDirectMessage(@RequestBody Map<String, String> data) {
+    public ResponseEntity<?> sendDirectMessage(@RequestBody Map<String, String> data) {
         ChatMessage chatMessage = chatMessageService.sendDirectMessage(data);
+    
         if (chatMessage != null) {
-            return ResponseEntity.ok().body(chatMessage);
+            return ResponseEntity.ok(chatMessage);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to send message"));
         }
     }
-
+    
     /**
      * 
      * @param data JSON object with the following keys:
@@ -57,13 +58,16 @@ public class ChatMessageController {
      * @return
      */
     @PostMapping(value = "/group", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChatMessage> sendGroupMessage(@RequestBody Map<String, String> data) {
+    public ResponseEntity<?> sendGroupMessage(@RequestBody Map<String, String> data) {
         ChatMessage chatMessage = chatMessageService.sendGroupMessage(data);
+    
         if (chatMessage != null) {
-            return ResponseEntity.ok().body(chatMessage);
+            return ResponseEntity.ok(chatMessage);
         } else {
-            return ResponseEntity.badRequest().body(new ChatMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", "Failed to send group message"));
         }
     }
+    
+    
 
 }
