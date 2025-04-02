@@ -76,7 +76,9 @@ public class ChatRoomService {
             return null;
         }
     }
-    
+
+
+    //-------------------RECENT CHATS--------------------------//
     public List<ChatRoomDto> getChatsWithUsernames(String userId) {
         List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
         
