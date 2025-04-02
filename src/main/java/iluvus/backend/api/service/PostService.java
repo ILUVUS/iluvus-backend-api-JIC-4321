@@ -11,7 +11,9 @@ import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.service.InterestTopicService;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class PostService {
     private InterestRepository interestRepository;
     @Autowired
     private CommunityUserRepository communityUserRepository;
+    @Autowired
+    private InterestTopicService interestTopicService;
+
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -564,7 +569,7 @@ public class PostService {
         }
     }
 public List<Post> searchPosts(String userId, String searchTerm) {
-        System.out.println("Checkpoint 0");
+        //System.out.println("Checkpoint 0");
         /*
         User user = userRepository.findById(userId).orElse(null); // NOTE: this line is the slowness bottleneck...
         if (user == null) {
@@ -572,18 +577,14 @@ public List<Post> searchPosts(String userId, String searchTerm) {
             return Collections.emptyList();
         }
         */
-
-        System.out.println("checkpoint 1");
-
+        //System.out.println("checkpoint 1");
         List<CommunityUser> communityUsers = communityUserRepository.findByMemberId(userId);
         List<String> communityIds = new ArrayList<>();
         for (CommunityUser cu : communityUsers) {
             communityIds.add(cu.getCommunityId());
         }
-
-        System.out.println("Checkpoint 2");
+        //System.out.println("Checkpoint 2");
         List<Post> posts = postRepository.searchByTermAndCommunities(searchTerm, communityIds);
-
         // ADDED START.
         /*
         System.out.println("Checkpoint 3");
@@ -612,15 +613,14 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         System.out.println("Checkpoint 7");
 
          */
-
         HashMap<String, String> authorIdName = new HashMap<>();
         for (Post post : posts) {
-            System.out.println("Checkpoint 3");
+            //System.out.println("Checkpoint 3");
             String authorId = post.getAuthor_id();
             if (authorIdName.containsKey(authorId)) {
-                System.out.println("Checkpoint 4");
+                //System.out.println("Checkpoint 4");
                 post.setAuthor_id(authorIdName.get(authorId));
-                System.out.println("Checkpoint 5");
+                //System.out.println("Checkpoint 5");
             } else {
                 User theuser = userRepository.findById(authorId).orElse(null); // NOTE: this line is the slowness bottleneck...
                 String fname = theuser.getFname();
@@ -631,8 +631,6 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         }
         System.out.println("posts size: " + posts.size() + ", search: " + searchTerm); // size 0 indicates problem w/ searchByTermAndCommunities...
         // ADDED END.
-
-
         //System.out.println("Checkpoint 3");
         //System.out.println("p1: " + p1.getDateTime());
         //posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
@@ -646,8 +644,126 @@ public List<Post> searchPosts(String userId, String searchTerm) {
         posts.sort((p1, p2) -> p2.getDateTime().compareTo(p1.getDateTime()));
 
     return posts;
-    }   
+    }
 
+    public List<Map<String, Object>> getTopicsOfTheDay() {
+        List<Post> todayPosts = postRepository.findAll().stream()
+                .filter(post -> {
+                    String date = post.getDateTime();
+                    return date != null && date.startsWith(LocalDate.now().toString()); // e.g., "2025-03-26"
+                })
+                .collect(Collectors.toList());
 
+        // Count posts per topic
+        Map<Integer, Long> topicCountMap = todayPosts.stream()
+                .collect(Collectors.groupingBy(Post::getTopicId, Collectors.counting()));
+
+        // Get topic names
+        HashMap<Integer, String> topicNames = interestTopicService.getInterestTopic();
+
+        // Convert to response list
+        return topicCountMap.entrySet().stream()
+                .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())) // descending
+                .limit(5)
+                .map(entry -> {
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("topicId", entry.getKey());
+                    result.put("name", topicNames.getOrDefault(entry.getKey(), "Other"));
+                    result.put("count", entry.getValue());
+                    return result;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getPopularTopics() {
+        List<Post> allPosts = postRepository.findAll().stream().collect(Collectors.toList());
+
+        // Count likes per topic
+        // NOTE: likes are a measure of popularity.
+        Map<Integer, Long> likesCountMap = allPosts.stream().collect(Collectors.groupingBy(Post::getTopicId, Collectors.summingLong(post -> post.getLikedBy().size())));
+
+        // Get topic names
+        HashMap<Integer, String> topicNames = interestTopicService.getInterestTopic();
+
+        // Convert to response list
+        return likesCountMap.entrySet().stream()
+                .sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())) // descending
+                .limit(3)
+                .map(entry -> {
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("topicId", entry.getKey());
+                    result.put("name", topicNames.getOrDefault(entry.getKey(), "Other"));
+                    result.put("count", entry.getValue());
+                    return result;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Post> filterPosts(String sharedBy, String likedBy, String communityName) {
+        List<Post> allPosts = postRepository.findAll();
+    
+        List<Post> filtered = allPosts.stream()
+            .filter(p -> {
+                boolean matchesAny = false;
+    
+                // If no filters applied, include all posts
+                boolean anyFilterApplied = (sharedBy != null && !sharedBy.isEmpty())
+                    || (likedBy != null && !likedBy.isEmpty())
+                    || (communityName != null && !communityName.isEmpty());
+    
+                if (!anyFilterApplied) return true;
+    
+                // 1. Match shared posts
+                if (sharedBy != null && !sharedBy.isEmpty()) {
+                    List<String> sharedByList = p.getSharedBy();
+                    if (sharedByList != null && sharedByList.contains(sharedBy)) {
+                        matchesAny = true;
+                    }
+                }
+    
+                // 2. Match liked posts
+                if (likedBy != null && !likedBy.isEmpty()) {
+                    List<String> likedByList = p.getLikedBy();
+                    if (likedByList != null && likedByList.contains(likedBy)) {
+                        matchesAny = true;
+                    }
+                }
+    
+                // 3. Match community name
+                if (communityName != null && !communityName.isEmpty()) {
+                    List<Community> matchedCommunities = communityRepository.findCommunitiesByName(communityName);
+    
+                    if (!matchedCommunities.isEmpty()) {
+                        List<String> matchedCommunityIds = matchedCommunities.stream()
+                                .map(Community::getId)
+                                .collect(Collectors.toList());
+    
+                        if (p.getCommunity_id() != null && matchedCommunityIds.contains(p.getCommunity_id())) {
+                            matchesAny = true;
+                        }
+                    }
+                }
+    
+                return matchesAny;
+                })
+                .collect(Collectors.toList());
+    
+            Map<String, String> authorIdName = new HashMap<>();
+            for (Post post : filtered) {
+                String authorId = post.getAuthor_id();
+                if (authorIdName.containsKey(authorId)) {
+                    post.setAuthor_id(authorIdName.get(authorId));
+                } else {
+                    User user = userRepository.findById(authorId).orElse(null);
+                    if (user != null) {
+                        String formattedName = user.getLname() + ", " + user.getFname();
+                        post.setAuthor_id(formattedName);
+                        authorIdName.put(authorId, formattedName);
+                    }
+                }
+            }   
+        return filtered;
+    }
+    
 
 }
