@@ -20,7 +20,6 @@ public class User {
     
     //-------NEW----------
     //holds list of blockedUser id's based on who the user has blocked
-
     @Field("blockedUsers")
     private List<String> blockedUsers; 
 
@@ -75,7 +74,7 @@ public class User {
         this.friends = userDto.getFriends();
         this.groups = userDto.getGroups();
         
-        //---added new reference here----------
+        //---added new reference here for blocked users----------
         this.blockedUsers = userDto.getBlockedUsers();
     }
 
