@@ -497,6 +497,13 @@ public class UserService {
 
             return false;
         }
+    }
 
+    //------IS USER BLOCKED?---------
+    //can use this method in unblocking or blocking method as well
+    public boolean isBlocked(String blockingUserId, String blockedUserId) {
+        User blockingUser = userRepository.findById(blockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
+
+        return blockingUser.getBlockedUsers().contains(blockedUserId);
     }
 }
