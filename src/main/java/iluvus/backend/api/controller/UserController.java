@@ -201,6 +201,31 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
             return ResponseEntity.badRequest().body(null);
         }
     }
-    
 
+
+    //--------NEW: Post Mapping Blocking User---------
+    //might need to change this to be @PathVariable instead
+    @PostMapping(value = "/blockUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> blockUser(@RequestParam String blockingUserId, @RequestParam String userToBlockId) {
+        boolean successfullyBlockedUser = userService.blockUser(blockingUserId, userToBlockId);
+        if (successfullyBlockedUser) {
+            return ResponseEntity.ok().body("Successfully blocked user");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to block user");
+        }
+    }
+
+    //-------NEW: Post Mapping Unblocking User----------
+    //might need to change this to be @PathVariable instead
+    @PostMapping(value = "/unblockUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> unblockUser(@RequestParam String unblockingUser, @RequestParam String userToUnblock) {
+
+        boolean successfullyUnblocked = userService.unblockUser(unblockingUser, userToUnblock);
+        if (successfullyUnblocked) {
+            return ResponseEntity.ok().body("Successfully unblocked user");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to unblock user");
+        }
+    }
+    
 }

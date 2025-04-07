@@ -20,6 +20,8 @@ public class User {
     
     //-------NEW----------
     //holds list of blockedUser id's based on who the user has blocked
+
+    @Field("blockedUsers")
     private List<String> blockedUsers; 
 
     private String fname;
