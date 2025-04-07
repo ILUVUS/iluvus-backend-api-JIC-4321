@@ -449,12 +449,14 @@ public class UserService {
         List<String> blockedUsers = blockingUser.getBlockedUsers();
 
         if (!userRepository.existsById(userToBlockId)) {
-            System.out.println("Couldn't find the user you want to block")
+            System.out.println("User to block doesn't exist in the repository.");
             return false;
         }
         
         if (!blockedUsers.contains(userToBlockId)) {
             blockedUsers.add(userToBlockId);
+            //setting blocked users in the model
+            blockingUser.setBlockedUsers(blockedUsers);
             userRepository.save(blockingUser);
         } else {
             //for tracking purposes
@@ -469,10 +471,25 @@ public class UserService {
     }
 
     //-----------NEW USER UNBLOCKING METHOD---------
-    public boolean unblockUser(String blockingUserId, String userToUnblock) {
+    public boolean unblockUser(String unblockingUserId, String userToUnblockId) {
         try {
+            User unblockingUser = userRepository.findById(unblockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
 
+            if (!userRepository.existsById(userToUnblockId)) {
+                System.out.println("User to unblock doesn't exist in the repository.");
+                return false;
+            }
+            
+            List<String> blockedUsers = unblockingUser.getBlockedUsers();
+            if (!blockedUsers.contains(userToUnblockId)) {
+                System.out.println("Couldn't find the user you want to block in the list of blocked users");
+                return false;
+            }
 
+            blockedUsers.remove(unblockingUserId);
+            //should be reset so that unblocked user is removed
+            unblockingUser.setBlockedUsers(blockedUsers);
+            userRepository.save(unblockingUser);
 
             return true;
         } catch (Exception E) {
