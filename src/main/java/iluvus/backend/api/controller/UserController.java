@@ -165,6 +165,8 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
 
     //addFriend, removeFriend, approve friend mappings
 
+    //add method block users
+
 
     @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {

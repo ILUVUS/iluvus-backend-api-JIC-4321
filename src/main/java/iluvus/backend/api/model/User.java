@@ -17,6 +17,10 @@ public class User {
     private String password;
 
     private boolean isVerified;
+    
+    //-------NEW----------
+    //holds list of blockedUser id's based on who the user has blocked
+    private List<String> blockedUsers; 
 
     private String fname;
     private String lname;
@@ -39,6 +43,7 @@ public class User {
 
     @Field("groups")
     private List<String> groups;
+
 
     public User() {
     }
@@ -67,6 +72,9 @@ public class User {
 
         this.friends = userDto.getFriends();
         this.groups = userDto.getGroups();
+        
+        //---added new reference here----------
+        this.blockedUsers = userDto.getBlockedUsers();
     }
 
     public String getId() {
@@ -225,6 +233,15 @@ public class User {
     public List<String> getGroups() {
         return groups;
     }
+
+    public List<String> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(List<String> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+    }
+
 
     public void setGroups(List<String> groups) {
         this.groups = groups;

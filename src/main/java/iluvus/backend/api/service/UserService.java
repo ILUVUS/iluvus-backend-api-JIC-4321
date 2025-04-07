@@ -6,6 +6,7 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import iluvus.backend.api.dto.UserDto;
@@ -73,6 +74,8 @@ public class UserService {
             userDto.setHobbies(new ArrayList<>());
             userDto.setFriends(new ArrayList<>());
             userDto.setGroups(new ArrayList<>());
+            //-----NEW EMPTY ARRAY LIST FOR BLOCKED USERS------
+            userDto.setBlockedUsers(new ArrayList<>());
 
             User user = new User(userDto);
             userRepository.insert(user);
@@ -434,5 +437,49 @@ public class UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+
+    //-----------NEW USER BLOCKING METHOD-----------
+    public boolean blockUser(String blockingUserId, String userToBlockId) {
+        try {
+        User blockingUser = userRepository.findById(blockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
+
+        List<String> blockedUsers = blockingUser.getBlockedUsers();
+
+        if (!userRepository.existsById(userToBlockId)) {
+            System.out.println("Couldn't find the user you want to block")
+            return false;
+        }
+        
+        if (!blockedUsers.contains(userToBlockId)) {
+            blockedUsers.add(userToBlockId);
+            userRepository.save(blockingUser);
+        } else {
+            //for tracking purposes
+            System.out.println("User was found but could not block the other user");
+        }
+        
+        return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //-----------NEW USER UNBLOCKING METHOD---------
+    public boolean unblockUser(String blockingUserId, String userToUnblock) {
+        try {
+
+
+
+            return true;
+        } catch (Exception E) {
+
+
+            return false;
+        }
+
     }
 }
