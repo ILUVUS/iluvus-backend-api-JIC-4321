@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import iluvus.backend.api.model.User;
 import iluvus.backend.api.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/user")
@@ -179,13 +181,17 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
     //Will need to add editInterest and interestList later tomorrow potentially
     //Also add method descriptions
 
-    @PostMapping(value = "/editProfileImage", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> editProfileImage(@RequestBody Map<String, String> data) {
-        boolean isSet = userService.editProfileImage(data);
-        if (isSet) {
-            return ResponseEntity.ok().body("Profile Image Set Successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Profile Image Set Failed");
+
+    @PostMapping(value = "/editProfileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> editProfileImage(
+            @RequestParam("userId") String userId,
+            @RequestParam("image") MultipartFile imageFile) {
+        try {
+            String imageUrl = userService.uploadProfileImage(userId, imageFile);
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Failed to upload image");
         }
     }
     
