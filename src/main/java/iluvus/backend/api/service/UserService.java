@@ -129,38 +129,43 @@ public class UserService {
         }
     }
 
-    public Map<String, Object> getUser(String userId) {
+    public Map<String, Object> getUser(String userId, String viewerId) {
         try {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
+            User target = userRepository.findById(userId).orElse(null);
+            User viewer = userRepository.findById(viewerId).orElse(null);
+    
+            if (target == null || viewer == null) {
                 return null;
             }
-
-            UserDto userDto = new UserDto(user);
+    
+            // Check if either has blocked the other
+            if ((target.getBlockedUsers() != null && target.getBlockedUsers().contains(viewerId)) ||
+                (viewer.getBlockedUsers() != null && viewer.getBlockedUsers().contains(userId))) {
+                return null; // Hide the profile
+            }
+    
+            UserDto userDto = new UserDto(target);
             Map<String, Object> userMap = userDto.getPublicUserInfo();
-
-            // Convert user's interest IDs -> {id -> name}
+    
+            // Convert interest IDs to name map
             Map<Integer, String> interestMap = new HashMap<>();
-            for (Integer interestId : user.getInterests()) {
+            for (Integer interestId : target.getInterests()) {
                 InterestTopic interestTopic = interestRepository.findInterestTopicById(interestId);
                 if (interestTopic != null) {
                     interestMap.put(interestTopic.getId(), interestTopic.getName());
                 }
             }
             userMap.put("interest", interestMap);
-
-            // ----------------------------------------------------------
-            // ADD this line to include skills in the returned userMap:
-            // ----------------------------------------------------------
-            userMap.put("skills", user.getSkills());
-            userMap.put("image", user.getImage() != null ? user.getImage() : "");
-
-
+            userMap.put("skills", target.getSkills());
+            userMap.put("image", target.getImage() != null ? target.getImage() : "");
+    
             return userMap;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
+    
 
     private boolean validateEmail(String proemail) {
         if (proemail == null) {

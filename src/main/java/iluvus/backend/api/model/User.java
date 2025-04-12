@@ -45,7 +45,6 @@ public class User {
     @Field("groups")
     private List<String> groups;
 
-
     public User() {
     }
 
