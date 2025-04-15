@@ -30,8 +30,7 @@ public class ChatRoomService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private User user;
+
 
     //-----------------CHAT CREATION--------------------------
     public ChatRoom createChatRoom(Map<String, String> data) {
@@ -78,9 +77,9 @@ public class ChatRoomService {
                     User ua = userRepository.findById(userA).orElse(null);
                     User ub = userRepository.findById(userB).orElse(null);
                     if (ua.getBlockedUsers().contains(userB) || ub.getBlockedUsers().contains(userA)) {
-                        System.out.println("Blocked: Cannot create chat between users with block relationship");
-                        return null;
+                        throw new IllegalArgumentException("Blocked: Cannot create chat between users with block relationship");
                     }
+                    
                 }
             }
             

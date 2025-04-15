@@ -34,46 +34,38 @@ public class ChatMessageService {
     //------------Direct One On One Message Method --------------------
     public ChatMessage sendDirectMessage(Map<String, String> data) {
         try {
-            //extracting and verifying data
             String roomId = data.get("roomId");
             String senderId = data.get("senderId");
             String message = data.get("message");
             String timestamp = data.get("timestamp");
             String receiverId = data.get("receiverId");
-
+    
             if (message == null || roomId == null || senderId == null || timestamp == null || receiverId == null) {
                 return null;
             }
-
-            
-
-            //this will most likely be a bottleneck need to restructure later
+    
             if (!userRepository.existsById(senderId) || !userRepository.existsById(receiverId)) {
                 return null;
             }
-
+    
             User sender = userRepository.findById(senderId).orElse(null);
             User receiver = userRepository.findById(receiverId).orElse(null);
+    
+            // 🔒 Block Check
             if (sender.getBlockedUsers().contains(receiverId) || receiver.getBlockedUsers().contains(senderId)) {
-                System.out.println("Blocked: Sender or receiver is blocked");
-                return null;
+                throw new IllegalArgumentException("Message blocked: One of the users has blocked the other.");
             }
-            
+    
             if (!chatRoomRepository.existsById(roomId)) {
                 return null;
-            } 
-
-            //if either one is not in the chat, should return null for the controller
-            ChatRoom chatroom = chatRoomRepository.findById(roomId).orElse(null);
-            if (chatroom.getIsGroup()) {
-                return null;
             }
+    
+            ChatRoom chatroom = chatRoomRepository.findById(roomId).orElse(null);
+            if (chatroom.getIsGroup()) return null;
             if (!chatroom.getParticipants().contains(senderId) || !chatroom.getParticipants().contains(receiverId)) {
                 return null;
             }
-          
-
-            //creating new chatmessage with isdeleted flag = false
+    
             ChatMessageDto chatMessageDto = new ChatMessageDto();
             chatMessageDto.setRoomId(roomId);
             chatMessageDto.setSenderId(senderId);
@@ -81,30 +73,23 @@ public class ChatMessageService {
             chatMessageDto.setMessage(message);
             chatMessageDto.setTime(timestamp);
             chatMessageDto.setIsDeleted(false);
-
+    
             ChatMessage chatMessage = new ChatMessage(chatMessageDto);
-            if (sender.getBlockedUsers().contains(receiverId) || receiver.getBlockedUsers().contains(senderId)) {
-                return null;
-            }
-
-            if (receiverId != null && !receiverId.isEmpty()) {
-                String notification = String.format("%s just messaged you.", sender.getFname());
-                NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_DIRECT_MESSAGE, notification, timestamp);
-            }
-
-          
-
+    
+            NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_DIRECT_MESSAGE,
+                    String.format("%s just messaged you.", sender.getFname()), timestamp);
+    
             chatMessageRepository.insert(chatMessage);
-
-            //maybe modify this to return a list of messages instead based on need of frontend
             return chatMessage;
-
+    
+        } catch (IllegalArgumentException e) {
+            throw e; // Forward to controller to send proper error message
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-
+    
 
     //---------------New Send Group message Method-----------------
     public ChatMessage sendGroupMessage(Map<String, String> data) {

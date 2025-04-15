@@ -36,14 +36,19 @@ public class ChatMessageController {
      */
     @PostMapping(value = "/direct", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> sendDirectMessage(@RequestBody Map<String, String> data) {
-        ChatMessage chatMessage = chatMessageService.sendDirectMessage(data);
+        try {
+            ChatMessage chatMessage = chatMessageService.sendDirectMessage(data);
     
-        if (chatMessage != null) {
-            return ResponseEntity.ok(chatMessage);
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("error", "Failed to send message"));
+            if (chatMessage != null) {
+                return ResponseEntity.ok(chatMessage);
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("error", "Failed to send message"));
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+    
     
     /**
      * 
