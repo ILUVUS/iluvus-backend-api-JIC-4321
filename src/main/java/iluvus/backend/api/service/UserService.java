@@ -448,61 +448,40 @@ public class UserService {
 
     //-----------NEW USER BLOCKING METHOD-----------
     public boolean blockUser(String blockingUserId, String userToBlockId) {
-        try {
-        User blockingUser = userRepository.findById(blockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
-
-        List<String> blockedUsers = blockingUser.getBlockedUsers();
-
-        if (!userRepository.existsById(userToBlockId)) {
-            System.out.println("User to block doesn't exist in the repository.");
+        User blockingUser = userRepository.findById(blockingUserId).orElse(null);
+        User userToBlock = userRepository.findById(userToBlockId).orElse(null);
+    
+        if (blockingUser == null || userToBlock == null) {
             return false;
         }
-        
-        if (!blockedUsers.contains(userToBlockId)) {
-            blockedUsers.add(userToBlockId);
-            //setting blocked users in the model
-            blockingUser.setBlockedUsers(blockedUsers);
+    
+        if (blockingUser.getBlockedUsers() == null) {
+            blockingUser.setBlockedUsers(new ArrayList<>());  // ✅ fix: prevent NPE
+        }
+    
+        if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
+            blockingUser.getBlockedUsers().add(userToBlockId);
             userRepository.save(blockingUser);
-        } else {
-            //for tracking purposes
-            System.out.println("User was found but could not block the other user");
         }
-        
+    
         return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
-
+    
     //-----------NEW USER UNBLOCKING METHOD---------
     public boolean unblockUser(String unblockingUserId, String userToUnblockId) {
-        try {
-            User unblockingUser = userRepository.findById(unblockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
-
-            if (!userRepository.existsById(userToUnblockId)) {
-                System.out.println("User to unblock doesn't exist in the repository.");
-                return false;
-            }
-            
-            List<String> blockedUsers = unblockingUser.getBlockedUsers();
-            if (!blockedUsers.contains(userToUnblockId)) {
-                System.out.println("Couldn't find the user you want to block in the list of blocked users");
-                return false;
-            }
-
-            blockedUsers.remove(unblockingUserId);
-            //should be reset so that unblocked user is removed
-            unblockingUser.setBlockedUsers(blockedUsers);
-            userRepository.save(unblockingUser);
-
-            return true;
-        } catch (Exception E) {
-
-
+        User unblockingUser = userRepository.findById(unblockingUserId).orElse(null);
+        if (unblockingUser == null || unblockingUser.getBlockedUsers() == null) {
             return false;
         }
+    
+        if (unblockingUser.getBlockedUsers().contains(userToUnblockId)) {
+            unblockingUser.getBlockedUsers().remove(userToUnblockId);
+            userRepository.save(unblockingUser);
+        }
+    
+        return true;
     }
+    
 
     //------IS USER BLOCKED?---------
     //can use this method in unblocking or blocking method as well
