@@ -45,13 +45,20 @@ public class ChatMessageService {
                 return null;
             }
 
+            
+
             //this will most likely be a bottleneck need to restructure later
             if (!userRepository.existsById(senderId) || !userRepository.existsById(receiverId)) {
                 return null;
             }
 
             User sender = userRepository.findById(senderId).orElse(null);
-
+            User receiver = userRepository.findById(receiverId).orElse(null);
+            if (sender.getBlockedUsers().contains(receiverId) || receiver.getBlockedUsers().contains(senderId)) {
+                System.out.println("Blocked: Sender or receiver is blocked");
+                return null;
+            }
+            
             if (!chatRoomRepository.existsById(roomId)) {
                 return null;
             } 
@@ -64,6 +71,7 @@ public class ChatMessageService {
             if (!chatroom.getParticipants().contains(senderId) || !chatroom.getParticipants().contains(receiverId)) {
                 return null;
             }
+          
 
             //creating new chatmessage with isdeleted flag = false
             ChatMessageDto chatMessageDto = new ChatMessageDto();
@@ -75,12 +83,16 @@ public class ChatMessageService {
             chatMessageDto.setIsDeleted(false);
 
             ChatMessage chatMessage = new ChatMessage(chatMessageDto);
-
+            if (sender.getBlockedUsers().contains(receiverId) || receiver.getBlockedUsers().contains(senderId)) {
+                return null;
+            }
 
             if (receiverId != null && !receiverId.isEmpty()) {
                 String notification = String.format("%s just messaged you.", sender.getFname());
                 NotificationService.addNotification(senderId, receiverId, NotificationType.NEW_DIRECT_MESSAGE, notification, timestamp);
             }
+
+          
 
             chatMessageRepository.insert(chatMessage);
 
