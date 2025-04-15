@@ -49,6 +49,13 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/getBlockedUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<List<Map<String, Object>>> getBlockedUsers(@RequestParam String userId) {
+    List<Map<String, Object>> blocked = userService.getBlockedUsers(userId);
+    return ResponseEntity.ok().body(blocked);
+}
+
+
     @PostMapping(value = "/verify", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkVerification(@RequestBody Map<String, String> data) {
         boolean isVerified = userService.verify(data);

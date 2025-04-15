@@ -15,6 +15,8 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -128,6 +130,27 @@ public class UserService {
             return null;
         }
     }
+
+    public List<Map<String, Object>> getBlockedUsers(String userId) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user == null || user.getBlockedUsers() == null) return new ArrayList<>();
+
+    return user.getBlockedUsers().stream()
+        .map(id -> {
+            User blocked = userRepository.findById(id).orElse(null);
+            if (blocked == null) return null;
+
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("id", blocked.getId());
+            userMap.put("username", blocked.getUsername());
+            userMap.put("fname", blocked.getFname());
+            userMap.put("lname", blocked.getLname());
+            return userMap;
+        })
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+}
+
 
     public Map<String, Object> getUser(String userId, String viewerId) {
         try {
