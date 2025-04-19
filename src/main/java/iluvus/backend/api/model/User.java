@@ -235,9 +235,9 @@ public class User {
     }
 
     public List<String> getBlockedUsers() {
-        return blockedUsers;
+        return blockedUsers == null ? new ArrayList<>() : blockedUsers;
     }
-
+    
     public void setBlockedUsers(List<String> blockedUsers) {
         this.blockedUsers = blockedUsers;
     }

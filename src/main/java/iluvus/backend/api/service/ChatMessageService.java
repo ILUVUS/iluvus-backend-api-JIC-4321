@@ -52,9 +52,11 @@ public class ChatMessageService {
             User receiver = userRepository.findById(receiverId).orElse(null);
     
             // 🔒 Block Check
-            if (sender.getBlockedUsers().contains(receiverId) || receiver.getBlockedUsers().contains(senderId)) {
-                throw new IllegalArgumentException("Message blocked: One of the users has blocked the other.");
-            }
+            if ((sender.getBlockedUsers() != null && sender.getBlockedUsers().contains(receiverId)) ||
+            (receiver.getBlockedUsers() != null && receiver.getBlockedUsers().contains(senderId))) {
+            throw new IllegalArgumentException("Message blocked: One of the users has blocked the other.");
+        }
+        
     
             if (!chatRoomRepository.existsById(roomId)) {
                 return null;
