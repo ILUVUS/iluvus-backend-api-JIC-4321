@@ -33,6 +33,7 @@ public class ChatRoomService {
 
 
     //-----------------CHAT CREATION--------------------------
+    //UPDATE: changed to make sure blocked users can't create chat together
     public ChatRoom createChatRoom(Map<String, String> data) {
         try {
             String groupName = data.get("groupName");
@@ -116,6 +117,7 @@ public class ChatRoomService {
             .collect(Collectors.toList());
     }    
     
+    //now working
     //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
         try {
