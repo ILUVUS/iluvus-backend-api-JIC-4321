@@ -12,6 +12,10 @@ public class UserDto {
     private String email;
     private String password;
     private boolean isVerified;
+    //----NEW: add field: blockedUsers (to block or unblock)
+    private List<String> blockedUsers;
+
+
     private String proEmail;
     private String fname;
     private String lname;
@@ -211,6 +215,14 @@ public class UserDto {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<String> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(List<String> blockedUsers) {
+        this.blockedUsers = blockedUsers;
     }
 
     public List<String> getGroups() {

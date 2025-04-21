@@ -6,6 +6,7 @@ import iluvus.backend.api.repository.CommunityRepository;
 import iluvus.backend.api.repository.CommunityUserRepository;
 import iluvus.backend.api.repository.InterestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import iluvus.backend.api.dto.UserDto;
@@ -14,6 +15,8 @@ import iluvus.backend.api.model.User;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.util.UserDataCheck;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -73,6 +76,8 @@ public class UserService {
             userDto.setHobbies(new ArrayList<>());
             userDto.setFriends(new ArrayList<>());
             userDto.setGroups(new ArrayList<>());
+            //-----NEW EMPTY ARRAY LIST FOR BLOCKED USERS------
+            userDto.setBlockedUsers(new ArrayList<>());
 
             User user = new User(userDto);
             userRepository.insert(user);
@@ -126,38 +131,64 @@ public class UserService {
         }
     }
 
-    public Map<String, Object> getUser(String userId) {
+    public List<Map<String, Object>> getBlockedUsers(String userId) {
+    User user = userRepository.findById(userId).orElse(null);
+    if (user == null || user.getBlockedUsers() == null) return new ArrayList<>();
+
+    return user.getBlockedUsers().stream()
+        .map(id -> {
+            User blocked = userRepository.findById(id).orElse(null);
+            if (blocked == null) return null;
+
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("id", blocked.getId());
+            userMap.put("username", blocked.getUsername());
+            userMap.put("fname", blocked.getFname());
+            userMap.put("lname", blocked.getLname());
+            return userMap;
+        })
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+}
+
+
+    public Map<String, Object> getUser(String userId, String viewerId) {
         try {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
+            User target = userRepository.findById(userId).orElse(null);
+            User viewer = userRepository.findById(viewerId).orElse(null);
+    
+            if (target == null || viewer == null) {
                 return null;
             }
-
-            UserDto userDto = new UserDto(user);
+    
+            // Check if either has blocked the other
+            if ((target.getBlockedUsers() != null && target.getBlockedUsers().contains(viewerId)) ||
+                (viewer.getBlockedUsers() != null && viewer.getBlockedUsers().contains(userId))) {
+                return null; // Hide the profile
+            }
+    
+            UserDto userDto = new UserDto(target);
             Map<String, Object> userMap = userDto.getPublicUserInfo();
-
-            // Convert user's interest IDs -> {id -> name}
+    
+            // Convert interest IDs to name map
             Map<Integer, String> interestMap = new HashMap<>();
-            for (Integer interestId : user.getInterests()) {
+            for (Integer interestId : target.getInterests()) {
                 InterestTopic interestTopic = interestRepository.findInterestTopicById(interestId);
                 if (interestTopic != null) {
                     interestMap.put(interestTopic.getId(), interestTopic.getName());
                 }
             }
             userMap.put("interest", interestMap);
-
-            // ----------------------------------------------------------
-            // ADD this line to include skills in the returned userMap:
-            // ----------------------------------------------------------
-            userMap.put("skills", user.getSkills());
-            userMap.put("image", user.getImage() != null ? user.getImage() : "");
-
-
+            userMap.put("skills", target.getSkills());
+            userMap.put("image", target.getImage() != null ? target.getImage() : "");
+    
             return userMap;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
+    
 
     private boolean validateEmail(String proemail) {
         if (proemail == null) {
@@ -434,5 +465,52 @@ public class UserService {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+
+    //-----------NEW USER BLOCKING METHOD-----------
+    public boolean blockUser(String blockingUserId, String userToBlockId) {
+        User blockingUser = userRepository.findById(blockingUserId).orElse(null);
+        User userToBlock = userRepository.findById(userToBlockId).orElse(null);
+    
+        if (blockingUser == null || userToBlock == null) {
+            return false;
+        }
+    
+        if (blockingUser.getBlockedUsers() == null) {
+            blockingUser.setBlockedUsers(new ArrayList<>());  // ✅ fix: prevent NPE
+        }
+    
+        if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
+            blockingUser.getBlockedUsers().add(userToBlockId);
+            userRepository.save(blockingUser);
+        }
+    
+        return true;
+    }
+    
+    //-----------NEW USER UNBLOCKING METHOD---------
+    public boolean unblockUser(String unblockingUserId, String userToUnblockId) {
+        User unblockingUser = userRepository.findById(unblockingUserId).orElse(null);
+        if (unblockingUser == null || unblockingUser.getBlockedUsers() == null) {
+            return false;
+        }
+    
+        if (unblockingUser.getBlockedUsers().contains(userToUnblockId)) {
+            unblockingUser.getBlockedUsers().remove(userToUnblockId);
+            userRepository.save(unblockingUser);
+        }
+    
+        return true;
+    }
+    
+
+    //------IS USER BLOCKED?---------
+    //can use this method in unblocking or blocking method as well
+    public boolean isBlocked(String blockingUserId, String blockedUserId) {
+        User blockingUser = userRepository.findById(blockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
+
+        return blockingUser.getBlockedUsers().contains(blockedUserId);
     }
 }

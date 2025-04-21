@@ -6,6 +6,7 @@ import iluvus.backend.api.model.ChatRoom;
 import iluvus.backend.api.repository.ChatMessageRepository;
 import iluvus.backend.api.repository.ChatRoomRepository;
 import iluvus.backend.api.repository.UserRepository;
+import iluvus.backend.api.model.User;
 import iluvus.backend.api.resources.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class ChatRoomService {
 
 
     //-----------------CHAT CREATION--------------------------
+    //UPDATE: changed to make sure blocked users can't create chat together
     public ChatRoom createChatRoom(Map<String, String> data) {
         try {
             String groupName = data.get("groupName");
@@ -60,17 +62,33 @@ public class ChatRoomService {
                     return null;
                 }
             }
+
+           
+            
     
             ChatRoom chatRoom = new ChatRoom();
             chatRoom.setGroupName(groupName);
             chatRoom.setIsGroup(participantList.size() > 2 || (groupName != null && !groupName.isBlank()));
             chatRoom.setParticipants(participantList);
             chatRoom.setCreatedBy(creatorId);
-    
+            for (int i = 0; i < participantList.size(); i++) {
+                for (int j = i + 1; j < participantList.size(); j++) {
+                    String userA = participantList.get(i);
+                    String userB = participantList.get(j);
+                    User ua = userRepository.findById(userA).orElse(null);
+                    User ub = userRepository.findById(userB).orElse(null);
+                    if (ua.getBlockedUsers().contains(userB) || ub.getBlockedUsers().contains(userA)) {
+                        throw new IllegalArgumentException("Blocked: Cannot create chat between users with block relationship");
+                    }
+                    
+                }
+            }
+            
             ChatRoom saved = chatRoomRepository.save(chatRoom);
             System.out.println("ChatRoom created with ID: " + saved.getId());
             return saved;
     
+            
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -99,6 +117,7 @@ public class ChatRoomService {
             .collect(Collectors.toList());
     }    
     
+    //now working
     //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {
         try {

@@ -7,6 +7,7 @@ import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.SkillTopic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,13 @@ public class UserController {
         }
     }
 
+    @GetMapping(value = "/getBlockedUsers", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<List<Map<String, Object>>> getBlockedUsers(@RequestParam String userId) {
+    List<Map<String, Object>> blocked = userService.getBlockedUsers(userId);
+    return ResponseEntity.ok().body(blocked);
+}
+
+
     @PostMapping(value = "/verify", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> checkVerification(@RequestBody Map<String, String> data) {
         boolean isVerified = userService.verify(data);
@@ -71,10 +79,17 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> getUser(@RequestParam String userId) {
-        return ResponseEntity.ok().body(userService.getUser(userId));
+  @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<Map<String, Object>> getUser(
+    @RequestParam String userId,
+    @RequestParam String viewerId
+) {
+    Map<String, Object> result = userService.getUser(userId, viewerId);
+    if (result == null) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
+    return ResponseEntity.ok(result);
+}
 
     @PostMapping(value = "/getNotification", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<HashMap<String, Object>>> getNotification(@RequestBody Map<String, String> data) {
@@ -165,6 +180,8 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
 
     //addFriend, removeFriend, approve friend mappings
 
+    //add method block users
+
 
     @PostMapping(value = "/editSkill", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> editSkill(@RequestBody Map<String, String> data) {
@@ -199,6 +216,35 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+
+    //--------NEW: Post Mapping Blocking User---------
+    //might need to change this to be @PathVariable instead
+    @PostMapping(value = "/blockUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> blockUser(@RequestBody Map<String, String> data) {
+        String blockingUserId = data.get("blockingUserId");
+        String userToBlockId = data.get("userToBlockId");
+    
+        boolean successfullyBlockedUser = userService.blockUser(blockingUserId, userToBlockId);
+        if (successfullyBlockedUser) {
+            return ResponseEntity.ok().body("Successfully blocked user");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to block user");
+        }
+    }
     
 
+    //-------NEW: Post Mapping Unblocking User----------
+    //might need to change this to be @PathVariable instead
+    @PostMapping(value = "/unblockUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> unblockUser(@RequestParam String unblockingUser, @RequestParam String userToUnblock) {
+
+        boolean successfullyUnblocked = userService.unblockUser(unblockingUser, userToUnblock);
+        if (successfullyUnblocked) {
+            return ResponseEntity.ok().body("Successfully unblocked user");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to unblock user");
+        }
+    }
+    
 }

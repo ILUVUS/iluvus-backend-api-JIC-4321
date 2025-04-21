@@ -50,23 +50,24 @@ private UserRepository userRepository;
      */
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createChatRoom(@RequestBody Map<String, String> data) {
-        ChatRoom chatroom = chatRoomService.createChatRoom(data);
+        try {
+            ChatRoom chatroom = chatRoomService.createChatRoom(data);
     
-        if (chatroom == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Chat room creation failed"));
+            if (chatroom == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Chat room creation failed"));
+            }
+    
+            List<String> participantIds = chatroom.getParticipants();
+            Map<String, String> idToUsername = new HashMap<>();
+            userRepository.findAllById(participantIds).forEach(user ->
+                idToUsername.put(user.getId(), user.getUsername())
+            );
+    
+            ChatRoomDto dto = new ChatRoomDto(chatroom, idToUsername);
+            return ResponseEntity.ok(Map.of("chatId", chatroom.getId()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-    
-     
-        List<String> participantIds = chatroom.getParticipants();
-        Map<String, String> idToUsername = new HashMap<>();
-        userRepository.findAllById(participantIds).forEach(user ->
-            idToUsername.put(user.getId(), user.getUsername())
-        );
-    
-      
-        ChatRoomDto dto = new ChatRoomDto(chatroom, idToUsername);
-        return ResponseEntity.ok(Map.of("chatId", chatroom.getId())); // ✅ Make sure this is set
-
     }
     
     
