@@ -131,7 +131,7 @@ After all, the Github Secrets should map with the above steps like below:
 - Users can now block other users of their choosing.
 - Users can now review and report other users in their community who have violated community guidelines to a community moderator for final review.
 
-### Features
+### Additional Features
 - Users can additionally view warnings for potential sensitive or triggering content on reported posts that are still under review.
 - Users can now view "Topics of the Day" on the home page to keep up with current events on the application.
 - Users can now explore popular topics from communities to keep up with and take part in community discussions.
