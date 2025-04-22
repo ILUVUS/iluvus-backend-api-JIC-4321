@@ -20,12 +20,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import javax.mail.*;
 import javax.mail.internet.*;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Service
 public class UserService {
@@ -356,26 +350,20 @@ public class UserService {
         }
     }
 
-    @Autowired
-    private Storage storage;
-
-    public String uploadProfileImage(String userId, MultipartFile file) throws IOException {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) throw new IllegalArgumentException("User not found");
-
-        String fileName = "users/" + userId + "/profile.jpg";
-        BlobId blobId = BlobId.of("iluvus-profile-images", fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
-                .setContentType(file.getContentType())
-                .build();
-
-        storage.create(blobInfo, file.getBytes());
-
-        // Public URL (or use signed URL if private)
-        String imageUrl = "https://storage.googleapis.com/iluvus-profile-images/" + fileName;
-        user.setImage(imageUrl);
-        userRepository.save(user);
-        return imageUrl;
+    public boolean editProfileImage(Map<String, String> data) {
+        try {
+            User user = userRepository.findById(data.get("userId")).orElse(null);
+            String pic = data.get("image");
+            if (pic == null) {
+                throw new IllegalArgumentException("Invalid image: cannot be null");
+            }
+            user.setImage(pic);
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Map<String, Object> searchUsers(String filter) {
