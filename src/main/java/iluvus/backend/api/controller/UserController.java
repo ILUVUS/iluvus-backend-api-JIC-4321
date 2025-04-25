@@ -313,18 +313,16 @@ public ResponseEntity<List<HashMap<String, Object>>> searchUsers(@RequestParam S
 
     //--------NEW: Post Mapping Blocking User---------
     //might need to change this to be @PathVariable instead
-    @PostMapping(value = "/blockUser", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> blockUser(@RequestBody Map<String, String> data) {
-        String blockingUserId = data.get("blockingUserId");
-        String userToBlockId = data.get("userToBlockId");
-    
-        boolean successfullyBlockedUser = userService.blockUser(blockingUserId, userToBlockId);
-        if (successfullyBlockedUser) {
-            return ResponseEntity.ok().body("Successfully blocked user");
-        } else {
-            return ResponseEntity.badRequest().body("Failed to block user");
-        }
-    }
+// UserController.java
+@PostMapping(value = "/blockUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+public ResponseEntity<String> blockUser(@RequestBody Map<String, String> data) {
+    String blockingUserId = data.get("blockingUserId");
+    String userToBlockId = data.get("userToBlockId");
+
+    boolean success = userService.blockUser(blockingUserId, userToBlockId);
+    return success ? ResponseEntity.ok("User blocked") 
+                  : ResponseEntity.badRequest().body("Failed to block user");
+}
     
 
     //-------NEW: Post Mapping Unblocking User----------

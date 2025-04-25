@@ -489,25 +489,28 @@ public class UserService {
 
 
     //-----------NEW USER BLOCKING METHOD-----------
-    public boolean blockUser(String blockingUserId, String userToBlockId) {
-        User blockingUser = userRepository.findById(blockingUserId).orElse(null);
-        User userToBlock = userRepository.findById(userToBlockId).orElse(null);
-    
-        if (blockingUser == null || userToBlock == null) {
-            return false;
-        }
-    
-        if (blockingUser.getBlockedUsers() == null) {
-            blockingUser.setBlockedUsers(new ArrayList<>());  // ✅ fix: prevent NPE
-        }
-    
-        if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
-            blockingUser.getBlockedUsers().add(userToBlockId);
-            userRepository.save(blockingUser);
-        }
-    
-        return true;
+   // UserService.java
+public boolean blockUser(String blockingUserId, String userToBlockId) {
+    User blockingUser = userRepository.findById(blockingUserId).orElse(null);
+    User userToBlock = userRepository.findById(userToBlockId).orElse(null);
+
+    if (blockingUser == null || userToBlock == null) {
+        return false;
     }
+
+    // Ensure blockedUsers list is initialized
+    if (blockingUser.getBlockedUsers() == null) {
+        blockingUser.setBlockedUsers(new ArrayList<>());
+    }
+
+    // Avoid duplicates
+    if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
+        blockingUser.getBlockedUsers().add(userToBlockId);
+        userRepository.save(blockingUser); // Ensure this line is executed
+    }
+
+    return true;
+}
     
     //-----------NEW USER UNBLOCKING METHOD---------
     public boolean unblockUser(String unblockingUserId, String userToUnblockId) {
