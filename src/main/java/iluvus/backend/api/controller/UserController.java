@@ -1,8 +1,11 @@
 package iluvus.backend.api.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import iluvus.backend.api.model.InterestTopic;
 import iluvus.backend.api.model.SkillTopic;
 
@@ -12,7 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import iluvus.backend.api.model.User;
+import iluvus.backend.api.model.User.UserReport;
+import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.service.UserService;
+import iluvus.backend.api.dto.ReportedUserDto;
+import iluvus.backend.api.dto.ReportUserRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +27,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+@Autowired
+private UserRepository userRepo;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createUser(@RequestBody Map<String, String> data) {
@@ -48,6 +57,90 @@ public class UserController {
             return ResponseEntity.badRequest().body("User logined failed");
         }
     }
+
+    @PostMapping("/moderator/dismissReport")
+public ResponseEntity<String> dismissUserReports(@RequestBody Map<String, String> data) {
+    String userId = data.get("reportedUserId");
+    String communityId = data.get("communityId");
+
+    User user = userRepo.findById(userId).orElse(null);
+    if (user == null) return ResponseEntity.badRequest().body("User not found");
+
+    List<User.UserReport> updatedReports = user.getReports().stream()
+        .filter(r -> !r.getCommunityId().equals(communityId))
+        .collect(Collectors.toList());
+
+    user.setReports(updatedReports);
+    userRepo.save(user);
+    return ResponseEntity.ok("Reports dismissed");
+}
+@PostMapping("/moderator/approveReport")
+public ResponseEntity<String> approveAndRemoveUser(@RequestBody Map<String, String> data) {
+    String userId = data.get("reportedUserId");
+    String communityId = data.get("communityId");
+
+    User user = userRepo.findById(userId).orElse(null);
+    if (user == null) return ResponseEntity.badRequest().body("User not found");
+
+    // Remove from group
+    List<String> updatedGroups = user.getGroups().stream()
+        .filter(gid -> !gid.equals(communityId))
+        .collect(Collectors.toList());
+    user.setGroups(updatedGroups);
+
+    // Remove reports for this community
+    List<User.UserReport> updatedReports = user.getReports().stream()
+        .filter(r -> !r.getCommunityId().equals(communityId))
+        .collect(Collectors.toList());
+    user.setReports(updatedReports);
+
+    userRepo.save(user);
+    return ResponseEntity.ok("User removed from community and reports approved");
+}
+
+    @GetMapping("/moderator/reportedUsers")
+    public ResponseEntity<List<ReportedUserDto>> getCommunityReports(@RequestParam String communityId) {
+        List<ReportedUserDto> results = userRepo.findAll().stream()
+            .filter(u -> u.getReports() != null && u.getReports().stream()
+                .anyMatch(r -> r.getCommunityId().equals(communityId)))
+            .map(u -> new ReportedUserDto(
+                u.getId(),
+                u.getUsername(),
+                u.getReports().stream()
+                    .filter(r -> r.getCommunityId().equals(communityId))
+                    .collect(Collectors.toList())))
+            .collect(Collectors.toList());
+    
+        return ResponseEntity.ok(results);
+    }
+    
+
+
+@PostMapping("/reportUserOnPost")
+public ResponseEntity<String> reportUserOnPost(@RequestBody ReportUserRequest request) {
+    User reported = userRepo.findById(request.getReportedUserId()).orElse(null);
+    if (reported == null) return ResponseEntity.badRequest().body("User not found");
+
+    List<User.UserReport> reports = reported.getReports();
+    if (reports == null) reports = new ArrayList<>();
+
+    boolean alreadyReported = reports.stream().anyMatch(r ->
+        r.getReporterId().equals(request.getReporterId()) &&
+        r.getCommunityId().equals(request.getCommunityId())
+    );
+    if (alreadyReported) return ResponseEntity.status(409).body("Already reported");
+
+    reports.add(new User.UserReport(
+        request.getReporterId(),
+        request.getReason(),
+        request.getCommunityId()
+    ));
+
+    reported.setReports(reports);
+    userRepo.save(reported);
+    return ResponseEntity.ok("Report submitted");
+}
+
 
     @GetMapping(value = "/getBlockedUsers", produces = MediaType.APPLICATION_JSON_VALUE)
 public ResponseEntity<List<Map<String, Object>>> getBlockedUsers(@RequestParam String userId) {

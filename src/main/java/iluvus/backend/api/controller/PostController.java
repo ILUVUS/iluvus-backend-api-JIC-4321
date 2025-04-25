@@ -1,7 +1,12 @@
 package iluvus.backend.api.controller;
 
+import iluvus.backend.api.dto.ReportPostRequest;
+import iluvus.backend.api.dto.ReportUserRequest;
+import iluvus.backend.api.controller.*;
 import iluvus.backend.api.model.Post;
 import iluvus.backend.api.service.PostService;
+import iluvus.backend.api.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +29,8 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+
+    private UserController userController;
     /**
      * 
      * @param data JSON object with the following keys:
@@ -75,6 +84,17 @@ public class PostController {
             return ResponseEntity.badRequest().body(0);
         }
     }
+
+    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> reportPost(@RequestBody ReportPostRequest req) {
+        boolean isReported = postService.reportPostByRequest(req);
+        if (isReported) {
+            return ResponseEntity.ok().body("Post and user reported successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Post report failed (maybe already reported)");
+        }
+    }
+    
 
     @PostMapping(value = "/share", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> sharePost(@RequestBody Map<String, String> data) {

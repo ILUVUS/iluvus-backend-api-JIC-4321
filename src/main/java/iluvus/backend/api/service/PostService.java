@@ -1,6 +1,7 @@
 package iluvus.backend.api.service;
 
 import iluvus.backend.api.dto.PostDto;
+import iluvus.backend.api.dto.ReportPostRequest;
 import iluvus.backend.api.model.Community;
 import iluvus.backend.api.model.CommunityUser;
 import iluvus.backend.api.resources.NotificationType;
@@ -13,6 +14,7 @@ import iluvus.backend.api.repository.PostRepository;
 import iluvus.backend.api.repository.UserRepository;
 import iluvus.backend.api.service.InterestTopicService;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -40,7 +42,8 @@ public class PostService {
     private CommunityUserRepository communityUserRepository;
     @Autowired
     private InterestTopicService interestTopicService;
-
+    @Autowired
+    private UserService userService;
 
     public List<Post> createPost(Map<String, String> data) {
         try {
@@ -124,6 +127,31 @@ public class PostService {
             return null;
         }
     }
+
+
+    public boolean reportPostByRequest(ReportPostRequest req) {
+    Optional<Post> postOpt = postRepository.findById(req.getPostId());
+    if (postOpt.isEmpty()) return false;
+
+    Post post = postOpt.get();
+
+    if (post.getReportedBy().contains(req.getReporterId())) return false;
+
+    post.getReportedBy().add(req.getReporterId());
+    post.setReport_count(
+        post.getReport_count() == null ? BigInteger.ONE : post.getReport_count().add(BigInteger.ONE)
+    );
+    postRepository.save(post);
+
+    userService.reportUserFromPost(
+        req.getReporterId(),
+        post.getAuthor_id(),
+        post.getCommunity_id(),
+        req.getReason()
+    );
+
+    return true;
+}
 
     public List<Post> getPostsByCommunityId(String id) {
         if (id == null || id.isBlank()) {

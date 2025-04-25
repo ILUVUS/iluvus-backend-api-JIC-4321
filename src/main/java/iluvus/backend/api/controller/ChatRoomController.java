@@ -76,6 +76,7 @@ private UserRepository userRepository;
         List<ChatRoomDto> chats = chatRoomService.getChatsWithUsernames(userId);
         return ResponseEntity.ok(chats);
     }
+    
      /**
      * Endpoint to retrieve recent messages from a chat room.
      * @param roomId ID of the chat room.

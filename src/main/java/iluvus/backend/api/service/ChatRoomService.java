@@ -97,24 +97,27 @@ public class ChatRoomService {
 
     //-------------------RECENT CHATS--------------------------//
     public List<ChatRoomDto> getChatsWithUsernames(String userId) {
-        List<ChatRoom> chats = chatRoomRepository.findByParticipantsContaining(userId);
-        
-        // Get all participant IDs
-        Set<String> allUserIds = chats.stream()
-            .flatMap(chat -> chat.getParticipants().stream())
-            .collect(Collectors.toSet());
+        List<ChatRoom> userChats = chatRoomRepository.findByParticipantsContaining(userId);
     
-        // Map of userId -> username
-        Map<String, String> idToUsername = new HashMap<>();
-        userRepository.findAllById(allUserIds).forEach(user -> {
-            idToUsername.put(user.getId(), user.getUsername());
-        });
+        List<ChatRoomDto> enrichedChats = new ArrayList<>();
     
-        // Build DTOs with participant ID to username map
-        return chats.stream()
-            .map(chat -> new ChatRoomDto(chat, idToUsername))
-            .collect(Collectors.toList());
-    }    
+        for (ChatRoom chat : userChats) {
+            List<String> participantIds = chat.getParticipants();
+            Map<String, String> idToUsername = new HashMap<>();
+    
+            // Load usernames for each participant
+            userRepository.findAllById(participantIds).forEach(user ->
+                idToUsername.put(user.getId(), user.getUsername())
+            );
+    
+            ChatRoomDto dto = new ChatRoomDto(chat, idToUsername);
+            enrichedChats.add(dto);
+        }
+    
+        return enrichedChats;
+    }
+    
+    
     
     //----------------RECENT MESSAGES---------------------------
     public Page<ChatMessage> getRecentMessages(String roomId, int page, int size) {

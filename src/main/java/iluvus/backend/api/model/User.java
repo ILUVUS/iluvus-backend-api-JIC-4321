@@ -45,6 +45,10 @@ public class User {
     @Field("groups")
     private List<String> groups;
 
+    @Field("reports")
+private List<UserReport> reports;
+
+
     public User() {
     }
 
@@ -76,6 +80,37 @@ public class User {
         //---added new reference here for blocked users----------
         this.blockedUsers = userDto.getBlockedUsers();
     }
+
+    public static class UserReport {
+        private String reporterId;
+        private String reason;
+        private String communityId;
+        private Date timestamp;
+    
+        public UserReport() {}
+    
+        public UserReport(String reporterId, String reason, String communityId) {
+            this.reporterId = reporterId;
+            this.reason = reason;
+            this.communityId = communityId;
+            this.timestamp = new Date();
+        }
+    
+        public String getReporterId() { return reporterId; }
+        public String getReason() { return reason; }
+        public String getCommunityId() { return communityId; }
+        public Date getTimestamp() { return timestamp; }
+    }
+    
+    
+    public List<UserReport> getReports() {
+        return reports == null ? new ArrayList<>() : reports;
+    }
+    
+    public void setReports(List<UserReport> reports) {
+        this.reports = reports;
+    }
+    
 
     public String getId() {
         return id;

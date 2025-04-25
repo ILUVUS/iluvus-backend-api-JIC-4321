@@ -466,6 +466,26 @@ public class UserService {
             return false;
         }
     }
+   
+
+    public void reportUserFromPost(String reporterId, String reportedUserId, String communityId, String reason) {
+        User reported = userRepository.findById(reportedUserId).orElse(null);
+        if (reported == null) return;
+    
+        List<User.UserReport> reports = reported.getReports();
+        if (reports == null) reports = new ArrayList<>();
+    
+        boolean alreadyReported = reports.stream().anyMatch(r ->
+            r.getReporterId().equals(reporterId) && r.getCommunityId().equals(communityId)
+        );
+        if (!alreadyReported) {
+            reports.add(new User.UserReport(reporterId, reason, communityId));
+            reported.setReports(reports);
+            userRepository.save(reported);
+        }
+    }
+    
+
 
 
 
@@ -511,6 +531,7 @@ public class UserService {
     public boolean isBlocked(String blockingUserId, String blockedUserId) {
         User blockingUser = userRepository.findById(blockingUserId).orElseThrow(() -> new UsernameNotFoundException("Blocking user wasn't found: does the user exist?"));
 
+        
         return blockingUser.getBlockedUsers().contains(blockedUserId);
     }
 }
