@@ -132,9 +132,17 @@ public class UserService {
     }
 
     public List<Map<String, Object>> getBlockedUsers(String userId) {
-    User user = userRepository.findById(userId).orElse(null);
-
-    return user.getBlockedUsers().stream()
+        System.out.println("[Backend] Fetching blocked users for: " + userId);
+        User user = userRepository.findById(userId).orElse(null);
+    
+        if (user == null || user.getBlockedUsers() == null) {
+            System.out.println("[Backend] No blocked users found");
+            return new ArrayList<>();
+        }
+    
+        System.out.println("[Backend] Blocked Users Raw IDs: " + user.getBlockedUsers());
+        
+        return user.getBlockedUsers().stream()
         .map(id -> {
             User blocked = userRepository.findById(id).orElse(null);
             if (blocked == null) return null;
@@ -490,28 +498,35 @@ public class UserService {
 
     //-----------NEW USER BLOCKING METHOD-----------
    // UserService.java
-public boolean blockUser(String blockingUserId, String userToBlockId) {
+   public boolean blockUser(String blockingUserId, String userToBlockId) {
+    System.out.println("[Backend] Blocking User: " + blockingUserId);
+    System.out.println("[Backend] Target User: " + userToBlockId);
+
     User blockingUser = userRepository.findById(blockingUserId).orElse(null);
     User userToBlock = userRepository.findById(userToBlockId).orElse(null);
 
     if (blockingUser == null || userToBlock == null) {
+        System.out.println("[Backend] User not found!");
         return false;
     }
 
-    // // Ensure blockedUsers list is initialized
-    // if (blockingUser.getBlockedUsers() == null) {
-    //     blockingUser.setBlockedUsers(new ArrayList<>());
-    // }
-
-    // Avoid duplicates
-    if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
-        blockingUser.getBlockedUsers().add(userToBlockId);
-        userRepository.save(blockingUser); // Ensure this line is executed
+    // Initialize blockedUsers if null
+    if (blockingUser.getBlockedUsers() == null) {
+        System.out.println("[Backend] Initializing blockedUsers list");
+        blockingUser.setBlockedUsers(new ArrayList<>());
     }
 
-    return true;
+    // Add to blocked list
+    if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
+        System.out.println("[Backend] Adding user to blocked list");
+        blockingUser.getBlockedUsers().add(userToBlockId);
+        userRepository.save(blockingUser);
+        System.out.println("[Backend] Updated Blocked Users: " + blockingUser.getBlockedUsers());
+        return true;
+    }
+
+    return false;
 }
-    
     //-----------NEW USER UNBLOCKING METHOD---------
     public boolean unblockUser(String unblockingUserId, String userToUnblockId) {
         User unblockingUser = userRepository.findById(unblockingUserId).orElse(null);
