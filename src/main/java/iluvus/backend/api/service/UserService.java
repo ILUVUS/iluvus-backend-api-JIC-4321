@@ -133,7 +133,6 @@ public class UserService {
 
     public List<Map<String, Object>> getBlockedUsers(String userId) {
     User user = userRepository.findById(userId).orElse(null);
-    if (user == null || user.getBlockedUsers() == null) return new ArrayList<>();
 
     return user.getBlockedUsers().stream()
         .map(id -> {
