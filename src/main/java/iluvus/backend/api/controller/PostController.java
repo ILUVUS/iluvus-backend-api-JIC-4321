@@ -132,15 +132,15 @@ public class PostController {
         }
     }
 
-    @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> reportPost(@RequestBody Map<String, String> data) {
-        boolean isReported = postService.reportPost(data);
-        if (isReported) {
-            return ResponseEntity.ok().body("Post reported successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Post reporting failed");
-        }
-    }
+    // @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    // public ResponseEntity<String> reportPost(@RequestBody Map<String, String> data) {
+    //     boolean isReported = postService.reportPost(data);
+    //     if (isReported) {
+    //         return ResponseEntity.ok().body("Post reported successfully");
+    //     } else {
+    //         return ResponseEntity.badRequest().body("Post reporting failed");
+    //     }
+    // }
 
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
