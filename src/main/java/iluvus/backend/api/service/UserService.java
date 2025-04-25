@@ -498,10 +498,10 @@ public boolean blockUser(String blockingUserId, String userToBlockId) {
         return false;
     }
 
-    // Ensure blockedUsers list is initialized
-    if (blockingUser.getBlockedUsers() == null) {
-        blockingUser.setBlockedUsers(new ArrayList<>());
-    }
+    // // Ensure blockedUsers list is initialized
+    // if (blockingUser.getBlockedUsers() == null) {
+    //     blockingUser.setBlockedUsers(new ArrayList<>());
+    // }
 
     // Avoid duplicates
     if (!blockingUser.getBlockedUsers().contains(userToBlockId)) {
