@@ -385,6 +385,47 @@ public class PostService {
         }
     }
 
+    public boolean reportUser(Map<String, String> data) {
+        try {
+            Post post = postRepository.findById(data.get("postId")).orElse(null);
+            String user = data.get("userId");
+            if (post == null) {
+                return false;
+            }
+            Community community = communityRepository.findById(post.getCommunity_id()).orElse(null);
+            if (community == null) {
+                return false;
+            }
+            User reporter = userRepository.findById(data.get("userId")).orElse(null);
+            if (reporter == null) {
+                return false;
+            }
+            if (reporter.getId().equals(community.getOwner())) {
+                postRepository.delete(post);
+                return true;
+            }
+            List<String> reportedBy = post.getReportedBy();
+            if (reportedBy.contains(user)) {
+                postRepository.save(post);
+            } else {
+                reportedBy.add(user);
+                post.setReportedBy(reportedBy);
+                String senderId = reporter.getId();
+                String receiverId = post.getAuthor_id();
+                String message = String.format("user %s reported you in community %s", reporter.getFname(),
+                        community.getName());
+                String dateTime = java.time.OffsetDateTime.now().toString();
+                NotificationService.addNotification(senderId, receiverId, NotificationType.REPORT, message,
+                        dateTime);
+                postRepository.save(post);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<String> processMedia(String raw_media) {
         List<String> medias = new ArrayList<>();
 
