@@ -122,6 +122,16 @@ public class PostController {
         }
     }
 
+    @PostMapping(value = "/report_user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> reportUser(@RequestBody Map<String, String> data) {
+        boolean isReported = postService.reportUser(data);
+        if (isReported) {
+            return ResponseEntity.ok().body("User reported successfully");
+        } else {
+            return ResponseEntity.badRequest().body("User reporting failed");
+        }
+    }
+
     @GetMapping(value = "/getPostForHomePage", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Post>> getPostForHomePage(@RequestParam String userId) {
         List<Post> posts = postService.getPostForHomePage(userId);
